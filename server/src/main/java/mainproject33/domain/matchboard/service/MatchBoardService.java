@@ -23,10 +23,6 @@ public class MatchBoardService {
         createdMatchBoard.setTitle(matchBoard.getTitle());
         createdMatchBoard.setContent(matchBoard.getContent());
 
-        // set createdAt, modifiedAt
-        createdMatchBoard.setCreatedAt(LocalDateTime.now());
-        createdMatchBoard.setModifiedAt(LocalDateTime.now());
-
         return matchBoardRepository.save(createdMatchBoard);
     }
 
@@ -39,9 +35,6 @@ public class MatchBoardService {
                 .ifPresent(title -> findMatchBoard.setTitle(title));
         Optional.ofNullable(matchBoard.getContent())
                 .ifPresent(content -> findMatchBoard.setContent(content));
-
-        // set modifiedAt
-        findMatchBoard.setModifiedAt(LocalDateTime.now());
 
         return matchBoardRepository.save(findMatchBoard);
     }

@@ -3,11 +3,13 @@ package mainproject33.domain.matchboard.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.matchboard.repository.MatchBoardRepository;
+import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -30,7 +32,8 @@ public class MatchBoardService {
 
     public MatchBoard updateMatchBoard(MatchBoard matchBoard) {
         MatchBoard findMatchBoard = matchBoardRepository.findById(matchBoard.getId())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 매칭 게시글 입니다.")); // TODO : 구체적인 Exception Handling 추후 필요.
+                .orElseThrow(()
+                        -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
 
         Optional.ofNullable(matchBoard.getTitle())
                 .ifPresent(title -> findMatchBoard.setTitle(title));
@@ -45,7 +48,8 @@ public class MatchBoardService {
 
     public MatchBoard readMatchBoard(long id) {
         MatchBoard findMatchBoard = matchBoardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 매칭 게시글 입니다.")); // TODO : 구체적인 Exception Handling 추후 필요.
+                .orElseThrow(()
+                        -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
 
         return findMatchBoard;
     }
@@ -60,7 +64,8 @@ public class MatchBoardService {
 
     public void deleteMatchBoard(long id) {
         MatchBoard findMatchBoard = matchBoardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 매칭 게시글 입니다.")); // TODO : 구체적인 Exception Handling 추후 필요.
+                .orElseThrow(()
+                        -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
 
         matchBoardRepository.delete(findMatchBoard);
     }

@@ -9,12 +9,14 @@ import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class MatchBoardController {
     private final MatchBoardMapper mapper;
 
     @PostMapping
-    public ResponseEntity postMatchBoard(@RequestBody MatchBoardDto.Post post) {
+    public ResponseEntity postMatchBoard(@RequestBody @Valid MatchBoardDto.Post post) {
         MatchBoard matchBoard = matchBoardService.createMatchBoard(mapper.postMatchBoardToMatchBoard(post));
 
         return new ResponseEntity(
@@ -37,8 +39,9 @@ public class MatchBoardController {
     }
 
     @PatchMapping("/{match-id}")
-    public ResponseEntity patchMatchBoard(@PathVariable("match-id") @Positive Long id,
-                                          @RequestBody MatchBoardDto.Patch patch) {
+    public ResponseEntity patchMatchBoard(@PathVariable("match-id")
+                                              @Positive(message = "id 값은 0보다 커야합니다.") Long id,
+                                          @RequestBody @Valid MatchBoardDto.Patch patch) {
         patch.setId(id);
         MatchBoard matchBoard = matchBoardService.updateMatchBoard(mapper.patchMatchBoardToMatchBoard(patch));
 
@@ -47,7 +50,8 @@ public class MatchBoardController {
     }
 
     @GetMapping("/{match-id}")
-    public ResponseEntity getMatchBoard(@PathVariable("match-id") @Positive Long id) {
+    public ResponseEntity getMatchBoard(@PathVariable("match-id")
+                                            @Positive(message = "id 값은 0보다 커야합니다.") Long id) {
         MatchBoard matchBoard = matchBoardService.readMatchBoard(id);
 
         return new ResponseEntity(
@@ -56,7 +60,8 @@ public class MatchBoardController {
 
     @GetMapping
     public ResponseEntity getMatchBoards(@RequestParam(value = "keyword", required = false) String keyword,
-                                         @PageableDefault Pageable pageable) {
+                                         @PageableDefault(sort = "id", direction = Sort.Direction.DESC)
+                                         Pageable pageable) {
         Page<MatchBoard> matchBoardPage = matchBoardService.readMatchBoards(keyword, pageable.previousOrFirst());
         List<MatchBoard> matchBoards = matchBoardPage.getContent();
 
@@ -67,7 +72,8 @@ public class MatchBoardController {
     }
 
     @DeleteMapping("/{match-id}")
-    public ResponseEntity deleteMatchBoard(@PathVariable("match-id") @Positive Long id) {
+    public ResponseEntity deleteMatchBoard(@PathVariable("match-id")
+                                               @Positive(message = "id 값은 0보다 커야합니다.") Long id) {
         matchBoardService.deleteMatchBoard(id);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);

@@ -18,6 +18,7 @@ public class MatchBoardMapper {
 
         matchBoard.setTitle(post.getTitle());
         matchBoard.setContent(post.getContent());
+        matchBoard.setTags(post.getTags());
 
         return matchBoard;
     }
@@ -30,6 +31,7 @@ public class MatchBoardMapper {
         matchBoard.setId(patch.getId());
         matchBoard.setTitle(patch.getTitle());
         matchBoard.setContent(patch.getContent());
+        matchBoard.setTags(patch.getTags());
 
         return matchBoard;
     }
@@ -44,6 +46,7 @@ public class MatchBoardMapper {
         response.setId(matchBoard.getId());
         response.setTitle(matchBoard.getTitle());
         response.setContent(matchBoard.getContent());
+        response.setTags(matchBoard.getTags());
         response.setCreatedAt(matchBoard.getCreatedAt());
         response.setModifiedAt(matchBoard.getModifiedAt());
 

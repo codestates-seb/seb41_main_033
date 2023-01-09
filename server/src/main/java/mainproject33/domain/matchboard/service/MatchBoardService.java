@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -20,8 +19,11 @@ public class MatchBoardService {
 
     public MatchBoard createMatchBoard(MatchBoard matchBoard) {
         MatchBoard createdMatchBoard = new MatchBoard();
+
         createdMatchBoard.setTitle(matchBoard.getTitle());
         createdMatchBoard.setContent(matchBoard.getContent());
+        Optional.ofNullable(matchBoard.getTags())
+                .ifPresent(tags -> createdMatchBoard.setTags(tags));
 
         return matchBoardRepository.save(createdMatchBoard);
     }
@@ -35,6 +37,8 @@ public class MatchBoardService {
                 .ifPresent(title -> findMatchBoard.setTitle(title));
         Optional.ofNullable(matchBoard.getContent())
                 .ifPresent(content -> findMatchBoard.setContent(content));
+        Optional.ofNullable(matchBoard.getTags())
+                .ifPresent(tags -> findMatchBoard.setTags(tags));
 
         return matchBoardRepository.save(findMatchBoard);
     }

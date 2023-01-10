@@ -71,6 +71,7 @@ public class UserBoardController
                                     @RequestParam @Positive int size)
     {
         Page<UserBoard> pageBoards = boardService.findAllUserBoards(page - 1, size);
+
         List<UserBoard> boards = pageBoards.getContent();
         List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards);
 

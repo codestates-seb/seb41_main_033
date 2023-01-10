@@ -1,0 +1,208 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	box-sizing: border-box;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol,
+ul {
+	list-style: none;
+}
+blockquote,
+q {
+	quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: "";
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+:root {
+	/* colors */
+	--black: #000000;
+	--darkgrey1: #171717;
+	--darkgrey2: #202020;
+	--grey: #4e4d4e;
+	--lightgrey: #6a6a6b;
+	--white: #ffffff;
+	--yellow: #ffba29;
+	--pink: #ff8f93;
+	--red: #ff5855;
+
+	/* main colors */
+	--primary-color: var(--yellow);
+	--secondary-color: var(--pink);
+
+	/* ui colors */
+	--bg-color: var(--black);
+	--bg-card-color: var(--darkgrey1);
+	--input-color: var(--darkgrey2);
+	--border-color: var(--grey);
+	--font-color: var(--lightgrey);
+	--strong-color: var(--white);
+	--error-color: var(--red);
+
+	/* font */
+	/* font-size */
+	--font-head1-size: 32px;
+	--font-head2-size: 24px;
+	--font-head3-size: 20px;
+	--font-body1-size: 16px;
+	--font-body2-size: 14px;
+	--font-caption-size: 12px;
+	/* font-weight */
+	--font-weight-normal: 400;
+	--font-weight-medium: 500;
+
+	/* border-radius */
+	--border-radius-lg: 16px;
+	--border-raidus-md: 12px;
+	--border-radius-sm: 8px;
+	--border-radius-btn: 56px;
+}
+
+/* layout, normalize */
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+	background: var(--bg-color);
+	font-family: "Noto Sans KR", sans-serif;
+	font-weight: var(--font-weight-normal);
+	font-size: var(--font-body1-size);
+	color: var(--font-color);
+}
+#root {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+a {
+	text-decoration: none;
+	color: var(--font-color);
+}
+.card {
+	border: 1px solid var(--border-color);
+	background: var(--bg-card-color);
+}
+.card.big {
+	padding: 48px;
+}
+.card.md {
+	padding: 32px;
+}
+.card.sm {
+	padding: 24px;
+}

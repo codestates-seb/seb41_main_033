@@ -1,6 +1,7 @@
 package mainproject33.domain.userboard.entity;
 
 import lombok.*;
+
 import mainproject33.domain.comment.entity.Comment;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.global.audit.Auditable;
@@ -8,6 +9,7 @@ import mainproject33.global.audit.Auditable;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Getter
 @NoArgsConstructor
@@ -27,6 +29,7 @@ public class UserBoard extends Auditable
     @OneToMany(mappedBy = "userBoard")
     private List<Comment> comments = new ArrayList<>();
 
+
     @Builder
     public UserBoard(Long id, String content)
     {
@@ -45,6 +48,4 @@ public class UserBoard extends Auditable
         this.member = member;
         member.getUserBoards().add(this);
     }*/
-
-
 }

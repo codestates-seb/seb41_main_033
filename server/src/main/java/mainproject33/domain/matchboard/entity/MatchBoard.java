@@ -2,11 +2,13 @@ package mainproject33.domain.matchboard.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import mainproject33.domain.matchboard.utils.validator.Tags;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.global.audit.Auditable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.util.LinkedList;
 import java.util.List;
 

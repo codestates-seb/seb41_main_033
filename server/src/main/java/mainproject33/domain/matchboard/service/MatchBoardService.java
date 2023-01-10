@@ -22,8 +22,10 @@ public class MatchBoardService {
 
         createdMatchBoard.setTitle(matchBoard.getTitle());
         createdMatchBoard.setContent(matchBoard.getContent());
+        
         createdMatchBoard.setGame(matchBoard.getGame()); // TODO : Game DB에 있는 객체를 가지고 와서 저장 (mapper 에서 처리)
         createdMatchBoard.setTeam(matchBoard.getTeam());
+        
         Optional.ofNullable(matchBoard.getTags())
                 .ifPresent(tags -> createdMatchBoard.setTags(tags));
 

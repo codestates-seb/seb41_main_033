@@ -28,7 +28,7 @@ public class UserBoardService
 
     public UserBoard patchUserBoard(UserBoard request)
     {
-        UserBoard findBoard = findOne(request.getId());
+        UserBoard findBoard = findUserBoard(request.getId());
 
         Optional.ofNullable(request.getContent())
                 .ifPresent(findBoard::updateContent);
@@ -37,7 +37,7 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
-    public UserBoard findOne(Long id)
+    public UserBoard findUserBoard(Long id)
     {
         Optional<UserBoard> optionalBoard = userBoardRepository.findById(id);
 
@@ -47,7 +47,7 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
-    public Page<UserBoard> findAll(int page, int size)
+    public Page<UserBoard> findAllUserBoards(int page, int size)
     {
         return userBoardRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
     }

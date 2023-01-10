@@ -7,6 +7,8 @@ import lombok.Setter;
 import mainproject33.global.audit.Auditable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,5 +31,8 @@ public class Member extends Auditable {
     private String introduction;
 
     private String game;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
 }

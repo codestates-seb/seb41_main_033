@@ -58,7 +58,7 @@ public class UserBoardController
     @GetMapping("/{board-id}")
     public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId)
     {
-        UserBoard userBoard = boardService.findOne(boardId);
+        UserBoard userBoard = boardService.findUserBoard(boardId);
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard);
 
@@ -70,7 +70,8 @@ public class UserBoardController
     public ResponseEntity getBoards(@RequestParam @Positive int page,
                                     @RequestParam @Positive int size)
     {
-        Page<UserBoard> pageBoards = boardService.findAll(page - 1, size);
+        Page<UserBoard> pageBoards = boardService.findAllUserBoards(page - 1, size);
+
         List<UserBoard> boards = pageBoards.getContent();
         List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards);
 

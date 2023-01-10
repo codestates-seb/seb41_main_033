@@ -12,7 +12,11 @@ import java.util.List;
 public class GameDBService {
     private final GameDBRepository gameDBRepository;
 
-    public List<GameDB> readGameDb() { // TODO : 페이지네이션 필요?
-        return gameDBRepository.findAll();
+    public List<GameDB> readGameDB(String keyword) { // TODO : 페이지네이션 필요?
+        if (keyword == null) {
+            return gameDBRepository.findAll();
+        } else {
+            return gameDBRepository.findByKeyword(keyword);
+        }
     }
 }

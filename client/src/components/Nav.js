@@ -79,7 +79,7 @@ const Menu = styled.ul`
 		svg {
 			fill: var(--primary-color);
 		}
-		a:hover {
+        a:hover {
 			color: var(--primary-color);
 			path {
 				fill: var(--primary-color);

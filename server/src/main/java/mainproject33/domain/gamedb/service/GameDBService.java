@@ -26,6 +26,9 @@ public class GameDBService {
     public GameDB readRandomGameDB() {
         Random random = new Random();
         int randomInt = random.nextInt(gameDBRepository.findAll().size());
+        while (randomInt == 0) { // 0이 걸리면 0이 안 걸릴 때 까지 랜덤 뽑기
+            randomInt = random.nextInt(gameDBRepository.findAll().size());
+        }
 
         return gameDBRepository.findById((long) randomInt)
                 .orElseThrow(() -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_ID_NOT_FOUND.get()));

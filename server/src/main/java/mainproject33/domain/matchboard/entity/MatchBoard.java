@@ -3,6 +3,7 @@ package mainproject33.domain.matchboard.entity;
 import lombok.Getter;
 import lombok.Setter;
 import mainproject33.domain.matchboard.utils.validator.Tags;
+import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.global.audit.Auditable;
 
@@ -24,6 +25,13 @@ public class MatchBoard extends Auditable {
 
     @Column(length = 500, nullable = false)
     private String content;
+
+    @OneToOne
+    @JoinColumn(name = "game_id")
+    private GameDB game;
+
+    @Column
+    private int team;
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> tags = new LinkedList<>();

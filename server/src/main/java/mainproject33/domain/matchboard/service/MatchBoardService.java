@@ -22,6 +22,10 @@ public class MatchBoardService {
 
         createdMatchBoard.setTitle(matchBoard.getTitle());
         createdMatchBoard.setContent(matchBoard.getContent());
+        
+        createdMatchBoard.setGame(matchBoard.getGame()); // TODO : Game DB에 있는 객체를 가지고 와서 저장 (mapper 에서 처리)
+        createdMatchBoard.setTeam(matchBoard.getTeam());
+        
         Optional.ofNullable(matchBoard.getTags())
                 .ifPresent(tags -> createdMatchBoard.setTags(tags));
 
@@ -39,6 +43,9 @@ public class MatchBoardService {
                 .ifPresent(content -> findMatchBoard.setContent(content));
         Optional.ofNullable(matchBoard.getTags())
                 .ifPresent(tags -> findMatchBoard.setTags(tags));
+        Optional.ofNullable(matchBoard.getGame())
+                .ifPresent(game -> findMatchBoard.setGame(game));
+        if (matchBoard.getTeam() != 0) findMatchBoard.setTeam(matchBoard.getTeam());
 
         return matchBoardRepository.save(findMatchBoard);
     }

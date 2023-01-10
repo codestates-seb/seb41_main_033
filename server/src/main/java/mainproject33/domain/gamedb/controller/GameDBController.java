@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/game")
+@RequestMapping("/api/games")
 @RequiredArgsConstructor
 public class GameDBController {
 
@@ -25,5 +25,12 @@ public class GameDBController {
         List<GameDB> gameDBs = gameDBService.readGameDB(keyword);
 
         return new ResponseEntity(new SingleResponseDto<>(gameDBs), HttpStatus.OK);
+    }
+
+    @GetMapping("/random")
+    public ResponseEntity getRandomGameDB() {
+        GameDB game = gameDBService.readRandomGameDB();
+
+        return new ResponseEntity(new SingleResponseDto<>(game), HttpStatus.OK);
     }
 }

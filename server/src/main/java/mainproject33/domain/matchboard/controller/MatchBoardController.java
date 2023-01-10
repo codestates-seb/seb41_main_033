@@ -60,7 +60,7 @@ public class MatchBoardController {
 
     @GetMapping
     public ResponseEntity getMatchBoards(@RequestParam(value = "keyword", required = false) String keyword,
-                                         @PageableDefault(sort = "id", direction = Sort.Direction.DESC)
+                                         @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
                                          Pageable pageable) {
         Page<MatchBoard> matchBoardPage = matchBoardService.readMatchBoards(keyword, pageable.previousOrFirst());
         List<MatchBoard> matchBoards = matchBoardPage.getContent();

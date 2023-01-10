@@ -4,9 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mainproject33.domain.comment.entity.Comment;
+import mainproject33.domain.matchboard.entity.MatchBoard;
+import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.global.audit.Auditable;
 
 import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,5 +33,14 @@ public class Member extends Auditable {
     private String introduction;
 
     private String game;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<UserBoard> userBoards;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<MatchBoard> matchBoards;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
 }

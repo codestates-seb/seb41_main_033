@@ -8,8 +8,11 @@ const Wrap = styled.div`
 	display: flex;
 	flex: 1;
 	width: 100%;
-	height: 100%;
 	background: var(--bg-color);
+
+	.card {
+		height: 900px;
+	}
 `;
 const MainWrap = styled.section`
 	display: flex;
@@ -35,6 +38,7 @@ function App() {
 					<Header />
 					{/* 아래 main 안에 각 페이지가 들어갑니다. */}
 					<main className="container">
+						<div className="card big"></div>
 						<Routes>
 							{/* <Route path="/" element={<Matching/>} />
           <Route path="/login" element={<Login/>} />

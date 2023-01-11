@@ -19,6 +19,7 @@ public class GameDBService {
         if (keyword == null) {
             return gameDBRepository.findAll();
         } else {
+            keyword = keyword.replaceAll(" ", "").toLowerCase(); // 띄어쓰기, 대소문자 상관없이 검색할 수 있게
             return gameDBRepository.findByKeyword(keyword);
         }
     }

@@ -22,7 +22,19 @@ public class SimpleLoggingAop {
     @Pointcut("within(mainproject33.domain.matchboard.service..*)")
     private void inMatchBoard() {}
 
-    @Pointcut("anyPublicOperation() && inMatchBoard()")
+    @Pointcut("within(mainproject33.domain.gamedb.service..*)")
+    private void inGameDB() {}
+
+    @Pointcut("within(mainproject33.domain.comment.service..*)")
+    private void inComment() {}
+
+    @Pointcut("within(mainproject33.domain.member.service..*)")
+    private void inMember() {}
+
+    @Pointcut("within(mainproject33.domain.userboard.service..*)")
+    private void inUserBoard() {}
+
+    @Pointcut("anyPublicOperation() && ( inMatchBoard() || inGameDB() || inComment() || inMember() || inUserBoard )")
     private void cut() {}
 
     @Before("cut()")

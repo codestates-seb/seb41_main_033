@@ -20,6 +20,9 @@ const MainWrap = styled.section`
 
 	.container {
 		width: 100%;
+		max-width: 1040px;
+		padding: 0 32px;
+		margin: 0 auto;
 	}
 `;
 

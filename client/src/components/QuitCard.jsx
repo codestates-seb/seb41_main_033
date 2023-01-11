@@ -6,6 +6,7 @@ const QuitWrap = styled.div`
   flex-direction: column;
   align-items: center;
   width: var(--col-8);
+  margin: 0 auto;
 `;
 
 const ImgWrap = styled.div`
@@ -41,16 +42,20 @@ const Content = styled.div`
 
 const ButtonWrap = styled.div`
   display: flex;
-  justify-content: space-around;
   width: 100%;
 
   button {
-    width: var(--col-3);
+    flex: 1; 
   }
 
   button.warning {
-    background: var(--red);
+    background: linear-gradient(
+      90deg,
+      rgba(248, 126, 105, 1) 0%,
+      rgba(255, 88, 85, 1) 100%
+    );
     border-radius: var(--border-radius-btn);
+    margin-right: 16px;
   }
 `;
 

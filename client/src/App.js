@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Nav from "./components/Nav";
 import "./style.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import MatchingWrite from "./pages/MatchingWrite";
 const Wrap = styled.div`
 	display: flex;
 	flex: 1;
@@ -50,6 +50,7 @@ function App() {
 							{/* <Route path="/storyall" element={<Story />} />
           <Route path={`/${board - id}`} element={<MatchingDetail />} />
           <Route path="/quit" element={<Quit />} /> */}
+							<Route path="/matchwrite" element={<MatchingWrite />} />
 						</Routes>
 					</main>
 				</MainWrap>

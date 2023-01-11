@@ -94,7 +94,8 @@ hgroup,
 menu,
 nav,
 section,
-main {
+main,
+textarea {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -221,7 +222,7 @@ a {
 }
 label {
 	display: block;
-	margin-bottom: 16px;
+	margin-bottom: 8px;
 }
 input[type="text"],
 input[type="number"],

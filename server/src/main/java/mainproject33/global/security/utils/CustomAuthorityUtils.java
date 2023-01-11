@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class CustomAuthorityUtils {
+public class CustomAuthorityUtils { // 유저에게 권한을 부여하는 클래스
 
     private final List<GrantedAuthority> USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER");
     private final List<String> USER_ROLES_STRING = List.of("USER");

@@ -1,12 +1,15 @@
 package mainproject33.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
+import mainproject33.global.security.jwt.JwtTokenizer;
+import mainproject33.global.security.utils.CustomAuthorityUtils;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-@Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-
+    private final JwtTokenizer jwtTokenizer;
+    private final CustomAuthorityUtils customAuthorityUtils;
 
 }

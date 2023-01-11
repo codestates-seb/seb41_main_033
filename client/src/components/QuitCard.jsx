@@ -45,8 +45,7 @@ const ButtonWrap = styled.div`
   width: 100%;
 
   button {
-    flex: 1;
-    width: var(--col-3);
+    flex: 1; 
   }
 
   button.warning {

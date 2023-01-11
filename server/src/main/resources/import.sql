@@ -1,0 +1,17 @@
+INSERT INTO GAME_DB VALUES (1, 'League of Legends', '리그 오브 레전드');
+INSERT INTO GAME_DB VALUES (2, 'VALORANT', '발로란트');
+INSERT INTO GAME_DB VALUES (3, 'OVERWATCH 2', '오버워치 2');
+INSERT INTO GAME_DB VALUES (4, 'LostArk', '로스트아크');
+INSERT INTO GAME_DB VALUES (5, 'MapleStory', '메이플스토리');
+INSERT INTO GAME_DB VALUES (6, 'SuddenAttack', '서든어택');
+INSERT INTO GAME_DB VALUES (7, 'PUBGs BattleGround', '배틀그라운드');
+INSERT INTO GAME_DB VALUES (8, 'CYPHERS', '사이퍼즈');
+INSERT INTO GAME_DB VALUES (9, 'Minecraft', '마인크래프트');
+INSERT INTO GAME_DB VALUES (10, 'Diablo II', '디아블로 2');
+INSERT INTO GAME_DB VALUES (11, 'Diablo III', '디아블로 3');
+INSERT INTO GAME_DB VALUES (12, 'Among Us', '어몽어스');
+INSERT INTO GAME_DB VALUES (13, 'Final Fantasy XIV', '파이널 판타지 14');
+INSERT INTO GAME_DB VALUES (14, 'Eternal Return', '이터널 리턴');
+INSERT INTO GAME_DB VALUES (15, 'Steam Game', '스팀 게임');
+INSERT INTO GAME_DB VALUES (16, 'Nintendo Game', '닌텐도 게임');
+INSERT INTO GAME_DB VALUES (17, 'ETC', '기타');

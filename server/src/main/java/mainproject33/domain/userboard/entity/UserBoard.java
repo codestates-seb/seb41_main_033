@@ -3,12 +3,15 @@ package mainproject33.domain.userboard.entity;
 import lombok.*;
 
 import mainproject33.domain.comment.entity.Comment;
+import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.global.audit.Auditable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -22,13 +25,17 @@ public class UserBoard extends Auditable
     @Column(nullable = false)
     private String content;
 
+    private int likeCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "userBoard")
+    @OneToMany(mappedBy = "userBoard", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userBoard", cascade = CascadeType.REMOVE)
+    private Set<Like> likes = new HashSet<>();
 
     @Builder
     public UserBoard(Long id, String content)
@@ -42,10 +49,13 @@ public class UserBoard extends Auditable
         this.content = content;
     }
 
-    //member 추가 시 자동으로 member 에도 userBoard 추가
-    /*public void addMember(Member member)
+    public void addLike()
     {
-        this.member = member;
-        member.getUserBoards().add(this);
-    }*/
+        this.likeCount++;
+    }
+
+    public void unLike()
+    {
+        this.likeCount--;
+    }
 }

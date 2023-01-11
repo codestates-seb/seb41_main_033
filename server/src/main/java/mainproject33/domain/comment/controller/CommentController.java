@@ -19,14 +19,15 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/boards/{board-id}/comments")
+@RequestMapping("/api/boards")
 @RestController
 public class CommentController
 {
     private final CommentService commentService;
 
     private final CommentMapper mapper;
-    @PostMapping
+
+    @PostMapping("/{board-id}/comments")
     public ResponseEntity postComment(@PathVariable("board-id") @Positive long boardId,
                                       @Valid @RequestBody CommentPostDto request)
     {
@@ -37,7 +38,7 @@ public class CommentController
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{comment-id}")
+    @PatchMapping("/comments/{comment-id}")
     public ResponseEntity patchComment(@PathVariable("comment-id") @Positive long commentId,
                                        @Valid@RequestBody CommentPatchDto request)
     {
@@ -49,7 +50,7 @@ public class CommentController
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping("/{comment-id}")
+    @GetMapping("/comments/{comment-id}")
     public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId)
     {
         Comment comment = commentService.findComment(commentId);
@@ -59,7 +60,7 @@ public class CommentController
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/{board-id}/comments")
     public ResponseEntity getComments(@PathVariable("board-id") @Positive long boardId,
                                       @RequestParam @Positive int page,
                                       @RequestParam @Positive int size)
@@ -72,7 +73,7 @@ public class CommentController
         return new ResponseEntity(new MultiResponseDto<>(responses, pageComments), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{comment-id}")
+    @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId)
     {
         commentService.deleteComment(commentId);

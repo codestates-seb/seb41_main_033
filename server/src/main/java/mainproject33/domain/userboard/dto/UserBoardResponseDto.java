@@ -17,16 +17,20 @@ public class UserBoardResponseDto
 
     private String content;
 
+    private int commentCount;
+    private int likeCount;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
-
     public UserBoardResponseDto(UserBoard entity)
     {
         this.memberId = userBoardMemberId(entity);
         this.nickname = userBoardNickname(entity);
         this.id = entity.getId();
         this.content = entity.getContent();
+        this.commentCount = entity.getComments().size();
+        this.likeCount = entity.getLikes().size();
         this.createdAt = entity.getCreatedAt();
         this.modifiedAt = entity.getModifiedAt();
     }

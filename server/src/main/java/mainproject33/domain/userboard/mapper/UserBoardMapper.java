@@ -1,10 +1,11 @@
 package mainproject33.domain.userboard.mapper;
 
-import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.like.dto.LikeResponseDto;
 import mainproject33.domain.userboard.dto.UserBoardPatchDto;
 import mainproject33.domain.userboard.dto.UserBoardPostDto;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.entity.UserBoard;
+import mainproject33.domain.like.entity.Like;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -29,5 +30,10 @@ public interface UserBoardMapper
                 .collect(Collectors.toList());
 
         return responses;
+    }
+
+    default LikeResponseDto userBoardLikeToResponse(Like entity)
+    {
+        return new LikeResponseDto(entity);
     }
 }

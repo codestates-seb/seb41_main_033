@@ -5,7 +5,7 @@ const Background = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -16,8 +16,8 @@ const PopupWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* 버튼이 1개면 4개 컬럼, 2개면 6개 컬럼 너비 */
-  width: ${({ button2 }) => (button2 ? 'var(--col-6)' : 'var(--col-4)')};
+  margin-left: 200px;
+  width: var(--col-6);
 `;
 
 const Title = styled.div`
@@ -39,10 +39,11 @@ const Content = styled.div`
 
 const ButtonWrap = styled.div`
   display: flex;
+  justify-content: center;
   width: 100%;
 
   button {
-    flex: 1;
+    width: calc((100% - 24px) / 2);
 
     :first-child {
       /* 버튼이 1개면 오른쪽 마진 16px, 없으면 0 */

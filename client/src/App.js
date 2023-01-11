@@ -9,10 +9,6 @@ const Wrap = styled.div`
 	flex: 1;
 	width: 100%;
 	background: var(--bg-color);
-
-	.card {
-		height: 900px;
-	}
 `;
 const MainWrap = styled.section`
 	display: flex;
@@ -25,7 +21,7 @@ const MainWrap = styled.section`
 		width: 100%;
 		max-width: 1040px;
 		padding: 0 32px;
-		margin: 0 auto;
+		margin: 0 auto 48px auto;
 	}
 `;
 

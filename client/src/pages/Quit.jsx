@@ -1,4 +1,4 @@
-import QuitCard from '../components/QuitCard';
+import QuitCard from "../components/QuitCard";
 
 const Quit = () => {
   return <QuitCard />;

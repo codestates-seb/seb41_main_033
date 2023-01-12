@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import ProfileContentList from './ProfileContentList';
+import Pagination from './Pagination';
 
 const ContentWrap = styled.div`
   width: var(--col-8);
@@ -30,6 +31,7 @@ const ProfileContent = () => {
         <div className={'tab' + (isStory ? ' active' : '')}>스토리</div>
       </TabWrap>
       <ProfileContentList />
+      <Pagination />
     </ContentWrap>
   );
 };

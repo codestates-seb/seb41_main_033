@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
-        String[] urls = new String[] {"/api/members/signup", "/api/members/login", "h2.*"};
+        String[] urls = new String[] {"/api/members/signup", "/api/members/login", "/h2.*"};
 
         log.info("======= method name : {} =======", "shouldNotFilter");
 

@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Principal { // 유저 정보를 principal 에 추가
-
-    private String Identifier;
-    private Long id;
+public class TokenDto {
+    private String accessToken;
+    private String refreshToken;
 }

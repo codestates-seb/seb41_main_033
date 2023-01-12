@@ -1,80 +1,67 @@
 package mainproject33.global.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import mainproject33.domain.member.entity.Member;
-import mainproject33.global.security.dto.LoginDto;
+import lombok.extern.slf4j.Slf4j;
 import mainproject33.global.security.jwt.JwtTokenizer;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
+
+@Slf4j
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
 
-    @SneakyThrows
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) { // 인증을 시도
-        ObjectMapper objectMapper = new ObjectMapper();
-        LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-
-        return authenticationManager.authenticate(authenticationToken);
-    }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, // 인증에 성공할 경우 호출
-                                            HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authResult) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-        Member member = (Member) authResult.getPrincipal();
+        String accessToken = resolveAccessToken(request);
 
-        String accessToken = delegateAccessToken(member);
-        String refreshToken = delegateRefreshToken(member);
-
-        response.setHeader("Authorization", "Bearer" + accessToken);
-        response.setHeader("Refresh", refreshToken);
-
-        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
+        if(jwtTokenizer.validateToken(accessToken)) {
+            Authentication authentication = jwtTokenizer.getAuthentication(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        filterChain.doFilter(request,response);
     }
 
-    private String delegateAccessToken(Member member) { // Access Token 생성 메서드
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+        String[] urls = new String[] {"/api/members/signup", "/api/members/login", "h2.*"};
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("email",member.getEmail());
-        claims.put("id", member.getId());
-        claims.put("roles", member.getRoles());
+        log.info("======= method name : {} =======", "shouldNotFilter");
 
-        String subject = member.getEmail();
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+        log.info("path : " + path);
+        log.info("method : " + method);
+        log.info("match : " + Arrays.stream(urls).anyMatch(s -> path.matches(s)));
 
-        return jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+        return Arrays.stream(urls).anyMatch(s -> path.matches(s))
+                || (method.equals("GET") && !path.matches(".*/me|/api/members/.*"));
     }
 
-    private String delegateRefreshToken(Member member) { // Refresh Token 생성 메서드
 
-        String subject = member.getEmail();
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+    private String resolveAccessToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
 
-        return jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+        return null;
     }
 }

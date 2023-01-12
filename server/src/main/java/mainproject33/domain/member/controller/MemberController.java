@@ -6,18 +6,19 @@ import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.SingleResponseDto;
+import mainproject33.global.security.dto.LoginDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Positive;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 @Validated
-@CrossOrigin
 public class MemberController {
 
     private final MemberService memberService;
@@ -39,21 +40,6 @@ public class MemberController {
         memberService.deleteMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody MemberDto.LoginPost post) {
-        Member member = memberService.findMember(mapper.loginPostToMember(post));
-        MemberDto.Response response = mapper.memberToResponse(member);
-
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(response), HttpStatus.OK);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity logout() {
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/profile/{member-id}")

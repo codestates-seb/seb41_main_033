@@ -23,7 +23,7 @@ public class Member extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
+    private String identifier;
 
     private String password;
 

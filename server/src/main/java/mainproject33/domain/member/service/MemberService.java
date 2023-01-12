@@ -14,7 +14,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member createMember(Member member) {
-        verifyExistsEmail(member.getEmail());
+        verifyExistsEmail(member.getIdentifier());
 
         return memberRepository.save(member);
     }
@@ -22,15 +22,6 @@ public class MemberService {
     public void deleteMember(Long memberId) {
         Member member = findVerifiedMember(memberId);
         memberRepository.delete(member);
-    }
-
-    public Member findMember(Member member) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
-        if(!optionalMember.isPresent() || !optionalMember.get().getPassword().equals(member.getPassword())){
-            throw new RuntimeException("로그인 정보가 일치하지 않습니다.");
-        }
-
-        return optionalMember.get();
     }
 
     public Member updateProfile(Member member, Long memberId) {
@@ -60,8 +51,8 @@ public class MemberService {
         return findMember;
     }
 
-    public void verifyExistsEmail(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
+    public void verifyExistsEmail(String identifier) {
+        Optional<Member> member = memberRepository.findByIdentifier(identifier);
         if(member.isPresent())
             throw new RuntimeException("회원이 이미 존재합니다.");
     }

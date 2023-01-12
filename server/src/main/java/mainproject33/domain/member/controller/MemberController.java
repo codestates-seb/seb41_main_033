@@ -6,13 +6,11 @@ import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.SingleResponseDto;
-import mainproject33.global.security.dto.LoginDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Positive;
 
 @RestController
@@ -42,7 +40,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/profile/{member-id}")
+    @PatchMapping("/{member-id}")
     public ResponseEntity patchProfile(@RequestBody MemberDto.Patch patch,
                                        @PathVariable("member-id") @Positive Long memberId) {
         Member member = memberService.updateProfile(mapper.patchToMember(patch), memberId);
@@ -52,7 +50,7 @@ public class MemberController {
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping("/profile/{member-id}")
+    @GetMapping("/{member-id}")
     public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId) {
         Member member = memberService.findProfile(memberId);
         MemberDto.Response response = mapper.memberToResponse(member);

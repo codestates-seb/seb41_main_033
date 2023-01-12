@@ -1,6 +1,8 @@
 package mainproject33.domain.userboard.service;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.matchboard.entity.MatchBoard;
+import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
 import org.springframework.data.domain.Page;
@@ -68,5 +70,11 @@ public class UserBoardService
         {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
         }
+    }
+
+    public boolean checkMember(Member principal, long id) {
+        Optional<UserBoard> optionalUserBoard = userBoardRepository.findById(id);
+
+        return optionalUserBoard.isPresent() && (optionalUserBoard.get().getMember().getId() == principal.getId());
     }
 }

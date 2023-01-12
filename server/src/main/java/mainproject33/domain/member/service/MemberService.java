@@ -53,7 +53,7 @@ public class MemberService {
 
     public void verifyExistsEmail(String identifier) {
         Optional<Member> member = memberRepository.findByIdentifier(identifier);
-        if(member.isPresent())
+        if (member.isPresent())
             throw new RuntimeException("회원이 이미 존재합니다.");
     }
 }

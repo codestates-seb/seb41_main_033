@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
@@ -56,33 +56,33 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .antMatchers(HttpMethod.POST, "/api/matches").hasRole("USER")
-                        .antMatchers(HttpMethod.PATCH, "/api/matches/{matchId}")
-                        .access("@matchBoardService.checkMember(principal, T(Long).parseLong(#matchId)")
-                        .antMatchers(HttpMethod.DELETE, "/api/matches/{matchId}")
-                        .access("@matchBoardService.checkMember(principal, T(Long).parseLong(#matchId)")
+                        .antMatchers(HttpMethod.PATCH, "/api/matches/{matchId}").hasRole("USER")
+                        //.access("@matchBoardService.checkMember(principal, T(Long).parseLong(#matchId)")
+                        .antMatchers(HttpMethod.DELETE, "/api/matches/{matchId}").hasRole("USER")
+                        //.access("@matchBoardService.checkMember(principal, T(Long).parseLong(#matchId)")
 
                         .antMatchers(HttpMethod.POST, "/api/boards/**").hasRole("USER")
-                        .antMatchers(HttpMethod.PATCH, "/api/boards/{boardId}")
-                        .access("@userBoardService.checkMember(principal, T(Long).parserLong(#boardId)")
-                        .antMatchers(HttpMethod.DELETE, "/api/boards/{boardId}")
-                        .access("@userBoardService.checkMember(principal, T(Long).parserLong(#boardId)")
+                        .antMatchers(HttpMethod.PATCH, "/api/boards/{boardId}").hasRole("USER")
+                        //.access("@userBoardService.checkMember(principal, T(Long).parserLong(#boardId)")
+                        .antMatchers(HttpMethod.DELETE, "/api/boards/{boardId}").hasRole("USER")
+                        //.access("@userBoardService.checkMember(principal, T(Long).parserLong(#boardId)")
                         .antMatchers(HttpMethod.POST, "/api/boards/{boardId}/likes").hasRole("USER")
 
                         .antMatchers(HttpMethod.POST, "/api/boards/{boardId}/comments").hasRole("USER")
-                        .antMatchers(HttpMethod.PATCH, "/api/boards/{boardId}/comments/{commentId}")
-                        .access("@commentService.checkMember(pricipal, T(Long).parserLong(#commentId)")
-                        .antMatchers(HttpMethod.DELETE, "/api/boards/{boardId}/comments/{commentId}")
-                        .access("@commentService.checkMember(pricipal, T(Long).parserLong(#commentId)")
+                        .antMatchers(HttpMethod.PATCH, "/api/boards/{boardId}/comments/{commentId}").hasRole("USER")
+                        //.access("@commentService.checkMember(pricipal, T(Long).parserLong(#commentId)")
+                        .antMatchers(HttpMethod.DELETE, "/api/boards/{boardId}/comments/{commentId}").hasRole("USER")
+                        //.access("@commentService.checkMember(pricipal, T(Long).parserLong(#commentId)")
                         .antMatchers(HttpMethod.POST,
                                 "/api/boards/{boardId}/comments/{commentId}/likes").hasRole("USER")
 
                         .antMatchers(HttpMethod.POST, "/api/members/logout").hasRole("USER")
-                        .antMatchers(HttpMethod.PATCH, "/api/members/{memberId}")
-                        .access("T(mainproject33.domain.member.entity.member).cast(principal).getId() "
-                                + "== T(Long).parseLong(#memberId)")
-                        .antMatchers(HttpMethod.DELETE, "/api/members/{memberId}")
-                        .access("T(mainproject33.domain.member.entity.member).cast(principal).getId() "
-                                + "== T(Long).parseLong(#memberId)")
+                        .antMatchers(HttpMethod.PATCH, "/api/members/{memberId}").hasRole("USER")
+                        //.access("T(mainproject33.domain.member.entity.member).cast(principal).getId() "
+                                //+ "== T(Long).parseLong(#memberId)")
+                        .antMatchers(HttpMethod.DELETE, "/api/members/{memberId}").hasRole("USER")
+                        //.access("T(mainproject33.domain.member.entity.member).cast(principal).getId() "
+                                //+ "== T(Long).parseLong(#memberId)")
                         .antMatchers(HttpMethod.POST, "/api/members/follows").hasRole("USER")
                         .anyRequest().permitAll()
                 )
@@ -111,7 +111,7 @@ public class SecurityConfiguration {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
 
-        return (CorsConfigurationSource) source;
+        return source;
     }
 
 

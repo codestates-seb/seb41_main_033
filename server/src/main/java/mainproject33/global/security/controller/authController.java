@@ -24,12 +24,12 @@ import java.util.NoSuchElementException;
 @Validated
 public class authController {
 
-    private final AuthService authservice;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
 
-        TokenDto tokenDto = authservice.login(loginDto);
+        TokenDto tokenDto = authService.login(loginDto);
 
         response.addHeader("Authorization", tokenDto.getAccessToken());
         response.addHeader("refreshToken", tokenDto.getRefreshToken());
@@ -37,15 +37,15 @@ public class authController {
         return new ResponseEntity<>("Login Successful!", HttpStatus.OK);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity logout(@AuthenticationPrincipal UserDetails user) {
-
-        if(user != null) {
-            authservice.logout(user);
-
-            return new ResponseEntity<>("Logout Successful!", HttpStatus.OK);
-        } else {
-            throw new NoSuchElementException("회원 정보를 불러올 수 없습니다. 토큰을 확인 해주세요.");
-        }
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity logout(@AuthenticationPrincipal UserDetails user) {
+//
+//        if(user != null) {
+//            authService.logout(user);
+//
+//            return new ResponseEntity<>("Logout Successful!", HttpStatus.OK);
+//        } else {
+//            throw new NoSuchElementException("회원 정보를 불러올 수 없습니다. 토큰을 확인 해주세요.");
+//        }
+//    }
 }

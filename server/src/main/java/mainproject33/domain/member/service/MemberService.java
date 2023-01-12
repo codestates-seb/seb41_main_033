@@ -3,8 +3,12 @@ package mainproject33.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.repository.MemberRepository;
+import mainproject33.global.security.redis.RedisDao;
+import mainproject33.global.security.utils.CustomAuthorityUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -12,9 +16,20 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomAuthorityUtils customAuthorityUtils;
+
+    private final RedisDao redisDao;
+
 
     public Member createMember(Member member) {
-        verifyExistsEmail(member.getIdentifier());
+        verifyExistsIdentifier(member.getIdentifier());
+
+        String encryptedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encryptedPassword);
+
+        List<String> role = customAuthorityUtils.createRoles(member.getIdentifier());
+        member.setRoles(role);
 
         return memberRepository.save(member);
     }
@@ -51,7 +66,7 @@ public class MemberService {
         return findMember;
     }
 
-    public void verifyExistsEmail(String identifier) {
+    public void verifyExistsIdentifier(String identifier) {
         Optional<Member> member = memberRepository.findByIdentifier(identifier);
         if (member.isPresent())
             throw new RuntimeException("회원이 이미 존재합니다.");

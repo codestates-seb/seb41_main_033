@@ -5,6 +5,8 @@ import mainproject33.domain.matchboard.dto.MatchBoardDto;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.matchboard.service.MatchBoardService;
+import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,19 +31,23 @@ public class MatchBoardController {
     // TODO : member entity 연계 시, memberId, memberNickname 정상적으로 받아올 수 있어야 함
 
     private final MatchBoardService matchBoardService;
+    private final MemberService memberService;
     private final MatchBoardMapper mapper;
 
     @PostMapping
-    public ResponseEntity postMatchBoard(@RequestBody @Valid MatchBoardDto.Post post) {
-        MatchBoard matchBoard = matchBoardService.createMatchBoard(mapper.postMatchBoardToMatchBoard(post));
+    public ResponseEntity postMatchBoard(@RequestBody @Valid MatchBoardDto.Post post,
+                                         @AuthenticationPrincipal Member member) {
+
+        Member findMember = memberService.findVerifiedMember(member.getId());
+
+        MatchBoard matchBoard = matchBoardService.createMatchBoard(mapper.postMatchBoardToMatchBoard(post, findMember));
 
         return new ResponseEntity(
                 new SingleResponseDto<>(mapper.matchBoardToMatchBoardResponse(matchBoard)), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{match-id}")
-    public ResponseEntity patchMatchBoard(@PathVariable("match-id")
-                                              @Positive(message = "id 값은 0보다 커야합니다.") Long id,
+    public ResponseEntity patchMatchBoard(@PathVariable("match-id") @Positive(message = "id 값은 0보다 커야합니다.") Long id,
                                           @RequestBody @Valid MatchBoardDto.Patch patch) {
         patch.setId(id);
         MatchBoard matchBoard = matchBoardService.updateMatchBoard(mapper.patchMatchBoardToMatchBoard(patch));

@@ -1,0 +1,81 @@
+{
+  "contents": [
+    {
+      "id": 7,
+      "title": "어제 밤새 친구랑 게임했는데 계속 이겼다!",
+      "createdAt": "2023-01-08T13:45:00.333Z",
+      "likeCount": 0,
+      "commentCount": 2,
+      "content": {
+        "content": "친구 삐짐",
+        "contentImage": "https://img.etnews.com/photonews/2005/1301361_20200518161908_521_0001.jpg"
+      }
+    },
+    {
+      "id": 6,
+      "title": "치킨 각",
+      "createdAt": "2023-01-08T13:35:00.333Z",
+      "likeCount": 0,
+      "commentCount": 0,
+      "content": {
+        "content": "냠냠",
+        "contentImage": "https://img.siksinhot.com/article/1580878530709213.jpeg"
+      }
+    },
+    {
+      "id": 5,
+      "title": "안녕하세요! 반갑습니다!",
+      "createdAt": "2023-01-08T13:25:00.333Z",
+      "likeCount": 12,
+      "commentCount": 0,
+      "content": {
+        "content": "T없Oi맑은orol™☆",
+        "contentImage": null
+      }
+    },
+    {
+      "id": 4,
+      "title": "오늘 같이 게임할 사람이 필요하다!",
+      "createdAt": "2023-01-08T13:15:00.333Z",
+      "likeCount": 0,
+      "commentCount": 0,
+      "content": {
+        "content": "없을 시 자립",
+        "contentImage": null
+      }
+    },
+    {
+      "id": 3,
+      "title": "게임은 역시 이겨야 제맛",
+      "createdAt": "2023-01-08T13:05:00.333Z",
+      "likeCount": 42,
+      "commentCount": 1,
+      "content": {
+        "content": "게임을 하면 이겨야지",
+        "contentImage": null
+      }
+    },
+    {
+      "id": 2,
+      "title": "어제 밤새 친구랑 게임했는데 계속 졌다...ㅠㅠㅠ",
+      "createdAt": "2023-01-08T12:55:00.333Z",
+      "likeCount": 0,
+      "commentCount": 1,
+      "content": {
+        "content": "슬픔",
+        "contentImage": null
+      }
+    },
+    {
+      "id": 1,
+      "title": "울집 고양이는 산책을 좋아해요... ?!",
+      "createdAt": "2023-01-08T12:45:00.333Z",
+      "likeCount": 56,
+      "commentCount": 12,
+      "content": {
+        "content": "냥냥",
+        "contentImage": "https://w.namu.la/s/6d37d2792f61b69511edc288e16598d0722ff0407af67089c0004ddeda7ad7b9bdc0b2e4880db9548efe21f2082a4c34545902a67aaa00eafce75c7f89fcdcb85cd1e74fa6841ff8568e4b31aa26bfa009914c66c7b4f601d2b5db6a6d928335"
+      }
+    }
+  ]
+}

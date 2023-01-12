@@ -143,7 +143,6 @@ const ProfileCard = () => {
       <ProfileWrap className="card sm">
         <div className="inform_title">주로하는 게임</div>
         <GameWrap>
-          {/* ul li (display flex) margin: 6px 6px 0 0*/}
           <ul>
             {games.games.map((game) => (
               <li key={game.id} className="normal game_title">

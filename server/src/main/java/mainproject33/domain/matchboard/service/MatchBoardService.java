@@ -3,6 +3,7 @@ package mainproject33.domain.matchboard.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.matchboard.repository.MatchBoardRepository;
+import mainproject33.domain.member.entity.Member;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,5 +73,11 @@ public class MatchBoardService {
                         -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
 
         matchBoardRepository.delete(findMatchBoard);
+    }
+
+    public boolean checkMember(Member principal, long id) {
+        Optional<MatchBoard> optionalMatchBoard = matchBoardRepository.findById(id);
+
+        return optionalMatchBoard.isPresent() && (optionalMatchBoard.get().getMember().getId() == principal.getId());
     }
 }

@@ -15,9 +15,8 @@ import javax.validation.constraints.Positive;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 @Validated
-@CrossOrigin
 public class MemberController {
 
     private final MemberService memberService;
@@ -41,22 +40,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody MemberDto.LoginPost post) {
-        Member member = memberService.findMember(mapper.loginPostToMember(post));
-        MemberDto.Response response = mapper.memberToResponse(member);
-
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(response), HttpStatus.OK);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity logout() {
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PatchMapping("/profile/{member-id}")
+    @PatchMapping("/{member-id}")
     public ResponseEntity patchProfile(@RequestBody MemberDto.Patch patch,
                                        @PathVariable("member-id") @Positive Long memberId) {
         Member member = memberService.updateProfile(mapper.patchToMember(patch), memberId);
@@ -66,7 +50,7 @@ public class MemberController {
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping("/profile/{member-id}")
+    @GetMapping("/{member-id}")
     public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId) {
         Member member = memberService.findProfile(memberId);
         MemberDto.Response response = mapper.memberToResponse(member);

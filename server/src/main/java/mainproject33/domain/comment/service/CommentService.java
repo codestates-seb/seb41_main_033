@@ -3,6 +3,7 @@ package mainproject33.domain.comment.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.comment.entity.Comment;
 import mainproject33.domain.comment.repository.CommentRepository;
+import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.service.UserBoardService;
 import org.springframework.data.domain.Page;
@@ -78,6 +79,12 @@ public class CommentService
         Optional<Comment> findComment = commentRepository.findById(id);
         if (findComment.isEmpty())
             throw new IllegalStateException("존재하지 않는 글입니다.");
+    }
+
+    public boolean checkMember(Member principal, long id) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+
+        return optionalComment.isPresent() && (optionalComment.get().getMember().getId() == principal.getId());
     }
 
 }

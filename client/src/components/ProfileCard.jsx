@@ -8,13 +8,14 @@ const ProfileWrap = styled.div`
   margin-bottom: 16px;
 
   .inform_title {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     font-size: var(--font-body2-size);
     font-weight: var(--font-weight-medium);
   }
 
   .inform_content {
-    font-size: 13px;
+    margin-top: 6px;
+    font-size: var(--font-body2-size);
     color: var(--white);
   }
 `;
@@ -87,8 +88,17 @@ const ButtonWrap = styled.div`
 `;
 
 const GameWrap = styled.div`
-  /* 🥕일단은 버튼 처리 했는데 text 상하 중앙 정렬 안되는 것, 각 요소 사이 margin 값 어떻게 줄지...?🥕 */
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .game_title {
+    margin: 6px 6px 0 0;
+    padding: 8px 12px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-btn);
     color: var(--yellow);
     font-size: var(--font-caption-size);
   }
@@ -148,11 +158,14 @@ const ProfileCard = () => {
       <ProfileWrap className="card sm">
         <div className="inform_title">주로하는 게임</div>
         <GameWrap>
-          {games.games.map((game) => (
-            <button key={game.id} className="normal game_title">
-              {game.title}
-            </button>
-          ))}
+          {/* ul li (display flex) margin: 6px 6px 0 0*/}
+          <ul>
+            {games.games.map((game) => (
+              <li key={game.id} className="normal game_title">
+                {game.title}
+              </li>
+            ))}
+          </ul>
         </GameWrap>
       </ProfileWrap>
       <ProfileWrap className="card sm">

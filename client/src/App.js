@@ -1,16 +1,18 @@
 import styled from "styled-components";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./style.css";
 import Header from "./components/Header";
 import Nav from "./components/Nav";
 import Login from "./pages/Login";
-import "./style.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MatchingWrite from "./pages/MatchingWrite";
+
 const Wrap = styled.div`
 	display: flex;
 	flex: 1;
 	width: 100%;
 	background: var(--bg-color);
 `;
+
 const MainWrap = styled.section`
 	display: flex;
 	flex: 1;
@@ -25,8 +27,7 @@ const MainWrap = styled.section`
 		margin: 48px auto 48px auto;
 	}
 `;
-
-function App() {
+const App = () => {
 	return (
 		<Wrap>
 			<Router basename={process.env.PUBLIC_URL}>
@@ -53,6 +54,6 @@ function App() {
 			</Router>
 		</Wrap>
 	);
-}
+};
 
 export default App;

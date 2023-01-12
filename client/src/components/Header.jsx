@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { ReactComponent as ProfileImg } from "./../assets/defaultImg.svg";
-import { ReactComponent as SearchIcon } from "./../assets/search.svg";
 
 const HeaderWrap = styled.header`
 	position: absolute;
@@ -8,31 +7,10 @@ const HeaderWrap = styled.header`
 	top: 0;
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
 	width: 100%;
 	height: 112px;
 	padding: 0 48px;
-`;
-
-const SearchWrap = styled.div`
-	flex: 1;
-	position: relative;
-	padding: 16px 16px 16px 56px;
-	display: flex;
-	align-items: center;
-	background: var(--input-color);
-	border-radius: var(--border-radius-btn);
-	svg {
-		position: absolute;
-		left: 16px;
-		top: 12px;
-		width: 24px;
-		height: 24px;
-	}
-	input[type="text"] {
-		padding: 0;
-		border: 0 none;
-		outline: none;
-	}
 `;
 
 const ProfileWrap = styled.div`
@@ -80,10 +58,6 @@ const BtnWrap = styled.div`
 const Header = () => {
 	return (
 		<HeaderWrap>
-			<SearchWrap>
-				<SearchIcon />
-				<input type="text" />
-			</SearchWrap>
 			<ProfileWrap>
 				<span className="alert">알림</span>
 				<span className="user_nickname">맑게고인신나현</span>

@@ -94,7 +94,8 @@ hgroup,
 menu,
 nav,
 section,
-main {
+main,
+textarea {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -221,7 +222,7 @@ a {
 }
 label {
 	display: block;
-	margin-bottom: 16px;
+	margin-bottom: 8px;
 }
 input[type="text"],
 input[type="number"],
@@ -240,15 +241,24 @@ button {
 	font-size: var(--font-body1-size);
 	font-weight: var(--font-weight-medium);
 	color: var(--strong-color);
+	cursor: pointer;
+	transition: 0.4s;
 }
 button.normal {
 	background: var(--bg-color);
 	border: 1px solid var(--white);
 	border-radius: var(--border-radius-btn);
 }
+button:hover.normal {
+	background: var(--grey);
+}
 button.em {
-	background: linear-gradient(90deg, rgba(255, 186, 41, 1) 0%, rgba(255, 143, 147, 1) 100%);
+	background-size: 200% auto;
+	background-image: linear-gradient(to right, rgba(255, 186, 41, 1) 0%, rgba(255, 143, 147, 1) 51%, rgba(255, 186, 41, 1) 100%);
 	border-radius: var(--border-radius-btn);
+}
+button:hover.em {
+	background-position: right center;
 }
 .card {
 	border-radius: var(--border-radius-lg);

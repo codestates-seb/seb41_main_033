@@ -20,17 +20,14 @@ const TabWrap = styled.div`
   }
 `;
 
-const ProfileContent = () => {
-  const isMatch = true;
-  const isStory = false;
-
+const ProfileContent = ({ isMatch, isStory }) => {
   return (
     <ContentWrap className="card">
       <TabWrap>
         <div className={'tab' + (isMatch ? ' active' : '')}>매칭글</div>
         <div className={'tab' + (isStory ? ' active' : '')}>스토리</div>
       </TabWrap>
-      <ProfileContentList />
+      <ProfileContentList isMatch={isMatch} isStory={isStory} />
       <Pagination />
     </ContentWrap>
   );

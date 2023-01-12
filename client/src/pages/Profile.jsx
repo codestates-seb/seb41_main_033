@@ -7,10 +7,13 @@ const ProfileWrap = styled.div`
 `;
 
 const Profile = () => {
+  const isMatch = false;
+  const isStory = true;
+
   return (
     <ProfileWrap>
       <ProfileCard />
-      <ProfileContent />
+      <ProfileContent isMatch={isMatch} isStory={isStory} />
     </ProfileWrap>
   );
 };

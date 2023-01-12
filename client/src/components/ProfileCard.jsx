@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ReactComponent as ProfileImg } from '../assets/defaultImg.svg';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import games from '../data/dummyGames.json';
@@ -6,13 +7,11 @@ import games from '../data/dummyGames.json';
 const ProfileWrap = styled.div`
   width: var(--col-4);
   margin-bottom: 16px;
-
   .inform_title {
     margin-bottom: 10px;
     font-size: var(--font-body2-size);
     font-weight: var(--font-weight-medium);
   }
-
   .inform_content {
     margin-top: 6px;
     font-size: var(--font-body2-size);
@@ -23,34 +22,28 @@ const ProfileWrap = styled.div`
 const InformWrap = styled.div`
   display: flex;
   margin-bottom: 16px;
-
   .img_profile {
     width: 56px;
     height: 56px;
     border-radius: 50%;
     margin-right: 16px;
   }
-
   .name_content {
     width: 100%;
     margin: auto;
   }
-
   .nickname {
     color: var(--white);
     font-size: 18px;
     font-weight: var(--font-weight-medium);
   }
-
   .identifier {
     font-size: var(--font-body2-size);
   }
-
   .icon {
     margin-left: 16px;
     margin: auto 0;
   }
-
   .setting,
   .likes {
     width: 24px;
@@ -66,13 +59,11 @@ const FollowWrap = styled.div`
 
 const Follow = styled.div`
   text-align: center;
-
   .follow,
   .number {
     font-size: var(--font-body2-size);
     line-height: var(--line-height-lg);
   }
-
   .number {
     color: var(--white);
   }
@@ -81,7 +72,6 @@ const Follow = styled.div`
 const ButtonWrap = styled.div`
   display: flex;
   flex-direction: column;
-
   button {
     margin-top: 16px;
   }
@@ -92,7 +82,6 @@ const GameWrap = styled.div`
     display: flex;
     flex-wrap: wrap;
   }
-
   .game_title {
     margin: 6px 6px 0 0;
     padding: 8px 12px;
@@ -112,11 +101,7 @@ const ProfileCard = () => {
     <div>
       <ProfileWrap className="card sm">
         <InformWrap>
-          <img
-            className="img_profile"
-            src="https://user-images.githubusercontent.com/111413253/211796628-2ec8bc2a-894c-48da-9fa6-630ef4f70c4c.png"
-            alt="프로필 이미지"
-          />
+          <ProfileImg className="img_profile" />
           <div className="name_content">
             {/* 정보 수정 필요 */}
             <div className="nickname">닉네임</div>

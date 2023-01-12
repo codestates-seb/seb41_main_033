@@ -8,6 +8,6 @@ import javax.validation.constraints.NotBlank;
 public class UserBoardPostDto
 {
     @NotBlank
-    String content;
+    private String content;
 
 }

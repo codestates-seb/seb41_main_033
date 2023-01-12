@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Background = styled.div`
   background: rgba(229, 229, 229, 0.2);
@@ -47,7 +47,7 @@ const ButtonWrap = styled.div`
 
     :first-child {
       /* 버튼이 1개면 오른쪽 마진 16px, 없으면 0 */
-      margin-right: ${({ button2 }) => (button2 ? '16px' : '0')};
+      margin-right: ${({ button2 }) => (button2 ? "16px" : "0")};
     }
   }
 `;

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { ReactComponent as Glummy } from '../assets/glummy.svg';
+import styled from "styled-components";
+import { ReactComponent as Glummy } from "../assets/glummy.svg";
 
 const QuitWrap = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ const ButtonWrap = styled.div`
   width: 100%;
 
   button {
-    flex: 1; 
+    flex: 1;
   }
 
   button.warning {

@@ -2,6 +2,8 @@ package mainproject33.domain.userboard.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.service.MemberService;
 import mainproject33.domain.userboard.dto.UserBoardPatchDto;
 import mainproject33.domain.userboard.dto.UserBoardPostDto;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
@@ -14,6 +16,7 @@ import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,12 +31,16 @@ public class UserBoardController
 {
     private final UserBoardService boardService;
 
+    private final MemberService memberService;
     private final UserBoardMapper mapper;
 
     @PostMapping
-    public ResponseEntity postBoard(@Valid @RequestBody UserBoardPostDto postDto)
+    public ResponseEntity postBoard(@Valid @RequestBody UserBoardPostDto postDto,
+                                    @AuthenticationPrincipal Member member)
     {
-        UserBoard userBoard = boardService.postUserBoard(mapper.postToUserBoard(postDto));
+        Member findMember = memberService.findVerifiedMember(member.getId());
+
+        UserBoard userBoard = boardService.postUserBoard(mapper.postToUserBoard(postDto), findMember);
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard);
 
@@ -43,11 +50,14 @@ public class UserBoardController
 
     @PatchMapping("/{board-id}")
     public ResponseEntity patchBoard(@PathVariable("board-id") @Positive long boardId,
-                                     @Valid @RequestBody UserBoardPatchDto patchDto)
+                                     @Valid @RequestBody UserBoardPatchDto patchDto,
+                                     @AuthenticationPrincipal Member member)
     {
+        boardService.verifyMember(member, boardId);
+
         patchDto.setId(boardId);
 
-        UserBoard userBoard = boardService.postUserBoard(mapper.patchToUserBoard(patchDto));
+        UserBoard userBoard = boardService.patchUserBoard(mapper.patchToUserBoard(patchDto));
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard);
 
@@ -67,8 +77,8 @@ public class UserBoardController
     }
 
     @GetMapping
-    public ResponseEntity getBoards(@RequestParam @Positive int page,
-                                    @RequestParam @Positive int size)
+    public ResponseEntity getBoards(@RequestParam(defaultValue = "1") @Positive int page,
+                                    @RequestParam(defaultValue = "15") @Positive int size)
     {
         Page<UserBoard> pageBoards = boardService.findAllUserBoards(page - 1, size);
 
@@ -80,8 +90,11 @@ public class UserBoardController
     }
 
     @DeleteMapping("{board-id}")
-    public ResponseEntity deleteBoard(@PathVariable("board-id") @Positive long boardId)
+    public ResponseEntity deleteBoard(@PathVariable("board-id") @Positive long boardId,
+                                      @AuthenticationPrincipal Member member)
     {
+        boardService.verifyMember(member, boardId);
+
         boardService.deleteOne(boardId);
 
         log.info("글 삭제 완료");

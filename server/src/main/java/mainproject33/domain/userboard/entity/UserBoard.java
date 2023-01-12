@@ -42,10 +42,9 @@ public class UserBoard extends Auditable
         this.content = content;
     }
 
-    //member 추가 시 자동으로 member 에도 userBoard 추가
-    /*public void addMember(Member member)
+    public void addMember(Member member)
     {
         this.member = member;
         member.getUserBoards().add(this);
-    }*/
+    }
 }

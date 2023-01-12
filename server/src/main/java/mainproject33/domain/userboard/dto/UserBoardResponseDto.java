@@ -23,37 +23,11 @@ public class UserBoardResponseDto
 
     public UserBoardResponseDto(UserBoard entity)
     {
-        this.memberId = userBoardMemberId(entity);
-        this.nickname = userBoardNickname(entity);
+        this.memberId = entity.getMember().getId();
+        this.nickname = entity.getMember().getNickname();
         this.id = entity.getId();
         this.content = entity.getContent();
         this.createdAt = entity.getCreatedAt();
         this.modifiedAt = entity.getModifiedAt();
-    }
-
-    private long userBoardMemberId(UserBoard entity)
-    {
-        if(entity == null)
-            return 1L;
-
-        Member member = entity.getMember();
-        if(member == null)
-            return 1L;
-
-        long id = member.getId();
-        return id;
-    }
-
-    private String userBoardNickname(UserBoard entity)
-    {
-        if(entity == null)
-            return null;
-
-        Member member = entity.getMember();
-        if(member == null)
-            return "JohnDoe";
-
-        String nickname = member.getNickname();
-        return nickname;
     }
 }

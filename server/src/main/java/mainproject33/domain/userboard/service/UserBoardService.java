@@ -21,9 +21,11 @@ public class UserBoardService
     private final UserBoardRepository userBoardRepository;
 
 
-    public UserBoard postUserBoard(UserBoard request)
+    public UserBoard postUserBoard(UserBoard request, Member member)
     {
         UserBoard userBoard = userBoardRepository.save(request);
+
+        userBoard.addMember(member);
 
         return userBoard;
     }
@@ -71,6 +73,17 @@ public class UserBoardService
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
         }
     }
+
+    public void verifyMember(Member member, long id)
+    {
+        UserBoard userBoard = findUserBoard(id);
+
+        if(userBoard.getMember().getId() != member.getId())
+        {
+            throw new IllegalStateException("권한이 없습니다.");
+        }
+    }
+
 
     public boolean checkMember(Member principal, long id) {
         Optional<UserBoard> optionalUserBoard = userBoardRepository.findById(id);

@@ -45,4 +45,11 @@ public class Comment extends Auditable
         if(!userBoard.getComments().contains(this))
             userBoard.getComments().add(this);
     }
+
+    public void addMember(Member member)
+    {
+        this.member = member;
+        if(member.getComments().contains(this))
+            member.getComments().add(this);
+    }
 }

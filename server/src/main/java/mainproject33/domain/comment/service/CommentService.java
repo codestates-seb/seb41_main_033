@@ -23,10 +23,11 @@ public class CommentService
 
     private final UserBoardService userBoardService;
 
-    public Comment postComment(long userBoardId, Comment request)
+    public Comment postComment(long userBoardId, Comment request, Member member)
     {
         UserBoard userBoard = userBoardService.findUserBoard(userBoardId);
         request.addUserBoard(userBoard);
+        request.addMember(member);
 
         return commentRepository.save(request);
     }
@@ -79,6 +80,14 @@ public class CommentService
         Optional<Comment> findComment = commentRepository.findById(id);
         if (findComment.isEmpty())
             throw new IllegalStateException("존재하지 않는 글입니다.");
+    }
+
+    public void verifyMember(Member member, long id)
+    {
+        Comment comment = findComment(id);
+
+        if(comment.getMember().getId() != member.getId())
+            throw new IllegalStateException("권한이 없습니다.");
     }
 
     public boolean checkMember(Member principal, long id) {

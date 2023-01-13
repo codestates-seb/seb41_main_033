@@ -9,7 +9,6 @@ import mainproject33.domain.userboard.dto.UserBoardPostDto;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.mapper.UserBoardMapper;
-import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.domain.userboard.service.UserBoardService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;

@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 const Flex = styled.div`
   display: flex;
   flex-direction: column;
@@ -18,7 +19,7 @@ const Space = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 8px; ;
+  margin: 8px;
 `;
 const Title = styled.div`
   font-size: var(--font-head2-size);
@@ -61,21 +62,33 @@ const Login = () => {
   const [isValid, setIsValid] = useState("");
   const idValid = /^[A-z0-9]{4,16}$/;
   const psdValid = /^(?=.*[A-z])(?=.*\d)(?=.*[~!@])[A-z\d~!@]{8,}$/;
-  const emailValueCheck = idValid.test(identifier);
+  const idValueCheck = idValid.test(identifier);
   const psdValueCheck = psdValid.test(password);
 
   const submitHandle = (e) => {
     e.preventDefault();
-    if (!emailValueCheck) {
-      setIsValid("이메일 형식이 올바르지 않아요");
+    if (!idValueCheck) {
+      setIsValid("아이디 형식이 올바르지 않아요");
     } else if (!psdValueCheck) {
       setIsValid("");
       setIsValid("패스워드 형식이 올바르지 않아요");
-    } else if (emailValueCheck && psdValueCheck) {
+    } else if (idValueCheck && psdValueCheck) {
       const data = { identifier, password };
       console.log(data);
+      //   axios
+      //     .post(
+      //       "https://813c-14-63-98-43.jp.ngrok.io/games",
+      //       {
+      //         data,
+      //       },
+      //       {
+      //         withCredentials: true,
+      //       }
+      //     )
+      //     .then((res) => console.log(res));
     }
   };
+
   return (
     <Flex>
       <Wrap>
@@ -83,15 +96,15 @@ const Login = () => {
           <Title>로그인</Title>
           <Form>
             <Space>
-              <Label> 아이디</Label>
+              <Label htmlFor="id"> 아이디</Label>
               <LoginInput
-                id="email"
+                id="id"
                 type="text"
                 onChange={(e) => setIdentifier(e.target.value)}
               />
             </Space>
             <Space>
-              <Label>비밀번호</Label>
+              <Label htmlFor="pwd">비밀번호</Label>
               <LoginInput
                 id="pwd"
                 type="password"

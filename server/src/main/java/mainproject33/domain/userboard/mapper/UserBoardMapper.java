@@ -1,11 +1,9 @@
 package mainproject33.domain.userboard.mapper;
 
-import mainproject33.domain.like.dto.LikeResponseDto;
 import mainproject33.domain.userboard.dto.UserBoardPatchDto;
 import mainproject33.domain.userboard.dto.UserBoardPostDto;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.entity.UserBoard;
-import mainproject33.domain.like.entity.Like;
 import org.mapstruct.Mapper;
 
 import java.util.List;

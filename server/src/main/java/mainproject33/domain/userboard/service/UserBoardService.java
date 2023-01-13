@@ -1,7 +1,6 @@
 package mainproject33.domain.userboard.service;
 
 import lombok.RequiredArgsConstructor;
-import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;

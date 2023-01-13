@@ -1,8 +1,6 @@
 package mainproject33.domain.userboard.dto;
 
-import lombok.Builder;
 import lombok.Getter;
-import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 
 import java.time.LocalDateTime;

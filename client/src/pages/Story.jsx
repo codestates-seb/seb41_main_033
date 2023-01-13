@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import { dummyDataStory } from "./../data/dummyDataStory";
 import SearchBar from "./../components/SearchBar";
 import StorySingle from "../components/StorySingle";
-import { dummyDataStory } from "./../data/dummyDataStory";
+import WriteFloatButton from "../components/WriteFloatButton";
 
 const TitleWrap = styled.ul`
 	display: flex;
@@ -33,10 +34,11 @@ const Story = () => {
 			</TitleWrap>
 			<SearchBar />
 			<StoryBoardWrap>
-				{dummyDataStory.map((el, idx) => {
-					return <StorySingle key={idx} data={el} />;
+				{dummyDataStory.map((el) => {
+					return <StorySingle key={el.id} data={el} />;
 				})}
 			</StoryBoardWrap>
+			<WriteFloatButton />
 		</div>
 	);
 };

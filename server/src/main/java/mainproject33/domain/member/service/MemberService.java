@@ -9,12 +9,10 @@ import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import mainproject33.global.security.redis.RedisDao;
 import mainproject33.global.security.utils.CustomAuthorityUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -104,7 +102,7 @@ public class MemberService {
         profile.setImage("디폴트 이미지");
         profile.setFollower(0);
         profile.setFollowing(0);
-        profile.setLike(0);
+        profile.setLikes(0);
         profile.setBlock(false);
 
         return profileRepository.save(profile);

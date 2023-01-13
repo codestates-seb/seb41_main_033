@@ -3,7 +3,6 @@ package mainproject33.domain.member.controller;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.Member;
-import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.SingleResponseDto;

@@ -1,13 +1,10 @@
 package mainproject33.domain.member.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.matchboard.dto.MatchBoardDto;
-import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
-import mainproject33.domain.userboard.entity.UserBoard;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -66,7 +63,7 @@ public class MemberDto {
         private String image;
         private int follower;
         private int following;
-        private int like;
+        private int likes;
         private boolean block;
         private List<GameDB> games;
         private List<MatchBoardDto.Response> matchBoards;

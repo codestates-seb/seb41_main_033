@@ -5,9 +5,9 @@ import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.gamedb.repository.GameDBRepository;
 import mainproject33.domain.matchboard.dto.MatchBoardDto;
 import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
-import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import org.springframework.stereotype.Component;
@@ -42,6 +42,9 @@ public class MemberMapper {
         if(patch == null) return null;
 
         Member member = new Member();
+
+        Profile profile = new Profile();
+        member.setProfile(profile);
 
         member.setNickname(patch.getNickname());
         member.getProfile().setImage(patch.getImage());
@@ -78,7 +81,7 @@ public class MemberMapper {
         profileResponse.setImage(member.getProfile().getImage());
         profileResponse.setFollower(member.getProfile().getFollower());
         profileResponse.setFollowing(member.getProfile().getFollowing());
-        profileResponse.setLike(member.getProfile().getLike());
+        profileResponse.setLikes(member.getProfile().getLikes());
         profileResponse.setBlock(member.getProfile().isBlock());
 
         List<GameDB> games = new ArrayList<>();

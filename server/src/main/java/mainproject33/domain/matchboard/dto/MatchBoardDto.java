@@ -56,6 +56,7 @@ public class MatchBoardDto {
     @Setter
     public static class Response {
         private long memberId;
+        private String identifier;
         private String nickname;
         private long id;
         private String title;

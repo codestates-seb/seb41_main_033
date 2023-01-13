@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import { ReactComponent as Arrow } from "./../assets/arrowDown.svg";
+
 const DropdownContainer = styled.div`
   position: relative;
 `;
+
 const DropdownBody = styled.div`
   background-color: var(--darkgrey2);
   border: 1px solid var(--grey);
@@ -21,6 +23,7 @@ const DropdownBody = styled.div`
     height: 24px;
   }
 `;
+
 const DropdownMenu = styled.ul`
   display: ${(props) => (props.isActive ? `block` : `none`)};
   background-color: var(--darkgrey2);
@@ -34,7 +37,6 @@ const DropdownMenu = styled.ul`
   position: absolute;
   overflow-y: scroll;
   top: 0px;
-
   ::-webkit-scrollbar {
     display: none;
   }
@@ -51,9 +53,9 @@ const DropdownItemContainer = styled.li`
 
 const Dropdown = ({ isOpen, setIsOpen, setGame, game }) => {
   const itemList = [
-    "리그오브레전드",
+    "리그 오브 레전드",
     "발로란트",
-    "오버워치2",
+    "오버워치 2",
     "로스트아크",
     "메이플스토리",
     "서든어택",
@@ -61,13 +63,13 @@ const Dropdown = ({ isOpen, setIsOpen, setGame, game }) => {
     "던전앤파이터",
     "사이퍼즈",
     "마인크래프트",
-    "디아블로2",
-    "디아블로3",
+    "디아블로 2",
+    "디아블로 3",
     "어몽어스",
-    "파이널 판타지14",
+    "파이널 판타지 14",
     "이터널 리턴",
-    "스팀게임",
-    "닌텐도",
+    "스팀 게임",
+    "닌텐도 게임",
     "기타",
   ];
 

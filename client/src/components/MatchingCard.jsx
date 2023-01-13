@@ -76,8 +76,8 @@ const MatchingCard = ({ data }) => {
         <div>{displayedAt(data.createdAt)}</div>
       </Space>
       <Space>
-        {data.tags.map((el) => (
-          <Tag>{el}</Tag>
+        {data.tags.map((el, idx) => (
+          <Tag key={idx}>{el}</Tag>
         ))}
       </Space>
     </Card>

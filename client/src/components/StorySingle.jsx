@@ -109,31 +109,25 @@ const StorySingle = ({ data }) => {
 					</a>
 					<div className="content">{data.content}</div>
 				</TextArea>
-				{data.image === undefined ? (
-					""
-				) : (
+				{data.image ? (
 					<ImgArea>
 						<img src={data.image} />
 					</ImgArea>
-				)}
+				) : null}
 			</div>
 			<InfoWrap>
-				{data.contentLikes === undefined || data.contentLikes === 0 ? (
-					""
-				) : (
+				{data.contentLikes ? (
 					<li>
 						<BoardLikeIcon />
 						<span>{data.contentLikes}</span>
 					</li>
-				)}
-				{data.commentCount == undefined || data.commentCount === 0 ? (
-					""
-				) : (
+				) : null}
+				{data.commentCount ? (
 					<li>
 						<BoardCommentIcon />
 						<span>{data.commentCount}</span>
 					</li>
-				)}
+				) : null}
 			</InfoWrap>
 		</StoryWrap>
 	);

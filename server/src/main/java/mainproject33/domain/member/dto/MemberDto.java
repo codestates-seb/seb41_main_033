@@ -1,18 +1,22 @@
-package mainproject33.domain.member.repository.dto;
+package mainproject33.domain.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.hibernate.validator.constraints.Range;
+import lombok.Setter;
+import mainproject33.domain.gamedb.entity.GameDB;
+import mainproject33.domain.matchboard.dto.MatchBoardDto;
+import mainproject33.domain.matchboard.entity.MatchBoard;
+import mainproject33.domain.userboard.dto.UserBoardResponseDto;
+import mainproject33.domain.userboard.entity.UserBoard;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MemberDto {
 
     @Getter
-    @AllArgsConstructor
     public static class Post {
 
         @NotBlank(message = "아이디에는 공백이 올 수 없습니다.")
@@ -32,7 +36,6 @@ public class MemberDto {
     }
 
     @Getter
-    @AllArgsConstructor
     public static class Patch {
 
         @NotBlank(message = "닉네임에는 공백이 포함될 수 없습니다.")
@@ -41,20 +44,35 @@ public class MemberDto {
         private String nickname;
         private String image;
         private String introduction;
-        private String game;
+        private List<String> games;
     }
 
     @Getter
-    @AllArgsConstructor
+    @Setter
     public static class Response {
         private Long id;
         private String identifier;
         private String password;
         private String nickname;
-        private String image;
-        private String introduction;
-        private String game;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
     }
+
+    @Getter
+    @Setter
+    public static class ProfileResponse {
+        private Long id;
+        private String nickname;
+        private String image;
+        private int follower;
+        private int following;
+        private int like;
+        private boolean block;
+        private List<GameDB> games;
+        private List<MatchBoardDto.Response> matchBoards;
+        private List<UserBoardResponseDto> userBoards;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+    }
+
 }

@@ -4,39 +4,33 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
+import mainproject33.global.audit.Auditable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@DynamicInsert
-public class Profile {
+public class Profile extends Auditable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
     private String image;
 
-    @ColumnDefault("0")
     private int follower;
 
-    @ColumnDefault("0")
     private int following;
 
-    @ColumnDefault("0")
     private int like;
 
-    @ColumnDefault("false")
     private boolean block;
 
-    private List<String> games;
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> games = new ArrayList<>();
 
     @Column(length = 500)
     private String introduction;

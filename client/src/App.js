@@ -6,6 +6,7 @@ import Nav from "./components/Nav";
 import Login from "./pages/Login";
 import MatchingWrite from "./pages/MatchingWrite";
 import Matching from "./pages/Matching";
+import MatchingDetail from "./pages/MatchingDetail";
 const Wrap = styled.div`
   display: flex;
   flex: 1;
@@ -48,6 +49,7 @@ const App = () => {
           <Route path={`/${board - id}`} element={<MatchingDetail />} />
           <Route path="/quit" element={<Quit />} /> */}
               <Route path="/matchwrite" element={<MatchingWrite />} />
+              <Route path={`/hi`} element={<MatchingDetail />} />
             </Routes>
           </main>
         </MainWrap>

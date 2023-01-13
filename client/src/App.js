@@ -5,6 +5,10 @@ import Header from "./components/Header";
 import Nav from "./components/Nav";
 import Login from "./pages/Login";
 import MatchingWrite from "./pages/MatchingWrite";
+import Story from "./pages/Story";
+import Matching from "./pages/Matching";
+import MatchingDetail from "./pages/MatchingDetail";
+import Profile from "./pages/Profile";
 
 const Wrap = styled.div`
 	display: flex;
@@ -38,16 +42,19 @@ const App = () => {
 					<main className="container">
 						<Routes>
 							<Route path="/login" element={<Login />} />
-							{/* <Route path="/" element={<Matching/>} />
+							<Route path="/matchwrite" element={<MatchingWrite />} />
+							<Route path="/" element={<Matching />} />
+							<Route path="/story" element={<Story />} />
+							<Route path="/userid" element={<Profile />} />
+							<Route path="/boardid" element={<MatchingDetail />} />
+							{/*
           <Route path="/signup" element={<Signup />} />
-          <Route path={`/:${user-id}`} element={<Profile />} />
-          <Route path="/storyfriend" element={<Story />} />
+          
           <Route path={`/:${user-id}/edit`} element={<Profile />} />
           <Route path={`/:${user-id}/:${board-id}`} element={<StoryDetail />} /> */}
-							{/* <Route path="/storyall" element={<Story />} />
+							{/* 
           <Route path={`/${board - id}`} element={<MatchingDetail />} />
           <Route path="/quit" element={<Quit />} /> */}
-							<Route path="/matchwrite" element={<MatchingWrite />} />
 						</Routes>
 					</main>
 				</MainWrap>

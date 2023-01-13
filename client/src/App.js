@@ -6,6 +6,7 @@ import Nav from "./components/Nav";
 import Login from "./pages/Login";
 import MatchingWrite from "./pages/MatchingWrite";
 import Story from "./pages/Story";
+import Matching from "./pages/Matching";
 
 const Wrap = styled.div`
 	display: flex;
@@ -40,8 +41,9 @@ const App = () => {
 						<Routes>
 							<Route path="/login" element={<Login />} />
 							<Route path="/matchwrite" element={<MatchingWrite />} />
+							<Route path="/" element={<Matching />} />
 							<Route path="/story" element={<Story />} />
-							{/* <Route path="/" element={<Matching/>} />
+							{/*
           <Route path="/signup" element={<Signup />} />
           <Route path={`/:${user-id}`} element={<Profile />} />
           <Route path={`/:${user-id}/edit`} element={<Profile />} />

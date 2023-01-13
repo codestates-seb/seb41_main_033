@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { ReactComponent as Glummy } from '../assets/glummy.svg';
+import styled from "styled-components";
+import { ReactComponent as Glummy } from "../assets/glummy.svg";
 
 const QuitWrap = styled.div`
   display: flex;
@@ -45,17 +45,23 @@ const ButtonWrap = styled.div`
   width: 100%;
 
   button {
-    flex: 1; 
+    flex: 1;
   }
 
   button.warning {
-    background: linear-gradient(
-      90deg,
+    background-size: 200% auto;
+    background-image: linear-gradient(
+      to right,
       rgba(248, 126, 105, 1) 0%,
-      rgba(255, 88, 85, 1) 100%
+      rgba(255, 88, 85, 1) 50%,
+      rgba(248, 126, 105, 1) 100%
     );
     border-radius: var(--border-radius-btn);
     margin-right: 16px;
+
+    :hover {
+      background-position: right center;
+    }
   }
 `;
 

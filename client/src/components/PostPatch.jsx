@@ -64,15 +64,17 @@ const PostPatch = ({
           <div className="identifier">{identifier}</div>
         </div>
       </ProfileWrap>
-      {children}
-      <ButtonWrap>
-        <Link to={link1}>
-          <button className="em">{button1}</button>
-        </Link>
-        <Link to={link2}>
-          <button className="normal">{button2}</button>
-        </Link>
-      </ButtonWrap>
+      <form onSubmit={() => {}}>
+        {children}
+        <ButtonWrap>
+          <Link to={link1}>
+            <button className="em">{button1}</button>
+          </Link>
+          <Link to={link2}>
+            <button className="normal">{button2}</button>
+          </Link>
+        </ButtonWrap>
+      </form>
     </CardWrap>
   );
 };

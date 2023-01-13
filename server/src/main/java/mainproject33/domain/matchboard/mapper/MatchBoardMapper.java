@@ -17,7 +17,7 @@ public class MatchBoardMapper {
 
     private final GameDBRepository gameDBRepository;
 
-    public MatchBoard postMatchBoardToMatchBoard(MatchBoardDto.Post post) {
+    public MatchBoard postMatchBoardToMatchBoard(MatchBoardDto.Post post, Member member) {
         if (post == null) return null;
 
         MatchBoard matchBoard = new MatchBoard();
@@ -30,6 +30,8 @@ public class MatchBoardMapper {
 
         matchBoard.setTeam(post.getTeam());
         matchBoard.setTags(post.getTags());
+
+        matchBoard.setMember(member);
 
         return matchBoard;
     }
@@ -57,8 +59,9 @@ public class MatchBoardMapper {
 
         MatchBoardDto.Response response = new MatchBoardDto.Response();
 
-        response.setMemberId(matchBoardMemberId(matchBoard));
-        response.setNickname(matchBoardNickname(matchBoard));
+        response.setMemberId(getMemberId(matchBoard));
+        response.setIdentifier(getIdentifier(matchBoard));
+        response.setNickname(getNickname(matchBoard));
         response.setId(matchBoard.getId());
         response.setTitle(matchBoard.getTitle());
         response.setContent(matchBoard.getContent());
@@ -83,25 +86,36 @@ public class MatchBoardMapper {
         return responses;
     }
 
-    private long matchBoardMemberId(MatchBoard matchBoard) {
+    private long getMemberId(MatchBoard matchBoard) {
         if (matchBoard == null) return 0L;
 
         Member member = matchBoard.getMember();
-        if ( member == null ) {
-            return 0L;
-        }
+        if (member == null) return 0L;
+
         long id = member.getId();
+
         return id;
     }
 
-    private String matchBoardNickname(MatchBoard matchBoard) {
+    private String getIdentifier(MatchBoard matchBoard) {
         if (matchBoard == null) return null;
 
         Member member = matchBoard.getMember();
-        if ( member == null ) {
-            return null;
-        }
+        if (member == null) return null;
+
+        String identifier = member.getIdentifier();
+
+        return identifier;
+    }
+
+    private String getNickname(MatchBoard matchBoard) {
+        if (matchBoard == null) return null;
+
+        Member member = matchBoard.getMember();
+        if (member == null) return null;
+
         String nickname = member.getNickname();
+
         return nickname;
     }
 }

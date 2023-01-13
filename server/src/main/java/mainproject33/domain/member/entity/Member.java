@@ -23,17 +23,17 @@ public class Member extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String identifier;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String nickname;
 
-    private String image;
-
-    private String introduction;
-
-    private String game;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<UserBoard> userBoards;
@@ -43,8 +43,5 @@ public class Member extends Auditable {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
 
 }

@@ -8,6 +8,8 @@ import MatchingWrite from "./pages/MatchingWrite";
 import Story from "./pages/Story";
 import Matching from "./pages/Matching";
 import MatchingDetail from "./pages/MatchingDetail";
+import Profile from "./pages/Profile";
+
 const Wrap = styled.div`
 	display: flex;
 	flex: 1;
@@ -43,8 +45,8 @@ const App = () => {
 							<Route path="/matchwrite" element={<MatchingWrite />} />
 							<Route path="/" element={<Matching />} />
 							<Route path="/story" element={<Story />} />
-							<Route path="/user-id" element={<Profile />} />
-							<Route path={`/hi`} element={<MatchingDetail />} />
+							<Route path="/userid" element={<Profile />} />
+							<Route path="/boardid" element={<MatchingDetail />} />
 							{/*
           <Route path="/signup" element={<Signup />} />
           

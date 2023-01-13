@@ -1,5 +1,6 @@
 export const dummyDataStory = [
 	{
+		id: 1,
 		nickname: "맑게고인신나현",
 		createdAt: "10분전",
 		content: "이 친구는 핑복! 핑크 복덩이 넘모 귀여워",
@@ -8,6 +9,7 @@ export const dummyDataStory = [
 		commentCount: 48,
 	},
 	{
+		id: 2,
 		nickname: "맑게고인신나현",
 		createdAt: "24분전",
 		content: "뜨아거 뜨악어",
@@ -16,6 +18,7 @@ export const dummyDataStory = [
 		commentCount: 48,
 	},
 	{
+		id: 3,
 		nickname: "맑게고인신나현",
 		createdAt: "41분전",
 		content: "이미지가 없는 경우도 생각해봤어요",
@@ -23,18 +26,21 @@ export const dummyDataStory = [
 		commentCount: 48,
 	},
 	{
+		id: 4,
 		nickname: "맑게고인신나현",
 		createdAt: "43분전",
 		content: "좋아요만 있는 경우",
 		contentLikes: 1,
 	},
 	{
+		id: 5,
 		nickname: "맑게고인신나현",
 		createdAt: "50분전",
 		content: "댓글만 있는 경우",
 		commentCount: 1,
 	},
 	{
+		id: 6,
 		nickname: "맑게고인신나현",
 		createdAt: "50분전",
 		content: "좋아요도 댓글도 없는 경우",

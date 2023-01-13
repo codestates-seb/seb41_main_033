@@ -9,6 +9,7 @@ import Story from "./pages/Story";
 import Matching from "./pages/Matching";
 import MatchingDetail from "./pages/MatchingDetail";
 import Profile from "./pages/Profile";
+import StoryDetail from "./pages/StoryDetail";
 
 const Wrap = styled.div`
 	display: flex;
@@ -47,11 +48,12 @@ const App = () => {
 							<Route path="/story" element={<Story />} />
 							<Route path="/userid" element={<Profile />} />
 							<Route path="/boardid" element={<MatchingDetail />} />
+							<Route path="/storyid" element={<StoryDetail />} />
 							{/*
           <Route path="/signup" element={<Signup />} />
           
           <Route path={`/:${user-id}/edit`} element={<Profile />} />
-          <Route path={`/:${user-id}/:${board-id}`} element={<StoryDetail />} /> */}
+           */}
 							{/* 
           <Route path={`/${board - id}`} element={<MatchingDetail />} />
           <Route path="/quit" element={<Quit />} /> */}

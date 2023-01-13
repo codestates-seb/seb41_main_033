@@ -5,6 +5,8 @@ import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
+import mainproject33.global.exception.BusinessLogicException;
+import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -45,7 +47,7 @@ public class UserBoardService
     {
         Optional<UserBoard> optionalBoard = userBoardRepository.findById(id);
 
-        UserBoard findBoard = optionalBoard.orElseThrow(() -> new IllegalStateException("해당 글을 찾을 수 없습니다."));
+        UserBoard findBoard = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND));
 
         return findBoard;
     }
@@ -70,7 +72,7 @@ public class UserBoardService
 
         if(findBoard.isEmpty())
         {
-            throw new IllegalStateException("존재하지 않는 게시글입니다.");
+            throw new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND);
         }
     }
 
@@ -80,14 +82,7 @@ public class UserBoardService
 
         if(userBoard.getMember().getId() != member.getId())
         {
-            throw new IllegalStateException("권한이 없습니다.");
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
         }
-    }
-
-
-    public boolean checkMember(Member principal, long id) {
-        Optional<UserBoard> optionalUserBoard = userBoardRepository.findById(id);
-
-        return optionalUserBoard.isPresent() && (optionalUserBoard.get().getMember().getId() == principal.getId());
     }
 }

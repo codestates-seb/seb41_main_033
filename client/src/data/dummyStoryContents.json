@@ -3,7 +3,7 @@
     {
       "id": 7,
       "title": "어제 밤새 친구랑 게임했는데 계속 이겼다!",
-      "createdAt": "2023-01-08T13:45:00.333Z",
+      "createdAt": "2023-01-08T13:45:00.123456",
       "likeCount": 0,
       "commentCount": 2,
       "content": {
@@ -14,7 +14,7 @@
     {
       "id": 6,
       "title": "치킨 각",
-      "createdAt": "2023-01-08T13:35:00.333Z",
+      "createdAt": "2023-01-08T13:35:00.123456",
       "likeCount": 0,
       "commentCount": 0,
       "content": {
@@ -25,7 +25,7 @@
     {
       "id": 5,
       "title": "안녕하세요! 반갑습니다!",
-      "createdAt": "2023-01-08T13:25:00.333Z",
+      "createdAt": "2023-01-08T13:25:00.123456",
       "likeCount": 12,
       "commentCount": 0,
       "content": {
@@ -36,7 +36,7 @@
     {
       "id": 4,
       "title": "오늘 같이 게임할 사람이 필요하다!",
-      "createdAt": "2023-01-08T13:15:00.333Z",
+      "createdAt": "2023-01-08T13:15:00.123456",
       "likeCount": 0,
       "commentCount": 0,
       "content": {
@@ -47,7 +47,7 @@
     {
       "id": 3,
       "title": "게임은 역시 이겨야 제맛",
-      "createdAt": "2023-01-08T13:05:00.333Z",
+      "createdAt": "2023-01-08T13:05:00.123456",
       "likeCount": 42,
       "commentCount": 1,
       "content": {
@@ -58,7 +58,7 @@
     {
       "id": 2,
       "title": "어제 밤새 친구랑 게임했는데 계속 졌다...ㅠㅠㅠ",
-      "createdAt": "2023-01-08T12:55:00.333Z",
+      "createdAt": "2023-01-08T12:55:00.123456",
       "likeCount": 0,
       "commentCount": 1,
       "content": {
@@ -69,7 +69,7 @@
     {
       "id": 1,
       "title": "울집 고양이는 산책을 좋아해요... ?!",
-      "createdAt": "2023-01-08T12:45:00.333Z",
+      "createdAt": "2023-01-08T12:45:00.123456",
       "likeCount": 56,
       "commentCount": 12,
       "content": {

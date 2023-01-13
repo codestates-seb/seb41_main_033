@@ -8,14 +8,16 @@ import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.global.audit.Auditable;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "likes")
 @NoArgsConstructor
-public class Like extends Auditable
+public class Like
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,6 +36,10 @@ public class Like extends Auditable
     private Comment comment;
 
     private boolean likeStatus;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Like(Member member, UserBoard userBoard)
     {

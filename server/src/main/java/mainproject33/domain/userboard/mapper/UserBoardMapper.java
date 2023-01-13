@@ -32,8 +32,4 @@ public interface UserBoardMapper
         return responses;
     }
 
-    default LikeResponseDto userBoardLikeToResponse(Like entity)
-    {
-        return new LikeResponseDto(entity);
-    }
 }

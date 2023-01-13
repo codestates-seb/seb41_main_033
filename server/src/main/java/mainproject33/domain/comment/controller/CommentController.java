@@ -84,7 +84,8 @@ public class CommentController
     }
 
     @DeleteMapping("/comments/{comment-id}")
-    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId)
+    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId,
+                                        @AuthenticationPrincipal Member member)
     {
         commentService.verifyMember(member, commentId);
         commentService.deleteComment(commentId);

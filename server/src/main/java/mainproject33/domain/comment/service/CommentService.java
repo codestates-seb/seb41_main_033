@@ -25,7 +25,7 @@ public class CommentService
 
     private final UserBoardService userBoardService;
 
-    public Comment postComment(long userBoardId, Comment request)
+    public Comment postComment(long userBoardId, Comment request, Member member)
     {
         UserBoard userBoard = userBoardService.findUserBoard(userBoardId);
         request.addUserBoard(userBoard);

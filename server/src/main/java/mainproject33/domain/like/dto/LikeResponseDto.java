@@ -1,8 +1,14 @@
 package mainproject33.domain.like.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import mainproject33.domain.like.entity.Like;
 
+import java.time.LocalDateTime;
+
+@Builder
+@AllArgsConstructor
 @Getter
 public class LikeResponseDto
 {
@@ -11,19 +17,7 @@ public class LikeResponseDto
     private String nickname;
     private Long boardId;
 
-    public LikeResponseDto(Like entity)
-    {
-        if(entity.getMember().getId() == null)
-            this.memberId = null;
+    private Long commentId;
 
-        if(entity.getMember().getNickname() == null)
-            this.nickname = null;
-
-        if(entity.getUserBoard().getId() == null)
-            this.boardId = null;
-
-        this.memberId = entity.getMember().getId();
-        this.nickname = entity.getMember().getNickname();
-        this.boardId = entity.getUserBoard().getId();
-    }
+    private LocalDateTime createdAt;
 }

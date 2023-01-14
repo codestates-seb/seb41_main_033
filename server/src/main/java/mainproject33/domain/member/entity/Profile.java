@@ -28,10 +28,11 @@ public class Profile extends Auditable {
 
     private boolean block;
 
+    @Column(length = 500)
+    private String introduction;
+
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> games = new ArrayList<>();
 
-    @Column(length = 500)
-    private String introduction;
 
 }

@@ -51,20 +51,20 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public void updateProfile(Long memberId, Member member, Member principal) {
+    public void updateProfile(Long memberId, Member patch, Member principal) {
 
         Member findMember = findVerifiedMember(memberId);
         verifyMember(findMember.getId(), principal);
 
         Optional.ofNullable(findMember.getNickname())
-                .ifPresent(nickname -> findMember.setNickname(member.getNickname()));
+                .ifPresent(nickname -> findMember.setNickname(patch.getNickname()));
         Optional.ofNullable(findMember.getProfile().getImage())
-                .ifPresent(image -> findMember.getProfile().setImage(member.getProfile().getImage()));
+                .ifPresent(image -> findMember.getProfile().setImage(patch.getProfile().getImage()));
         Optional.ofNullable(findMember.getProfile().getIntroduction())
                 .ifPresent(introduction ->
-                        findMember.getProfile().setIntroduction(member.getProfile().getIntroduction()));
+                        findMember.getProfile().setIntroduction(patch.getProfile().getIntroduction()));
         Optional.ofNullable(findMember.getProfile().getGames())
-                .ifPresent(image -> findMember.getProfile().setGames(member.getProfile().getGames()));
+                .ifPresent(image -> findMember.getProfile().setGames(patch.getProfile().getGames()));
 
         memberRepository.save(findMember);
     }
@@ -104,6 +104,7 @@ public class MemberService {
         profile.setFollowing(0);
         profile.setLikes(0);
         profile.setBlock(false);
+        profile.setIntroduction("소개문을 작성해주세요");
 
         return profileRepository.save(profile);
     }

@@ -65,6 +65,7 @@ public class MemberDto {
         private int following;
         private int likes;
         private boolean block;
+        private String introduction;
         private List<GameDB> games;
         private List<MatchBoardDto.Response> matchBoards;
         private List<UserBoardResponseDto> userBoards;

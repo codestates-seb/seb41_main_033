@@ -83,12 +83,11 @@ public class MemberMapper {
         profileResponse.setFollowing(member.getProfile().getFollowing());
         profileResponse.setLikes(member.getProfile().getLikes());
         profileResponse.setBlock(member.getProfile().isBlock());
+        profileResponse.setIntroduction(member.getProfile().getIntroduction());
 
         List<GameDB> games = new ArrayList<>();
-
         for(int i=0; i<member.getProfile().getGames().size(); i++) {
-            GameDB game = gameDBRepository.findByKorTitle(member.getProfile().getGames().get(i));
-            games.add(game);
+            games.add(gameDBRepository.findByKorTitle(member.getProfile().getGames().get(i)));
         }
 
         profileResponse.setGames(games);

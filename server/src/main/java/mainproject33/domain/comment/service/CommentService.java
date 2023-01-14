@@ -3,8 +3,11 @@ package mainproject33.domain.comment.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.comment.entity.Comment;
 import mainproject33.domain.comment.repository.CommentRepository;
+import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.service.UserBoardService;
+import mainproject33.global.exception.BusinessLogicException;
+import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,10 +25,11 @@ public class CommentService
 
     private final UserBoardService userBoardService;
 
-    public Comment postComment(long userBoardId, Comment request)
+    public Comment postComment(long userBoardId, Comment request, Member member)
     {
         UserBoard userBoard = userBoardService.findUserBoard(userBoardId);
         request.addUserBoard(userBoard);
+        request.addMember(member);
 
         return commentRepository.save(request);
     }
@@ -46,7 +50,7 @@ public class CommentService
     {
         Optional<Comment> findComment = commentRepository.findById(id);
 
-        Comment comment = findComment.orElseThrow(() -> new IllegalStateException("존재하지 않는 글입니다."));
+        Comment comment = findComment.orElseThrow(() -> new BusinessLogicException(ExceptionMessage.COMMENT_NOT_FOUND));
 
 
         return comment;
@@ -56,7 +60,6 @@ public class CommentService
     public Page<Comment> findAllCommentsByBoardId(int page, int size, long userBoardId)
     {
         return commentRepository.findAllByUserBoardId(PageRequest.of(page, size, Sort.by("id").ascending()), userBoardId);
-
     }
 
     //api 논의 필요
@@ -77,8 +80,14 @@ public class CommentService
     {
         Optional<Comment> findComment = commentRepository.findById(id);
         if (findComment.isEmpty())
-            throw new IllegalStateException("존재하지 않는 글입니다.");
+            throw new BusinessLogicException(ExceptionMessage.COMMENT_NOT_FOUND);
     }
 
+    public void verifyMember(Member member, long id)
+    {
+        Comment comment = findComment(id);
 
+        if(comment.getMember().getId() != member.getId())
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
+    }
 }

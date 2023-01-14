@@ -3,6 +3,7 @@ package mainproject33.domain.matchboard.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.matchboard.repository.MatchBoardRepository;
+import mainproject33.domain.member.entity.Member;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,18 +19,8 @@ public class MatchBoardService {
     private final MatchBoardRepository matchBoardRepository;
 
     public MatchBoard createMatchBoard(MatchBoard matchBoard) {
-        MatchBoard createdMatchBoard = new MatchBoard();
 
-        createdMatchBoard.setTitle(matchBoard.getTitle());
-        createdMatchBoard.setContent(matchBoard.getContent());
-        
-        createdMatchBoard.setGame(matchBoard.getGame()); // TODO : Game DB에 있는 객체를 가지고 와서 저장 (mapper 에서 처리)
-        createdMatchBoard.setTeam(matchBoard.getTeam());
-        
-        Optional.ofNullable(matchBoard.getTags())
-                .ifPresent(tags -> createdMatchBoard.setTags(tags));
-
-        return matchBoardRepository.save(createdMatchBoard);
+        return matchBoardRepository.save(matchBoard);
     }
 
     public MatchBoard updateMatchBoard(MatchBoard matchBoard) {
@@ -72,5 +63,11 @@ public class MatchBoardService {
                         -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
 
         matchBoardRepository.delete(findMatchBoard);
+    }
+
+    public boolean checkMember(Member principal, long id) {
+        Optional<MatchBoard> optionalMatchBoard = matchBoardRepository.findById(id);
+
+        return optionalMatchBoard.isPresent() && (optionalMatchBoard.get().getMember().getId() == principal.getId());
     }
 }

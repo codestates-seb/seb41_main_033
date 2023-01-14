@@ -29,7 +29,7 @@ public class MatchBoardDto {
         @NotBlank(message  = "게임은 필수 입력 값입니다.")
         private String game;
         @NotNull(message  = "팀원 수는 필수 입력 값입니다.")
-        @Max(20)
+        @Max(24)
         private int team;
         @Tags
         @Size(max = 3)
@@ -45,7 +45,7 @@ public class MatchBoardDto {
         @Length(max = 500, message = "내용은  최대 500자 까지 입력 가능합니다.")
         private String content;
         private String game;
-        @Max(20)
+        @Max(24)
         private int team;
         @Tags
         @Size(max = 3)
@@ -56,6 +56,7 @@ public class MatchBoardDto {
     @Setter
     public static class Response {
         private long memberId;
+        private String identifier;
         private String nickname;
         private long id;
         private String title;

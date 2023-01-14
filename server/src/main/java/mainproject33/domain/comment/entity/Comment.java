@@ -32,6 +32,7 @@ public class Comment extends Auditable
     @JoinColumn(name = "user_board_id")
     private UserBoard userBoard;
 
+
     @OneToMany(mappedBy = "comment")
     private Set<Like> likes = new HashSet<>();
 
@@ -46,6 +47,14 @@ public class Comment extends Auditable
     {
         this.content = content;
     }
+
+    public void addMember(Member member)
+    {
+        this.member = member;
+        if(member.getComments().contains(this))
+            member.getComments().add(this);
+    }
+
 
     public void addUserBoard(UserBoard userBoard)
     {

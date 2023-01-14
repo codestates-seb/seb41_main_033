@@ -21,7 +21,7 @@ public class GameDBController {
     private final GameDBService gameDBService;
 
     @GetMapping
-    public ResponseEntity getGameDBs(@RequestParam("keyword") String keyword) {
+    public ResponseEntity getGameDBs(@RequestParam(value = "keyword", required = false) String keyword) {
         List<GameDB> gameDBs = gameDBService.readGameDB(keyword);
 
         return new ResponseEntity(new SingleResponseDto<>(gameDBs), HttpStatus.OK);

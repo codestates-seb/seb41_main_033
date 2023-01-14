@@ -10,6 +10,8 @@ import Matching from "./pages/Matching";
 import MatchingDetail from "./pages/MatchingDetail";
 import Profile from "./pages/Profile";
 import StoryDetail from "./pages/StoryDetail";
+import Signup from "./pages/Signup";
+import Quit from "./pages/Quit";
 
 const Wrap = styled.div`
 	display: flex;
@@ -49,14 +51,8 @@ const App = () => {
 							<Route path="/userid" element={<Profile />} />
 							<Route path="/boardid" element={<MatchingDetail />} />
 							<Route path="/storyid" element={<StoryDetail />} />
-							{/*
-          <Route path="/signup" element={<Signup />} />
-          
-          <Route path={`/:${user-id}/edit`} element={<Profile />} />
-           */}
-							{/* 
-          <Route path={`/${board - id}`} element={<MatchingDetail />} />
-          <Route path="/quit" element={<Quit />} /> */}
+							<Route path="/signup" element={<Signup />} />
+							<Route path="/quit" element={<Quit />} />
 						</Routes>
 					</main>
 				</MainWrap>

@@ -71,7 +71,7 @@ const MatchingCard = ({ data }) => {
       <Space className="game_info">
         <div className="team_count">
           <span></span>
-          {data.team}
+          {data.team} 명
         </div>
         <div>{displayedAt(data.createdAt)}</div>
       </Space>

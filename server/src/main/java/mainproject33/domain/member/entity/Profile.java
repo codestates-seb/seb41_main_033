@@ -1,6 +1,5 @@
 package mainproject33.domain.member.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,8 +35,4 @@ public class Profile extends Auditable {
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> games = new ArrayList<>();
-
-    @Transient
-    @JsonIgnore
-    private String base64EncodedFile;
 }

@@ -63,4 +63,11 @@ public class MemberController {
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    @PostMapping("/{member-id}/follows")
+    public ResponseEntity follow(@PathVariable("member-id") @Positive Long memberId,
+                                 @AuthenticationPrincipal Member principal) {
+
+        return null;
+    }
+
 }

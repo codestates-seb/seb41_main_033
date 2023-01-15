@@ -74,6 +74,13 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
+    public Member follow(Long memberId, Member principal) {
+
+
+
+        return null;
+    }
+
     public void verifyMember(Long memberId, Member principal) {
 
         if(!Objects.equals(memberId, principal.getId())) {

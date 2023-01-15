@@ -2,6 +2,7 @@ package mainproject33.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.member.dto.MemberDto;
+import mainproject33.domain.member.entity.Follow;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
@@ -65,6 +66,19 @@ public class MemberController {
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @PostMapping("/{member-id}/follows")
+    public ResponseEntity follow(@PathVariable("member-id") @Positive Long memberId,
+                                 @AuthenticationPrincipal Member principal) {
+
+        Follow follow = memberService.follow(memberId, principal);
+
+        if(follow == null) {
+            return new ResponseEntity<>("팔로우가 취소되었습니다.", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("팔로우가 완료되었습니다.", HttpStatus.OK);
     }
 
 }

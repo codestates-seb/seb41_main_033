@@ -13,6 +13,7 @@ import mainproject33.global.security.redis.RedisDao;
 import mainproject33.global.security.utils.CustomAuthorityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +25,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+    private final ProfileImageService imageService;
 
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
@@ -55,22 +57,23 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public void updateProfile(Long memberId, Member patch, Member principal) {
+    public Member updateProfile(Long memberId, Member patch, Member principal, MultipartFile file) {
 
         Member findMember = findVerifiedMember(memberId);
         verifyMember(findMember.getId(), principal);
 
-        Optional.ofNullable(findMember.getNickname())
-                .ifPresent(nickname -> findMember.setNickname(patch.getNickname()));
-        Optional.ofNullable(findMember.getProfile().getImage())
-                .ifPresent(image -> findMember.getProfile().setImage(patch.getProfile().getImage()));
-        Optional.ofNullable(findMember.getProfile().getIntroduction())
-                .ifPresent(introduction ->
-                        findMember.getProfile().setIntroduction(patch.getProfile().getIntroduction()));
-        Optional.ofNullable(findMember.getProfile().getGames())
-                .ifPresent(image -> findMember.getProfile().setGames(patch.getProfile().getGames()));
+        if (patch != null) {
+            Optional.ofNullable(patch.getNickname())
+                    .ifPresent(nickname -> findMember.setNickname(patch.getNickname()));
+            Optional.ofNullable(patch.getProfile().getIntroduction())
+                    .ifPresent(introduction -> findMember.getProfile().setIntroduction(introduction));
+            Optional.ofNullable(patch.getProfile().getGames())
+                    .ifPresent(games -> findMember.getProfile().setGames(games));
+        }
 
-        memberRepository.save(findMember);
+        if (file != null) imageService.updateProfileImage(findMember.getProfile(), file);
+
+        return memberRepository.save(findMember);
     }
 
     public Member findProfile(Long memberId) {
@@ -127,7 +130,7 @@ public class MemberService {
     public Profile createProfile() {
 
         Profile profile = new Profile();
-        profile.setImage("디폴트 이미지");
+        imageService.createDefaultProfileImage(profile);
         profile.setFollower(0);
         profile.setFollowing(0);
         profile.setLikes(0);

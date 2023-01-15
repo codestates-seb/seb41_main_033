@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.matchboard.dto.MatchBoardDto;
+import mainproject33.domain.member.entity.ProfileImage;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 
 import javax.validation.constraints.NotBlank;
@@ -62,7 +63,7 @@ public class MemberDto {
 
         private Long id;
         private String nickname;
-        private String image;
+        private ProfileImage image;
         private int follower;
         private int following;
         private int likes;

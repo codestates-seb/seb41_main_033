@@ -21,8 +21,11 @@ public enum ExceptionMessage {
 
 
     //=========comment=========//
-    COMMENT_NOT_FOUND("존재하지 않는 답글입니다.");
+    COMMENT_NOT_FOUND("존재하지 않는 답글입니다."),
 
+    //=========image=========//
+    IMAGE_DATA_NOT_FOUND("존재하지 않는 프로필 이미지 데이터입니다."),
+    FILE_NOT_FOUND("존재하지 않는 파일입니다");
 
 
 

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -46,12 +47,15 @@ public class MemberController {
 
     @PatchMapping("/{member-id}")
     public ResponseEntity patchProfile(@PathVariable("member-id") @Positive Long memberId,
-                                       @RequestBody @Valid MemberDto.Patch patch,
+                                       @RequestPart(value = "data", required = false) @Valid MemberDto.Patch patch,
+                                       @RequestPart(value = "image", required = false) MultipartFile file,
                                        @AuthenticationPrincipal Member principal) {
 
-        memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal);
+        Member member = memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal, file);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member);
 
-        return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")

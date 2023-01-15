@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -79,8 +80,8 @@ public class MemberMapper {
 
         MemberDto.ProfileResponse profileResponse = new MemberDto.ProfileResponse();
 
-        int follower = 0;
-        int following = 0;
+        int follower = followRepository.findByFollowerId(member.getId()).size();
+        int following = followRepository.findByFollowingId(member.getId()).size();
 
         List<GameDB> games = new ArrayList<>();
         for(int i=0; i<member.getProfile().getGames().size(); i++) {

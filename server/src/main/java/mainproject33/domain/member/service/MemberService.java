@@ -74,6 +74,14 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
+    public void verifyMember(Long memberId, Member principal) {
+
+        if(!Objects.equals(memberId, principal.getId())) {
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
+        }
+
+    }
+
     public Member follow(Long memberId, Member principal) {
 
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -88,5 +89,13 @@ public class ExceptionAdvice {
         log.error("예외가 발생했습니다.", e);
 
         return ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIOException(IOException e) {
+        log.error("입출력 예외가 발생했습니다.", e);
+
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }

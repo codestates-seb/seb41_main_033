@@ -21,7 +21,6 @@ public class MemberMapper {
 
     private final GameDBRepository gameDBRepository;
     private final MatchBoardMapper matchBoardMapper;
-
     private final UserBoardMapper userBoardMapper;
 
     public Member postToMember(MemberDto.Post post) {
@@ -43,13 +42,13 @@ public class MemberMapper {
 
         Member member = new Member();
 
-        Profile profile = new Profile();
-        member.setProfile(profile);
-
         member.setNickname(patch.getNickname());
-        member.getProfile().setImage(patch.getImage());
-        member.getProfile().setIntroduction(patch.getIntroduction());
-        member.getProfile().setGames(patch.getGames());
+
+        Profile profile = new Profile();
+        profile.setIntroduction(patch.getIntroduction());
+        profile.setGames(patch.getGames());
+
+        member.setProfile(profile);
 
         return member;
     }

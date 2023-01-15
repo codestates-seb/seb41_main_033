@@ -1,6 +1,8 @@
 package mainproject33.domain.userboard.service;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.boardfile.UserBoardFile;
+import mainproject33.domain.boardfile.UserBoardFileService;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
@@ -11,7 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,12 +26,20 @@ public class UserBoardService
 {
     private final UserBoardRepository userBoardRepository;
 
+    private final UserBoardFileService boardFileService;
 
-    public UserBoard postUserBoard(UserBoard request, Member member)
+    public UserBoard postUserBoard(UserBoard request, Member member, List<MultipartFile> files) throws IOException
     {
+        List<UserBoardFile> userBoardFiles = boardFileService.storeFiles(files);
+
         UserBoard userBoard = userBoardRepository.save(request);
 
         userBoard.addMember(member);
+
+        for (UserBoardFile userBoardFile : userBoardFiles)
+        {
+            userBoardFile.addUserBoard(request);
+        }
 
         return userBoard;
     }

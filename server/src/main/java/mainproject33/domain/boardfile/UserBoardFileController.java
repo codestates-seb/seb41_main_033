@@ -1,3 +1,4 @@
+/*
 package mainproject33.domain.boardfile;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,8 @@ public class UserBoardFileController
     private final UserBoardFileService fileService;
 
     private final UserBoardFileMapper fileMapper;
-    @PostMapping("/files")
+    */
+/*@PostMapping("/files")
     public ResponseEntity uploadFile(@RequestParam MultipartFile file)
     {
         try
@@ -34,8 +36,9 @@ public class UserBoardFileController
             throw new RuntimeException(e);
         }
     }
+*//*
 
-    @PostMapping("/multi/files")
+    @PostMapping("/files")
     public ResponseEntity uploadMultiFiles(@RequestParam List<MultipartFile> files)
     {
         try
@@ -52,3 +55,4 @@ public class UserBoardFileController
         }
     }
 }
+*/

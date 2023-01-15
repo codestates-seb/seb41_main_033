@@ -2,6 +2,7 @@ package mainproject33.domain.userboard.entity;
 
 import lombok.*;
 
+import mainproject33.domain.boardfile.UserBoardFile;
 import mainproject33.domain.comment.entity.Comment;
 import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.member.entity.Member;
@@ -36,6 +37,9 @@ public class UserBoard extends Auditable
 
     @OneToMany(mappedBy = "userBoard", cascade = CascadeType.REMOVE)
     private Set<Like> likes = new HashSet<>();
+
+    @OneToMany(mappedBy = "userBoard")
+    private List<UserBoardFile> userBoardFiles = new ArrayList<>();
 
     @Builder
     public UserBoard(Long id, String content)

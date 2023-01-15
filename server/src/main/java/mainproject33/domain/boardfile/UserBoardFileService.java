@@ -27,11 +27,25 @@ public class UserBoardFileService
         return fileDir + filename;
     }
 
+    public List<UserBoardFile> storeFiles(List<MultipartFile> files) throws IOException
+    {
+        List<UserBoardFile> storeFileResult = new ArrayList<>();
+        for (MultipartFile file : files)
+        {
+            if(!file.isEmpty())
+            {
+                UserBoardFile userBoardFile = storeFile(file);
+                storeFileResult.add(userBoardFile);
+            }
+        }
+
+        return storeFileResult;
+    }
+
     public UserBoardFile storeFile(MultipartFile multipartFile) throws IOException
     {
-       if(multipartFile.isEmpty())
-           return null;
-
+        if(multipartFile.isEmpty())
+            return null;
 
         //image.png
         String uploadFilename = multipartFile.getOriginalFilename();
@@ -47,21 +61,6 @@ public class UserBoardFileService
                 .build();
 
         return fileRepository.save(boardFile);
-    }
-
-    public List<UserBoardFile> storeFiles(List<MultipartFile> files) throws IOException
-    {
-        List<UserBoardFile> storeFileResult = new ArrayList<>();
-        for (MultipartFile file : files)
-        {
-            if(!file.isEmpty())
-            {
-                UserBoardFile userBoardFile = storeFile(file);
-                storeFileResult.add(userBoardFile);
-            }
-        }
-
-        return storeFileResult;
     }
 
     private String createStoreFileName(String originalFilename)

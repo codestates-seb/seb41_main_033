@@ -1,10 +1,11 @@
 package mainproject33.domain.boardfile;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Setter @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserBoardFileResponse
 {
     private Long id;
@@ -12,11 +13,4 @@ public class UserBoardFileResponse
     private String uploadFileName;
 
     private String storeFileName;
-
-    public UserBoardFileResponse(UserBoardFile entity)
-    {
-        this.id = entity.getId();
-        this.uploadFileName = entity.getUploadFileName();
-        this.storeFileName = entity.getStoreFileName();
-    }
 }

@@ -23,7 +23,6 @@ public class UserBoardFile
     @ManyToOne
     @JoinColumn(name = "user_board_id")
     private UserBoard userBoard;
-
     @Builder
     public UserBoardFile(String uploadFileName, String storeFileName)
     {

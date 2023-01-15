@@ -19,6 +19,8 @@ public class CommentResponseDto
 
     private String content;
 
+    private int likeCount;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
@@ -30,6 +32,7 @@ public class CommentResponseDto
         this.userBoardId = entity.getUserBoard().getId();
         this.id = entity.getId();
         this.content = entity.getContent();
+        this.likeCount = entity.getLikeCount();
         this.createdAt = entity.getCreatedAt();
         this.modifiedAt = entity.getModifiedAt();
     }

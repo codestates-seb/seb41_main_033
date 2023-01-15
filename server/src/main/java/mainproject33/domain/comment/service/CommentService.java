@@ -59,7 +59,7 @@ public class CommentService
     @Transactional(readOnly = true)
     public Page<Comment> findAllCommentsByBoardId(int page, int size, long userBoardId)
     {
-        return commentRepository.findAllByUserBoardId(PageRequest.of(page, size, Sort.by("id").ascending()), userBoardId);
+        return commentRepository.findAllByUserBoardId(PageRequest.of(page, size, Sort.by("likeCount").descending()), userBoardId);
     }
 
     //api 논의 필요
@@ -68,6 +68,7 @@ public class CommentService
     {
         return commentRepository.findAllByMemberId(PageRequest.of(page, size, Sort.by("id").ascending()), memberId);
     }
+
 
     public void deleteComment(long id)
     {

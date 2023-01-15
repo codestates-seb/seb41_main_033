@@ -1,3 +1,4 @@
+/*
 package mainproject33.domain.boardfile;
 
 import org.mapstruct.Mapper;
@@ -10,7 +11,13 @@ public interface UserBoardFileMapper
 {
     default UserBoardFileResponse userBoardFileToResponse(UserBoardFile entity)
     {
-        return new UserBoardFileResponse(entity);
+        UserBoardFileResponse response = UserBoardFileResponse.builder()
+                .id(entity.getId())
+                .uploadFileName(uploadFileName(entity))
+                .storeFileName(storeFileName(entity))
+                .build();
+
+        return response;
     }
 
     default List<UserBoardFileResponse> userBoardFileToResponses(List<UserBoardFile> entities)
@@ -21,4 +28,31 @@ public interface UserBoardFileMapper
 
         return responses;
     }
+
+    private String uploadFileName(UserBoardFile userBoardFile)
+    {
+        if(userBoardFile == null)
+            return null;
+
+        String uploadFileName = userBoardFile.getUploadFileName();
+
+        if(uploadFileName == null)
+            return null;
+
+        return uploadFileName;
+    }
+
+    private String storeFileName(UserBoardFile userBoardFile)
+    {
+        if(userBoardFile == null)
+            return null;
+
+        String storeFileName = userBoardFile.getStoreFileName();
+
+        if(storeFileName == null)
+            return null;
+
+        return storeFileName;
+    }
 }
+*/

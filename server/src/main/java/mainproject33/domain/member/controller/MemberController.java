@@ -8,9 +8,11 @@ import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RestController
@@ -23,7 +25,7 @@ public class MemberController {
     private final MemberMapper mapper;
 
     @PostMapping("/signup")
-    public ResponseEntity signUp(@RequestBody MemberDto.Post post) {
+    public ResponseEntity signUp(@RequestBody @Valid MemberDto.Post post) {
 
         Member member = memberService.createMember(mapper.postToMember(post));
         MemberDto.Response response = mapper.memberToResponse(member);
@@ -33,27 +35,29 @@ public class MemberController {
     }
 
     @DeleteMapping("/{member-id}")
-    public ResponseEntity dropOut(@PathVariable("member-id") @Positive Long memberId) {
+    public ResponseEntity dropOut(@PathVariable("member-id") @Positive Long memberId,
+                                  @AuthenticationPrincipal Member principal) {
 
-        memberService.deleteMember(memberId);
+        memberService.deleteMember(memberId, principal);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{member-id}")
-    public ResponseEntity patchProfile(@RequestBody MemberDto.Patch patch,
-                                       @PathVariable("member-id") @Positive Long memberId) {
-        Member member = memberService.updateProfile(mapper.patchToMember(patch), memberId);
-        MemberDto.Response response = mapper.memberToResponse(member);
+    public ResponseEntity patchProfile(@PathVariable("member-id") @Positive Long memberId,
+                                       @RequestBody @Valid MemberDto.Patch patch,
+                                       @AuthenticationPrincipal Member principal) {
 
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(response), HttpStatus.OK);
+        memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal);
+
+        return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
     }
 
     @GetMapping("/{member-id}")
     public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId) {
+
         Member member = memberService.findProfile(memberId);
-        MemberDto.Response response = mapper.memberToResponse(member);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);

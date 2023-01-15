@@ -6,13 +6,13 @@ import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.entity.ProfileImage;
 import mainproject33.domain.member.repository.ProfileImageRepository;
 import mainproject33.global.exception.ExceptionMessage;
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -29,27 +29,27 @@ public class ProfileImageService {
     private final String defaultExtension = ".png";
 
     public ProfileImage createDefaultProfileImage(Profile profile) { // 기본 프로필 이미지 생성
-        String fileName = UUID.randomUUID().toString();
+        String uploadFileName = defaultFileName + defaultExtension;
+        String storeFileName = UUID.randomUUID() + defaultExtension;
 
-        saveDefaultImageFile(fileName); // 이미지 파일 로컬에 저장
+        saveDefaultImageFile(storeFileName); // 이미지 파일 로컬에 저장
 
-        ProfileImage profileImage = saveImageData(new ProfileImage(), fileName, defaultExtension); // 이미지 데이터 DB 에 저장
+        ProfileImage profileImage = saveImageData(new ProfileImage(), uploadFileName, storeFileName); // 이미지 데이터 DB 에 저장
         profile.setImage(profileImage);
 
         return imageRepository.save(profileImage);
     }
 
-    public ProfileImage updateProfileImage(Profile findProfile, String base64EncodedFile) { // 프로필 이미지 수정
+    public ProfileImage updateProfileImage(Profile findProfile, MultipartFile file) { // 프로필 이미지 수정
         deleteImageFile(findProfile.getId()); // 기존 이미지 파일 삭제
 
-        String fileName = UUID.randomUUID().toString();
-        String extension = parseFileExtension(base64EncodedFile);
+        String uploadFileName = file.getOriginalFilename();
+        String storeFileName = UUID.randomUUID() + parseFileExtension(file);
 
-        byte[] imageByte = Base64.decodeBase64(base64EncodedFile); // patch 로 받은 base64EncodedFile 을 바이트 배열로 디코딩
+        saveImageFile(storeFileName, file); // 이미지 파일 로컬에 저장
 
-        saveImageFile(fileName, extension, imageByte); // 이미지 파일 로컬에 저장
-
-        ProfileImage profileImage = saveImageData(findProfile.getImage(), fileName, extension); // 이미지 데이터 DB 에 저장
+        ProfileImage profileImage = saveImageData(
+                findProfile.getImage(), uploadFileName, storeFileName); // 이미지 데이터 DB 에 저장
 
         return imageRepository.save(profileImage);
     }
@@ -59,45 +59,44 @@ public class ProfileImageService {
                 .orElseThrow(() -> new NoSuchElementException(ExceptionMessage.IMAGE_DATA_NOT_FOUND.get()));
 
         Resource resource = new FileSystemResource(
-                filePath + image.getFileName() + image.getExtension());
+                filePath + image.getStoreFileName());
 
         if (!resource.exists()) throw new NoSuchElementException(ExceptionMessage.FILE_NOT_FOUND.get());
 
         return resource;
     }
 
-    private void saveDefaultImageFile(String fileName) { // 기본 프로필 이미지 파일 저장
-        Resource resource = new FileSystemResource(
-                filePath + defaultFileName + defaultExtension);
+    private void saveDefaultImageFile(String storeFileName) { // 기본 프로필 이미지 파일 저장
+        Resource resource = new FileSystemResource(filePath + defaultFileName + defaultExtension);
         try {
             File file = resource.getFile();
-            File copy = new File(filePath + fileName + defaultExtension);
+            File copy = new File(filePath + storeFileName);
             Files.copy(file.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.warn("IOException happened", e);
         }
     }
 
-    private void saveImageFile(String fileName, String extension, byte[] imageByte) {
+    private void saveImageFile(String fileName, MultipartFile file) {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(filePath + fileName + extension);
-            fileOutputStream.write(imageByte);
-            fileOutputStream.close();
+            String savedPath = filePath + fileName;
+            File path = new File(savedPath); // 파일 저장될 경로 설정
+            file.transferTo(path); // @RequestPart로 받은 file을 지정 경로에 저장
         } catch (IOException e) {
             log.warn("IOException happened", e);
         }
     }
 
-    private ProfileImage saveImageData(ProfileImage profileImage, String fileName, String extension) {
-        profileImage.setFileName(fileName);
-        profileImage.setExtension(extension);
+    private ProfileImage saveImageData(ProfileImage profileImage, String uploadFileName, String storeFileName) {
+        profileImage.setUploadFileName(uploadFileName);
+        profileImage.setStoreFileName(storeFileName);
 
         return profileImage;
     }
 
     private void deleteImageFile(Long memberId) {
         ProfileImage findImage = findVerifiedImage(memberId);
-        File file = new File(filePath + findImage.getFileName() + findImage.getExtension());
+        File file = new File(filePath + findImage.getStoreFileName());
         file.delete();
     }
 
@@ -108,14 +107,7 @@ public class ProfileImageService {
         return findImage;
     }
 
-    private String parseFileExtension(String base64EncodedFile) { // base64EncodedFile 확장자 Parser. TODO : 추가 확장자 확인 필요
-        switch (base64EncodedFile.charAt(0)) {
-            case '/' : return ".jpeg";
-            case 'i' : return ".png";
-            case 'R' : return ".gif";
-            case 'U' : return ".webp";
-            case 'J' : return ".pdf";
-        }
-        throw new RuntimeException("올바른 확장자가 아닙니다.");
+    private String parseFileExtension(MultipartFile file) { // base64EncodedFile 확장자 Parser. TODO : 추가 확장자 확인 필요
+        return "." + FilenameUtils.getExtension(file.getOriginalFilename());
     }
 }

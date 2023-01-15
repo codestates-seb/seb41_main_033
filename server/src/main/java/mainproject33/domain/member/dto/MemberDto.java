@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.matchboard.dto.MatchBoardDto;
-import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.entity.ProfileImage;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 

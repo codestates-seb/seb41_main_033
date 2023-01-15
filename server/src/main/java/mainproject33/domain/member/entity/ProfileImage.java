@@ -16,8 +16,8 @@ public class ProfileImage {
     private Long id;
 
     @Column
-    private String fileName;
+    private String uploadFileName;
 
     @Column
-    private String extension;
+    private String storeFileName;
 }

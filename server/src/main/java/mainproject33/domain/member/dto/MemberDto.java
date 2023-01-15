@@ -47,6 +47,7 @@ public class MemberDto {
     @Getter
     @Setter
     public static class Response {
+
         private Long id;
         private String identifier;
         private String password;
@@ -58,6 +59,7 @@ public class MemberDto {
     @Getter
     @Setter
     public static class ProfileResponse {
+
         private Long id;
         private String nickname;
         private String image;

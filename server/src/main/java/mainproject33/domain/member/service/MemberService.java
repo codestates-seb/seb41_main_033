@@ -1,8 +1,10 @@
 package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.member.entity.Follow;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.entity.Profile;
+import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.MemberRepository;
 import mainproject33.domain.member.repository.ProfileRepository;
 import mainproject33.global.exception.BusinessLogicException;
@@ -22,6 +24,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+
+    private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
 
@@ -74,19 +78,24 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
-    public void verifyMember(Long memberId, Member principal) {
+    public Follow follow(Long memberId, Member principal) {
 
-        if(!Objects.equals(memberId, principal.getId())) {
-            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
+        Member follower = findVerifiedMember(memberId); // 팔로우를 받는 사람
+        Member following = findVerifiedMember(principal.getId()); // 팔로우를 하는 사람
+
+        Follow follow = new Follow();
+        follow.setFollower(follower);
+        follow.setFollowing(following);
+
+        Optional<Follow> verifyExistsFollow =
+                followRepository.findByFollow(follow.getFollower().getId(), follow.getFollowing().getId());
+
+        if(verifyExistsFollow.isPresent()) {
+            followRepository.delete(verifyExistsFollow.get());
+            return null;
         }
 
-    }
-
-    public Member follow(Long memberId, Member principal) {
-
-
-
-        return null;
+        return followRepository.save(follow);
     }
 
     public void verifyMember(Long memberId, Member principal) {

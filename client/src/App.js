@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import StoryDetail from "./pages/StoryDetail";
 import Signup from "./pages/Signup";
 import Quit from "./pages/Quit";
+import StoryWrite from "./pages/StoryWrite";
 
 const Wrap = styled.div`
 	display: flex;
@@ -53,6 +54,7 @@ const App = () => {
 							<Route path="/storyid" element={<StoryDetail />} />
 							<Route path="/signup" element={<Signup />} />
 							<Route path="/quit" element={<Quit />} />
+							<Route path="/storywrite" element={<StoryWrite />} />
 						</Routes>
 					</main>
 				</MainWrap>

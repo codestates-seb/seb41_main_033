@@ -22,6 +22,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+    private final ProfileImageService imageService;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
 
@@ -56,15 +57,14 @@ public class MemberService {
         Member findMember = findVerifiedMember(memberId);
         verifyMember(findMember.getId(), principal);
 
-        Optional.ofNullable(findMember.getNickname())
+        Optional.ofNullable(patch.getNickname())
                 .ifPresent(nickname -> findMember.setNickname(patch.getNickname()));
-        Optional.ofNullable(findMember.getProfile().getImage())
-                .ifPresent(image -> findMember.getProfile().setImage(patch.getProfile().getImage()));
-        Optional.ofNullable(findMember.getProfile().getIntroduction())
-                .ifPresent(introduction ->
-                        findMember.getProfile().setIntroduction(patch.getProfile().getIntroduction()));
-        Optional.ofNullable(findMember.getProfile().getGames())
-                .ifPresent(image -> findMember.getProfile().setGames(patch.getProfile().getGames()));
+        Optional.ofNullable(patch.getProfile().getBase64EncodedFile())
+                .ifPresent(base64EncodedFile -> imageService.updateProfileImage(findMember.getProfile(), base64EncodedFile));
+        Optional.ofNullable(patch.getProfile().getIntroduction())
+                .ifPresent(introduction -> findMember.getProfile().setIntroduction(introduction));
+        Optional.ofNullable(patch.getProfile().getGames())
+                .ifPresent(games -> findMember.getProfile().setGames(games));
 
         memberRepository.save(findMember);
     }
@@ -99,7 +99,7 @@ public class MemberService {
     public Profile createProfile() {
 
         Profile profile = new Profile();
-        profile.setImage("디폴트 이미지");
+        imageService.createDefaultProfileImage(profile);
         profile.setFollower(0);
         profile.setFollowing(0);
         profile.setLikes(0);

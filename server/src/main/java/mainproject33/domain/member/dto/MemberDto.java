@@ -2,16 +2,17 @@ package mainproject33.domain.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import javax.validation.constraints.Email;
+import mainproject33.domain.member.entity.Profile;
+
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MemberDto {
 
     @Getter
     @AllArgsConstructor
     public static class Post {
-
         @NotBlank(message = "이메일에는 공백이 올 수 없습니다.")
         private String identifier;
 
@@ -28,7 +29,7 @@ public class MemberDto {
         private String nickname;
         private String image;
         private String introduction;
-        private String game;
+        private List<String> games;
     }
 
     @Getter
@@ -38,9 +39,8 @@ public class MemberDto {
         private String identifier;
         private String password;
         private String nickname;
-        private String image;
-        private String introduction;
-        private String game;
+        private Profile profile;
+
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
     }

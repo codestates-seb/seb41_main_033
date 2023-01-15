@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +25,6 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody MemberDto.Post post) {
-
         Member member = memberService.createMember(mapper.postToMember(post));
         MemberDto.Response response = mapper.memberToResponse(member);
 
@@ -34,7 +34,6 @@ public class MemberController {
 
     @DeleteMapping("/{member-id}")
     public ResponseEntity dropOut(@PathVariable("member-id") @Positive Long memberId) {
-
         memberService.deleteMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

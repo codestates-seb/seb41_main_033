@@ -87,6 +87,10 @@ public class MemberService {
         follow.setFollower(follower);
         follow.setFollowing(following);
 
+        if(Objects.equals(follow.getFollower().getId(), follow.getFollowing().getId())) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_FOLLOW_NOT_ALLOWED);
+        }
+
         Optional<Follow> verifyExistsFollow =
                 followRepository.findByFollow(follow.getFollower().getId(), follow.getFollowing().getId());
 

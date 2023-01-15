@@ -45,7 +45,6 @@ public class MemberMapper {
         member.setNickname(patch.getNickname());
 
         Profile profile = new Profile();
-        profile.setBase64EncodedFile(patch.getImage());
         profile.setIntroduction(patch.getIntroduction());
         profile.setGames(patch.getGames());
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
@@ -10,14 +11,13 @@ const ProfileWrap = styled.div`
 `;
 
 const Profile = () => {
-  const URL = `https://f841-14-63-98-43.jp.ngrok.io`;
   const [user, setUser] = useState(null);
   const isMatch = false;
   const isStory = true;
 
   useEffect(() => {
     axios
-      .get(`${URL}/api/members/98`, {
+      .get(`${API_URL}/api/members/98`, {
         // ngrok get cors 해결용
         headers: { 'ngrok-skip-browser-warning': '69420' },
       })

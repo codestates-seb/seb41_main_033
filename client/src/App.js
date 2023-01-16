@@ -9,9 +9,11 @@ import Story from "./pages/Story";
 import Matching from "./pages/Matching";
 import MatchingDetail from "./pages/MatchingDetail";
 import Profile from "./pages/Profile";
+import Quit from "./pages/Quit";
+import ProfileEdit from "./pages/ProfileEdit";
+import GameRecommend from "./components/GameRecommend";
 import StoryDetail from "./pages/StoryDetail";
 import Signup from "./pages/Signup";
-import Quit from "./pages/Quit";
 import StoryWrite from "./pages/StoryWrite";
 
 const Wrap = styled.div`
@@ -27,7 +29,6 @@ const MainWrap = styled.section`
 	position: relative;
 	padding: 112px 0 0 0;
 	width: calc(100% - 200px);
-
 	.container {
 		width: 100%;
 		max-width: 1040px;
@@ -35,6 +36,7 @@ const MainWrap = styled.section`
 		margin: 48px auto 48px auto;
 	}
 `;
+
 const App = () => {
 	return (
 		<Wrap>
@@ -46,13 +48,15 @@ const App = () => {
 					<main className="container">
 						<Routes>
 							<Route path="/login" element={<Login />} />
+							<Route path="/signup" element={<Signup />} />
 							<Route path="/matchwrite" element={<MatchingWrite />} />
+							<Route path={`/game`} element={<GameRecommend />} />
 							<Route path="/" element={<Matching />} />
 							<Route path="/story" element={<Story />} />
-							<Route path="/userid" element={<Profile />} />
-							<Route path="/boardid" element={<MatchingDetail />} />
 							<Route path="/storyid" element={<StoryDetail />} />
-							<Route path="/signup" element={<Signup />} />
+							<Route path="/userid" element={<Profile />} />
+							<Route path="/userid/edit" element={<ProfileEdit />} />
+							<Route path="/boardid" element={<MatchingDetail />} />
 							<Route path="/quit" element={<Quit />} />
 							<Route path="/storywrite" element={<StoryWrite />} />
 						</Routes>

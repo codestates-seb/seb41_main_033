@@ -9,15 +9,27 @@ const ListWrap = styled.div`
     padding: 16px 24px;
     border-top: 1px solid var(--border-color);
     display: flex;
-    .match_game {
+    .game_container {
       width: 20px;
       height: 20px;
       border-radius: 50%;
+      overflow: hidden;
       margin: auto 0;
+      margin-right: 16px;
+      .game_icon {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
     .content_container {
-      width: 100%;
       line-height: var(--line-height-lg);
+    }
+    .match {
+      width: 100%;
+    }
+    .story {
+      width: calc(100% - 72px);
     }
     .content_title {
       font-size: var(--font-body2-size);
@@ -47,13 +59,15 @@ const ListWrap = styled.div`
       }
     }
     .image_container {
-      display: flex;
-      align-items: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: auto 0;
       margin-left: 16px;
       img {
-        width: 56px;
-        height: 56px;
-        border-radius: 4px;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
       }
     }
@@ -67,12 +81,14 @@ const ProfileContentList = ({ isMatch, isStory }) => {
         {isMatch
           ? dummyMatchContents.contents.map((content) => (
               <li key={content.id}>
-                <img
-                  className="match_game"
-                  src={content.icon}
-                  alt="게임 아이콘"
-                />
-                <div className="content_container">
+                <div className="game_container">
+                  <img
+                    className="game_icon"
+                    src={content.icon}
+                    alt="게임 아이콘"
+                  />
+                </div>
+                <div className="content_container match">
                   <div className="content_title">{content.title}</div>
                   <div className="content_date">
                     {new Date(content.createdAt).toLocaleString()}
@@ -84,7 +100,7 @@ const ProfileContentList = ({ isMatch, isStory }) => {
         {isStory
           ? dummyStoryContents.contents.map((content) => (
               <li key={content.id}>
-                <div className="content_container">
+                <div className="content_container story">
                   <div className="content_title">{content.title}</div>
                   <div className="content_date">
                     {new Date(content.createdAt).toLocaleString()}

@@ -120,7 +120,6 @@ const ProfileCard = ({
             <ProfileImg className="img_profile" />
           )}
           <div className="name_content">
-            {/* 정보 수정 필요 */}
             <div className="nickname">{nickname}</div>
             <div className="identifier">{identifier}</div>
           </div>
@@ -138,7 +137,6 @@ const ProfileCard = ({
           )}
         </InformWrap>
         <FollowWrap>
-          {/* 정보 수정 필요 */}
           <Follow>
             <div className="follow">팔로잉</div>
             <div className="number">{following}</div>
@@ -172,7 +170,6 @@ const ProfileCard = ({
         </GameWrap>
       </ProfileWrap>
       <ProfileWrap className="card sm">
-        {/* 정보 수정 필요 */}
         <div className="inform_title">자기 소개</div>
         <div className="inform_content">{introduction}</div>
       </ProfileWrap>

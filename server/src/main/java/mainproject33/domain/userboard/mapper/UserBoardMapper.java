@@ -1,6 +1,5 @@
 package mainproject33.domain.userboard.mapper;
 
-import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.dto.UserBoardPatchDto;
 import mainproject33.domain.userboard.dto.UserBoardPostDto;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
@@ -30,4 +29,5 @@ public interface UserBoardMapper
 
         return responses;
     }
+
 }

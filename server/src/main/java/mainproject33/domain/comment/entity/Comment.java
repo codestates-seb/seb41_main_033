@@ -5,9 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
+import mainproject33.domain.like.entity.Like;
 import mainproject33.global.audit.Auditable;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -19,6 +22,8 @@ public class Comment extends Auditable
 
     private String content;
 
+    private int likeCount = 0;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -26,6 +31,10 @@ public class Comment extends Auditable
     @ManyToOne
     @JoinColumn(name = "user_board_id")
     private UserBoard userBoard;
+
+
+    @OneToMany(mappedBy = "comment")
+    private Set<Like> likes = new HashSet<>();
 
     @Builder
     public Comment(Long id, String content)
@@ -39,10 +48,28 @@ public class Comment extends Auditable
         this.content = content;
     }
 
+    public void addMember(Member member)
+    {
+        this.member = member;
+        if(member.getComments().contains(this))
+            member.getComments().add(this);
+    }
+
+
     public void addUserBoard(UserBoard userBoard)
     {
         this.userBoard = userBoard;
         if(!userBoard.getComments().contains(this))
             userBoard.getComments().add(this);
+    }
+
+    public void addLike()
+    {
+        ++this.likeCount;
+    }
+
+    public void unlike()
+    {
+        --this.likeCount;
     }
 }

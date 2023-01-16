@@ -1,13 +1,20 @@
-import styled from "styled-components";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./style.css";
-import Header from "./components/Header";
-import Nav from "./components/Nav";
-import Login from "./pages/Login";
-import MatchingWrite from "./pages/MatchingWrite";
-import Matching from "./pages/Matching";
-import MatchingDetail from "./pages/MatchingDetail";
+
+import styled from 'styled-components';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './style.css';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Login from './pages/Login';
+import MatchingWrite from './pages/MatchingWrite';
+import Story from './pages/Story';
+import Matching from './pages/Matching';
+import MatchingDetail from './pages/MatchingDetail';
+import Profile from './pages/Profile';
+import Quit from './pages/Quit';
+import ProfileEdit from './pages/ProfileEdit';
 import GameRecommend from "./components/GameRecommend";
+
+
 const Wrap = styled.div`
   display: flex;
   flex: 1;
@@ -21,7 +28,6 @@ const MainWrap = styled.section`
   position: relative;
   padding: 112px 0 0 0;
   width: calc(100% - 200px);
-
   .container {
     width: 100%;
     max-width: 1040px;
@@ -29,6 +35,7 @@ const MainWrap = styled.section`
     margin: 48px auto 48px auto;
   }
 `;
+
 const App = () => {
   return (
     <Wrap>
@@ -40,17 +47,20 @@ const App = () => {
           <main className="container">
             <Routes>
               <Route path="/login" element={<Login />} />
-              <Route path="/" element={<Matching />} />
-              {/*  <Route path="/signup" element={<Signup />} />
-          <Route path={`/:${user-id}`} element={<Profile />} />
-          <Route path="/storyfriend" element={<Story />} />
-          <Route path={`/:${user-id}/edit`} element={<Profile />} />
-          <Route path={`/:${user-id}/:${board-id}`} element={<StoryDetail />} /> */}
-              {/* <Route path="/storyall" element={<Story />} />
-          <Route path={`/${board - id}`} element={<MatchingDetail />} />
-          <Route path="/quit" element={<Quit />} /> */}
               <Route path="/matchwrite" element={<MatchingWrite />} />
               <Route path={`/game`} element={<GameRecommend />} />
+              <Route path="/" element={<Matching />} />
+              <Route path="/story" element={<Story />} />
+              <Route path="/userid" element={<Profile />} />
+              <Route path="/userid/edit" element={<ProfileEdit />} />
+              <Route path="/boardid" element={<MatchingDetail />} />
+              <Route path="/quit" element={<Quit />} />
+              {/* <Route path="/signup" element={<Signup />} />
+              <Route
+                path={`/:${user - id}/:${board - id}`}
+                element={<StoryDetail />}
+              /> */}
+
             </Routes>
           </main>
         </MainWrap>

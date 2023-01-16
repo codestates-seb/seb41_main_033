@@ -8,17 +8,17 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-public class Follow {
+public class Block {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "follower_id")
-    private Member follower;
+    @JoinColumn(name = "blocker_id")
+    private Member Blocker;
 
     @ManyToOne
-    @JoinColumn(name = "following_id")
-    private Member following;
+    @JoinColumn(name = "blocking_id")
+    private Member Blocking;
 }

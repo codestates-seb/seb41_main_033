@@ -96,4 +96,11 @@ public class MemberController {
         return new ResponseEntity<>("좋아요가 완료되었습니다.", HttpStatus.OK);
     }
 
+    @PostMapping("/{member-id}/blocks")
+    public ResponseEntity block(@PathVariable("member-id") @Positive Long memberId,
+                                @AuthenticationPrincipal Member principal) {
+
+        return null;
+    }
+
 }

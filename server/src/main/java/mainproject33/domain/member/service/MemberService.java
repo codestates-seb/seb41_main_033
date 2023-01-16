@@ -2,10 +2,7 @@ package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.like.entity.Like;
-import mainproject33.domain.member.entity.Follow;
-import mainproject33.domain.member.entity.Likes;
-import mainproject33.domain.member.entity.Member;
-import mainproject33.domain.member.entity.Profile;
+import mainproject33.domain.member.entity.*;
 import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.LikesRepository;
 import mainproject33.domain.member.repository.MemberRepository;
@@ -131,6 +128,11 @@ public class MemberService {
         }
 
         return likesRepository.save(likes);
+    }
+
+    public Block block(Long memberId, Member principal) {
+
+        return null;
     }
 
 

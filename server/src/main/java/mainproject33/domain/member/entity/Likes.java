@@ -21,5 +21,4 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "liking_id")
     private Member liking;
-
 }

@@ -1,3 +1,4 @@
+
 import styled from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './style.css';
@@ -11,6 +12,8 @@ import MatchingDetail from './pages/MatchingDetail';
 import Profile from './pages/Profile';
 import Quit from './pages/Quit';
 import ProfileEdit from './pages/ProfileEdit';
+import GameRecommend from "./components/GameRecommend";
+
 
 const Wrap = styled.div`
   display: flex;
@@ -45,6 +48,7 @@ const App = () => {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/matchwrite" element={<MatchingWrite />} />
+              <Route path={`/game`} element={<GameRecommend />} />
               <Route path="/" element={<Matching />} />
               <Route path="/story" element={<Story />} />
               <Route path="/userid" element={<Profile />} />
@@ -56,6 +60,7 @@ const App = () => {
                 path={`/:${user - id}/:${board - id}`}
                 element={<StoryDetail />}
               /> */}
+
             </Routes>
           </main>
         </MainWrap>

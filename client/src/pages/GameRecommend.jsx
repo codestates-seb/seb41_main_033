@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Drag from "../util/drag";
+import styled from 'styled-components';
+import Drag from '../components/Drag';
 
 const Warp = styled.div`
   display: flex;

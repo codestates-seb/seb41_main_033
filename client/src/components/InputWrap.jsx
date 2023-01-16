@@ -9,7 +9,8 @@ const InputEdit = styled.input`
     width: 100%;
   }
 `;
-const Input = ({ type, value, name, placeholder, ...rest }) => {
+
+const InputWrap = ({ type, value, name, placeholder, ...rest }) => {
   if (name === 'team') {
     value = value.replaceAll(/[^0-9]/g, '').substring(0, 2);
     if (value < 1 || value > 25) {
@@ -27,4 +28,5 @@ const Input = ({ type, value, name, placeholder, ...rest }) => {
     />
   );
 };
-export default Input;
+
+export default InputWrap;

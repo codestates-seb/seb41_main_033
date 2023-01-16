@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { ReactComponent as Game } from "./../assets/mohagi.svg";
-import styled from "styled-components";
-import Animation from "../util/Animation";
-import useAudio from "../hooks/useAudio";
-import sound from "../assets/game.mp3";
-import drum from "../assets/drum.mp3";
-import RandomRolling from "../components/RandomRolling";
+import { useState } from 'react';
+import { ReactComponent as Game } from './../assets/mohagi.svg';
+import styled from 'styled-components';
+import Confetti from './Confetti';
+import useAudio from '../hooks/useAudio';
+import sound from '../assets/game.mp3';
+import drum from '../assets/drum.mp3';
+import RandomRolling from '../components/RandomRolling';
 
 const Icon = styled.div`
   div {
@@ -42,7 +42,7 @@ const Drag = () => {
     e.preventDefault();
     setDnD({
       isDragging: true,
-      draggedTo: "중간지점",
+      draggedTo: '중간지점',
     });
     setDrag(false);
     setRecommend(true);
@@ -55,7 +55,7 @@ const Drag = () => {
     setPass(false);
     setDnD({
       isDragging: false,
-      draggedTo: "끝",
+      draggedTo: '끝',
     });
   };
 
@@ -70,9 +70,10 @@ const Drag = () => {
       >
         <div>{!recommend && <Game />}</div>
 
-        <div>{isDrag && play && <Animation />}</div>
+        <div>{isDrag && play && <Confetti />}</div>
       </Icon>
     </div>
   );
 };
+
 export default Drag;

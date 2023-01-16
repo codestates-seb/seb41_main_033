@@ -92,6 +92,7 @@ public class MemberMapper {
                 userBoardMapper.userBoardToResponses(member.getUserBoards());
 
         profileResponse.setId(member.getProfile().getId());
+        profileResponse.setIdentifier(member.getIdentifier());
         profileResponse.setNickname(member.getNickname());
         profileResponse.setImage(member.getProfile().getImage());
         profileResponse.setFollower(member.getProfile().getFollower());

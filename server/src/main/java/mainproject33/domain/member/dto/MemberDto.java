@@ -62,6 +62,7 @@ public class MemberDto {
     public static class ProfileResponse {
 
         private Long id;
+        private String identifier;
         private String nickname;
         private ProfileImage image;
         private int follower;

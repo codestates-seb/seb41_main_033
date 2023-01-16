@@ -62,14 +62,6 @@ public class CommentService
         return commentRepository.findAllByUserBoardId(PageRequest.of(page, size, Sort.by("likeCount").descending()), userBoardId);
     }
 
-    //api 논의 필요
-    @Transactional(readOnly = true)
-    public Page<Comment> findAllCommentsByMemberId(int page, int size, long memberId)
-    {
-        return commentRepository.findAllByMemberId(PageRequest.of(page, size, Sort.by("id").ascending()), memberId);
-    }
-
-
     public void deleteComment(long id)
     {
         verifyExistComment(id);

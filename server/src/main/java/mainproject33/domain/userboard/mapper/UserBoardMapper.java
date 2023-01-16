@@ -1,14 +1,12 @@
 package mainproject33.domain.userboard.mapper;
 
 import lombok.RequiredArgsConstructor;
-import mainproject33.domain.boardfile.UserBoardFile;
-import mainproject33.domain.boardfile.UserBoardFileRepository;
-import mainproject33.domain.boardfile.UserBoardFileResponse;
+import mainproject33.domain.boardfile.entity.UserBoardFile;
+import mainproject33.domain.boardfile.repository.UserBoardFileRepository;
 import mainproject33.domain.userboard.dto.UserBoardPatchDto;
 import mainproject33.domain.userboard.dto.UserBoardPostDto;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.entity.UserBoard;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -50,21 +48,13 @@ public class UserBoardMapper
         if(entity == null)
             return null;
 
-        List<UserBoardFile> userBoardFiles = entity.getUserBoardFiles();
-
-        List<String> uploadFilenames = new ArrayList<>();
-
-        for (String uploadFilename : uploadFilenames)
-        {
-            uploadFilenames.add(fileRepository.findUploadFileNameByUserBoardId(entity.getId()));
-        }
 
         UserBoardResponseDto response = UserBoardResponseDto.builder()
                 .memberId(entity.getMember().getId())
                 .nickname(entity.getMember().getNickname())
                 .id(entity.getId())
                 .content(entity.getContent())
-                .uploadFileNames(uploadFilenames)
+                .uploadFileName(getUploadFileName(entity))
                 .commentCount(entity.getComments().size())
                 .likeCount(entity.getLikeCount())
                 .createdAt(entity.getCreatedAt())
@@ -81,5 +71,21 @@ public class UserBoardMapper
                 .collect(Collectors.toList());
 
         return responses;
+    }
+
+    private String getUploadFileName(UserBoard userBoard)
+    {
+        if(userBoard == null)
+            return null;
+
+        UserBoardFile userBoardFile = userBoard.getUserBoardFile();
+        if(userBoardFile == null)
+            return null;
+
+        String uploadFileName = userBoardFile.getUploadFileName();
+        if(uploadFileName == null)
+            uploadFileName = "";
+
+        return uploadFileName;
     }
 }

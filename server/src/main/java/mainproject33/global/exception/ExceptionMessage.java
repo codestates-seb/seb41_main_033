@@ -19,8 +19,12 @@ public enum ExceptionMessage {
 
 
     //=========comment=========//
-    COMMENT_NOT_FOUND("존재하지 않는 답글입니다.");
+    COMMENT_NOT_FOUND("존재하지 않는 답글입니다."),
 
+
+    //=========user board file=========//
+
+    EXT_NOT_ACCEPTED("확장자 명이 올바르지 않습니다.");
 
 
 

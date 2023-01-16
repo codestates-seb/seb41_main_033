@@ -1,8 +1,8 @@
 package mainproject33.domain.userboard.service;
 
 import lombok.RequiredArgsConstructor;
-import mainproject33.domain.boardfile.UserBoardFile;
-import mainproject33.domain.boardfile.UserBoardFileService;
+import mainproject33.domain.boardfile.entity.UserBoardFile;
+import mainproject33.domain.boardfile.service.UserBoardFileService;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
@@ -28,18 +28,17 @@ public class UserBoardService
 
     private final UserBoardFileService boardFileService;
 
-    public UserBoard postUserBoard(UserBoard request, Member member, List<MultipartFile> files) throws IOException
+    public UserBoard postUserBoard(UserBoard request, Member member, MultipartFile file) throws IOException
     {
-        List<UserBoardFile> userBoardFiles = boardFileService.storeFiles(files);
+        if(file != null)
+        {
+            UserBoardFile userBoardFile = boardFileService.storeFile(file);
+            userBoardFile.addUserBoard(request);
+        }
 
         UserBoard userBoard = userBoardRepository.save(request);
 
         userBoard.addMember(member);
-
-        for (UserBoardFile userBoardFile : userBoardFiles)
-        {
-            userBoardFile.addUserBoard(request);
-        }
 
         return userBoard;
     }
@@ -69,7 +68,6 @@ public class UserBoardService
     {
         return userBoardRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
     }
-
 
     public void deleteOne(Long id)
     {

@@ -2,7 +2,6 @@ package mainproject33.domain.userboard.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mainproject33.domain.boardfile.UserBoardFileService;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.service.MemberService;
 import mainproject33.domain.userboard.dto.UserBoardPatchDto;
@@ -32,18 +31,17 @@ import java.util.List;
 public class UserBoardController
 {
     private final UserBoardService boardService;
-
     private final MemberService memberService;
     private final UserBoardMapper mapper;
 
     @PostMapping
     public ResponseEntity postBoard(@Valid @RequestPart(value = "data") UserBoardPostDto postDto,
-                                    @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                    @RequestPart(required = false) MultipartFile file,
                                     @AuthenticationPrincipal Member member) throws IOException
     {
         Member findMember = memberService.findVerifiedMember(member.getId());
 
-        UserBoard userBoard = boardService.postUserBoard(mapper.postToUserBoard(postDto), findMember, files);
+        UserBoard userBoard = boardService.postUserBoard(mapper.postToUserBoard(postDto), findMember, file);
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard);
 
@@ -53,8 +51,7 @@ public class UserBoardController
 
     @PatchMapping("/{board-id}")
     public ResponseEntity patchBoard(@PathVariable("board-id") @Positive long boardId,
-                                     @Valid @RequestPart UserBoardPatchDto patchDto,
-                                     @RequestPart MultipartFile file,
+                                     @Valid @RequestBody UserBoardPatchDto patchDto,
                                      @AuthenticationPrincipal Member member)
     {
         boardService.verifyMember(member, boardId);

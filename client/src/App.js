@@ -1,20 +1,20 @@
-import styled from "styled-components";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./style.css";
-import Header from "./components/Header";
-import Nav from "./components/Nav";
-import Login from "./pages/Login";
-import MatchingWrite from "./pages/MatchingWrite";
-import Story from "./pages/Story";
-import Matching from "./pages/Matching";
-import MatchingDetail from "./pages/MatchingDetail";
-import Profile from "./pages/Profile";
-import Quit from "./pages/Quit";
-import ProfileEdit from "./pages/ProfileEdit";
-import GameRecommend from "./components/GameRecommend";
-import StoryDetail from "./pages/StoryDetail";
-import Signup from "./pages/Signup";
-import StoryWrite from "./pages/StoryWrite";
+import styled from 'styled-components';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './style.css';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Matching from './pages/Matching';
+import MatchingDetail from './pages/MatchingDetail';
+import MatchingWrite from './pages/MatchingWrite';
+import Story from './pages/Story';
+import StoryDetail from './pages/StoryDetail';
+import StoryWrite from './pages/StoryWrite';
+import Profile from './pages/Profile';
+import ProfileEdit from './pages/ProfileEdit';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Quit from './pages/Quit';
+import GameRecommend from './pages/GameRecommend';
 
 const Wrap = styled.div`
 	display: flex;
@@ -38,33 +38,33 @@ const MainWrap = styled.section`
 `;
 
 const App = () => {
-	return (
-		<Wrap>
-			<Router basename={process.env.PUBLIC_URL}>
-				<Nav />
-				<MainWrap>
-					<Header />
-					{/* 아래 main 안에 각 페이지가 들어갑니다. */}
-					<main className="container">
-						<Routes>
-							<Route path="/login" element={<Login />} />
-							<Route path="/signup" element={<Signup />} />
-							<Route path="/matchwrite" element={<MatchingWrite />} />
-							<Route path={`/game`} element={<GameRecommend />} />
-							<Route path="/" element={<Matching />} />
-							<Route path="/story" element={<Story />} />
-							<Route path="/storyid" element={<StoryDetail />} />
-							<Route path="/userid" element={<Profile />} />
-							<Route path="/userid/edit" element={<ProfileEdit />} />
-							<Route path="/boardid" element={<MatchingDetail />} />
-							<Route path="/quit" element={<Quit />} />
-							<Route path="/storywrite" element={<StoryWrite />} />
-						</Routes>
-					</main>
-				</MainWrap>
-			</Router>
-		</Wrap>
-	);
+  return (
+    <Wrap>
+      <Router basename={process.env.PUBLIC_URL}>
+        <Nav />
+        <MainWrap>
+          <Header />
+          {/* 아래 main 안에 각 페이지가 들어갑니다. */}
+          <main className="container">
+            <Routes>
+              <Route path="/" element={<Matching />} />
+              <Route path="/:boardid" element={<MatchingDetail />} />
+              <Route path="/matchwrite" element={<MatchingWrite />} />
+              <Route path="story" element={<Story />} />
+              <Route path="/:userid/:boardid" element={<StoryDetail />} />
+              <Route path="/storywrite" element={<StoryWrite />} />
+              <Route path="/:userid" element={<Profile />} />
+              <Route path="/:userid/edit" element={<ProfileEdit />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/quit" element={<Quit />} />
+              <Route path="/game" element={<GameRecommend />} />
+            </Routes>
+          </main>
+        </MainWrap>
+      </Router>
+    </Wrap>
+  );
 };
 
 export default App;

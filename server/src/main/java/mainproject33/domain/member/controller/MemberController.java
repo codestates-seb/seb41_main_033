@@ -1,11 +1,10 @@
 package mainproject33.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
-import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.Follow;
-import mainproject33.domain.member.entity.Likes;
 import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.entity.MemberLikes;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.SingleResponseDto;
@@ -87,9 +86,9 @@ public class MemberController {
     public ResponseEntity like(@PathVariable("member-id") @Positive Long memberId,
                                @AuthenticationPrincipal Member principal) {
 
-        Likes likes = memberService.like(memberId, principal);
+        MemberLikes memberLikes = memberService.like(memberId, principal);
 
-        if(likes == null) {
+        if(memberLikes == null) {
             return new ResponseEntity<>("좋아요가 취소되었습니다.", HttpStatus.OK);
         }
 

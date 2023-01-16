@@ -1,10 +1,9 @@
 package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
-import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.member.entity.*;
 import mainproject33.domain.member.repository.FollowRepository;
-import mainproject33.domain.member.repository.LikesRepository;
+import mainproject33.domain.member.repository.MemberLikesRepository;
 import mainproject33.domain.member.repository.MemberRepository;
 import mainproject33.domain.member.repository.ProfileRepository;
 import mainproject33.global.exception.BusinessLogicException;
@@ -26,7 +25,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
 
-    private final LikesRepository likesRepository;
+    private final MemberLikesRepository memberLikesRepository;
     private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
@@ -106,12 +105,12 @@ public class MemberService {
         return followRepository.save(follow);
     }
 
-    public Likes like(Long memberId, Member principal) {
+    public MemberLikes like(Long memberId, Member principal) {
 
         Member liker = findVerifiedMember(memberId);
         Member liking = findVerifiedMember(principal.getId());
 
-        Likes likes = new Likes();
+        MemberLikes likes = new MemberLikes();
         likes.setLiker(liker);
         likes.setLiking(liking);
 
@@ -119,15 +118,15 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
         }
 
-        Optional<Likes> verifyExistsLikes =
-                likesRepository.findByLikes(likes.getLiker().getId(), likes.getLiking().getId());
+        Optional<MemberLikes> verifyExistsMemberLikes =
+                memberLikesRepository.findByMemberLikes(likes.getLiker().getId(), likes.getLiking().getId());
 
-        if(verifyExistsLikes.isPresent()) {
-            likesRepository.delete(verifyExistsLikes.get());
+        if(verifyExistsMemberLikes.isPresent()) {
+            memberLikesRepository.delete(verifyExistsMemberLikes.get());
             return null;
         }
 
-        return likesRepository.save(likes);
+        return memberLikesRepository.save(likes);
     }
 
     public Block block(Long memberId, Member principal) {

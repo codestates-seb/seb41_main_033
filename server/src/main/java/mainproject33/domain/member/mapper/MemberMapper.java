@@ -9,7 +9,7 @@ import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.repository.FollowRepository;
-import mainproject33.domain.member.repository.LikesRepository;
+import mainproject33.domain.member.repository.MemberLikesRepository;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class MemberMapper {
     private final GameDBRepository gameDBRepository;
 
     private final FollowRepository followRepository;
-    private final LikesRepository likesRepository;
+    private final MemberLikesRepository memberLikesRepository;
     private final MatchBoardMapper matchBoardMapper;
     private final UserBoardMapper userBoardMapper;
 
@@ -82,7 +82,7 @@ public class MemberMapper {
 
         int follower = followRepository.findByFollowerId(member.getId()).size();
         int following = followRepository.findByFollowingId(member.getId()).size();
-        int liker = likesRepository.findByLikerId(member.getId()).size();
+        int liker = memberLikesRepository.findByLikerId(member.getId()).size();
 
         List<GameDB> games = new ArrayList<>();
         for(int i=0; i<member.getProfile().getGames().size(); i++) {

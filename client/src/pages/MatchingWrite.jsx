@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import Input from '../components/Input';
 import Dropdown from '../components/DropDown';
 import React, { useState } from 'react';
+import InputWrap from '../components/InputWrap';
 
 const MatchContainer = styled.form`
   .user_info {
@@ -188,7 +188,7 @@ const MatchingWrite = () => {
         <MatchBox className="user_info">
           <div>
             <Label htmlFor="title">제목</Label>
-            <Input
+            <InputWrap
               type="text"
               name="title"
               id="title"
@@ -209,7 +209,7 @@ const MatchingWrite = () => {
           </div>
           <div>
             <Label htmlFor="team">구하려는 팀원수</Label>
-            <Input
+            <InputWrap
               type="text"
               name="team"
               id="team"

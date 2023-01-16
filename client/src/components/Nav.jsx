@@ -100,25 +100,25 @@ const Nav = () => {
 			</LogoWrap>
 			<Menu>
 				<li>
-					<NavLink to="/" activeClassName="active">
+					<NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
 						<MenuIconMatch />
 						<span>매칭하기</span>
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to="/story" activeClassName="active">
+					<NavLink to="/story" className={({ isActive }) => (isActive ? "active" : "")}>
 						<MenuIconStory />
 						<span>스토리</span>
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to="/game" activeClassName="active">
+					<NavLink to="/game" className={({ isActive }) => (isActive ? "active" : "")}>
 						<MenuIconGame />
 						<span>오늘뭐하지?</span>
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to="/:userid" activeClassName="active">
+					<NavLink to="/:userid" className={({ isActive }) => (isActive ? "active" : "")}>
 						<MenuIconProfile />
 						<span>마이프로필</span>
 					</NavLink>

@@ -9,12 +9,10 @@ import mainproject33.domain.boardfile.repository.UserBoardFileRepository;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,19 +24,10 @@ import java.util.UUID;
 @Service
 public class UserBoardFileService
 {
-    private final UserBoardRepository userBoardRepository;
     private final UserBoardFileRepository fileRepository;
 
     private final String bucket = "gameto";
     private final AmazonS3 amazonS3;
-
-    @Value("${file.dir}")
-    private String fileDir;
-
-    public String getFullPath(String filename)
-    {
-        return fileDir + filename;
-    }
 
     public UserBoardFile storeFile(MultipartFile multipartFile) throws IOException
     {
@@ -110,7 +99,7 @@ public class UserBoardFileService
     {
         String ext = file.getContentType();
 
-        if (!ext.contains("image"))
+        if (!ext.contains("image") && !ext.contains("video"))
             throw new BusinessLogicException(ExceptionMessage.EXT_NOT_ACCEPTED);
     }
 

@@ -30,8 +30,10 @@ public class UserBoardService
 
     public UserBoard postUserBoard(UserBoard request, Member member, MultipartFile file) throws IOException
     {
+
         if(file != null)
         {
+            boardFileService.verifyContentType(file);
             UserBoardFile userBoardFile = boardFileService.storeFile(file);
             userBoardFile.addUserBoard(request);
         }
@@ -73,6 +75,7 @@ public class UserBoardService
     {
         verifyExistBoard(id);
 
+        boardFileService.deleteUploadFile(id);
         userBoardRepository.deleteById(id);
     }
 

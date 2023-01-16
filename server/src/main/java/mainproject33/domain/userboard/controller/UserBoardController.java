@@ -36,7 +36,7 @@ public class UserBoardController
 
     @PostMapping
     public ResponseEntity postBoard(@Valid @RequestPart(value = "data") UserBoardPostDto postDto,
-                                    @RequestPart(required = false) MultipartFile file,
+                                    @RequestPart(value = "image", required = false) MultipartFile file,
                                     @AuthenticationPrincipal Member member) throws IOException
     {
         Member findMember = memberService.findVerifiedMember(member.getId());

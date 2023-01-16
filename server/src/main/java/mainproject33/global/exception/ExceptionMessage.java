@@ -27,7 +27,7 @@ public enum ExceptionMessage {
 
     //=========image=========//
     IMAGE_DATA_NOT_FOUND("존재하지 않는 프로필 이미지 데이터입니다."),
-    FILE_NOT_FOUND("존재하지 않는 파일입니다.");
+    FILE_NOT_FOUND("존재하지 않는 파일입니다."),
 
     //=========user board file=========//
 

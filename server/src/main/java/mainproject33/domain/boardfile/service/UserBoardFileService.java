@@ -1,8 +1,12 @@
 package mainproject33.domain.boardfile.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mainproject33.domain.boardfile.entity.UserBoardFile;
 import mainproject33.domain.boardfile.repository.UserBoardFileRepository;
+import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
 public class UserBoardFileService
 {
+    private final UserBoardRepository userBoardRepository;
     private final UserBoardFileRepository fileRepository;
+
+    private final String bucket = "gameto";
+    private final AmazonS3 amazonS3;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -33,13 +42,12 @@ public class UserBoardFileService
 
     public UserBoardFile storeFile(MultipartFile multipartFile) throws IOException
     {
-
         //image.png
         String uploadFilename = multipartFile.getOriginalFilename();
 
         String storeFileName = createStoreFileName(uploadFilename);
 
-        multipartFile.transferTo(new File(getFullPath(storeFileName)));
+        saveUploadFile(storeFileName, multipartFile);
 
         UserBoardFile boardFile = UserBoardFile
                 .builder()
@@ -61,12 +69,6 @@ public class UserBoardFileService
         return storeFileResult;
     }
 
-    public void deleteByUserBoardId(long userBoardId)
-    {
-        fileRepository.deleteByUserBoardId(userBoardId);
-    }
-
-
     private String createStoreFileName(String originalFilename)
     {
         //서버에 저장하는 파일 명
@@ -86,14 +88,41 @@ public class UserBoardFileService
         //확장자 명 추출
         String ext = originalFilename.substring(num + 1);
 
-        List<String> extList = new ArrayList<>();
-        extList.add("jpg");
-        extList.add("jpeg");
-        extList.add("png");
-
-        if(!extList.contains(ext))
-            throw new BusinessLogicException(ExceptionMessage.EXT_NOT_ACCEPTED);
-
         return ext;
+    }
+
+    private void saveUploadFile(String storeFileName, MultipartFile file)
+    {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
+        try
+        {
+            amazonS3.putObject(bucket, "StoryFiles/" + storeFileName, file.getInputStream(), metadata);
+        }
+        catch (IOException e)
+        {
+            log.warn("IOException happened", e);
+        }
+    }
+
+    public void verifyContentType(MultipartFile file)
+    {
+        String ext = file.getContentType();
+
+        if (!ext.contains("image"))
+            throw new BusinessLogicException(ExceptionMessage.EXT_NOT_ACCEPTED);
+    }
+
+    public void deleteUploadFile(long boardId)
+    {
+        UserBoardFile userBoardFile = verifyFile(boardId);
+        amazonS3.deleteObject(bucket, "StoryFiles/" + userBoardFile.getStoreFileName());
+    }
+
+    public UserBoardFile verifyFile(long boardId)
+    {
+        return fileRepository.findByUserBoardId(boardId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionMessage.FILE_NOT_FOUND));
     }
 }

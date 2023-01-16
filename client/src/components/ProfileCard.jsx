@@ -113,7 +113,7 @@ const ProfileCard = ({
           {image ? (
             <img
               className="img_profile"
-              src={image.uploadFileName}
+              src={image.storeFileName}
               alt="프로필 이미지"
             />
           ) : (

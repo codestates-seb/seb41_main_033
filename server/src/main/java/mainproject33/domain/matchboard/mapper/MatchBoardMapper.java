@@ -6,6 +6,7 @@ import mainproject33.domain.gamedb.repository.GameDBRepository;
 import mainproject33.domain.matchboard.dto.MatchBoardDto;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.service.ProfileImageService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 public class MatchBoardMapper {
 
     private final GameDBRepository gameDBRepository;
+    private final ProfileImageService imageService;
 
     public MatchBoard postMatchBoardToMatchBoard(MatchBoardDto.Post post, Member member) {
         if (post == null) return null;
@@ -62,6 +64,7 @@ public class MatchBoardMapper {
         response.setMemberId(getMemberId(matchBoard));
         response.setIdentifier(getIdentifier(matchBoard));
         response.setNickname(getNickname(matchBoard));
+        response.setImage(imageService.readProfileImagePath(matchBoard.getMember().getId()));
         response.setId(matchBoard.getId());
         response.setTitle(matchBoard.getTitle());
         response.setContent(matchBoard.getContent());

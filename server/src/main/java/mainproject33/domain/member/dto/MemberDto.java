@@ -18,8 +18,8 @@ public class MemberDto {
     public static class Post {
 
         @NotBlank(message = "아이디에는 공백이 올 수 없습니다.")
-        @Pattern(regexp = "^[A-z0-9가-힣]{4,16}$",
-                message = "아이디는 특수문자가 포함될 수 없으며, 4 ~ 16자 까지만 입력이 가능합니다.")
+        @Pattern(regexp = "^[A-z0-9]{4,16}$",
+                message = "아이디는 한글, 특수문자가 포함될 수 없으며, 4 ~ 16자 까지만 입력이 가능합니다.")
         private String identifier;
 
         @NotBlank(message = "패스워드에는 공백이 올 수 없습니다.")

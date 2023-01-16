@@ -1,5 +1,7 @@
 package mainproject33.domain.member.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mainproject33.domain.member.entity.Profile;
@@ -7,15 +9,10 @@ import mainproject33.domain.member.entity.ProfileImage;
 import mainproject33.domain.member.repository.ProfileImageRepository;
 import mainproject33.global.exception.ExceptionMessage;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +21,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProfileImageService {
     private final ProfileImageRepository imageRepository;
-    private final String filePath = "C:\\Users\\PC\\Desktop\\git\\seb41_main_033\\server\\src\\main\\resources\\memberImages\\"; // TODO : 실제 서버 filePath 로 수정 필요
+    private final AmazonS3 amazonS3;
+    private final String bucket = "gameto";
     private final String defaultFileName = "defaultImage";
     private final String defaultExtension = ".png";
 
@@ -54,34 +52,24 @@ public class ProfileImageService {
         return imageRepository.save(profileImage);
     }
 
-    public Resource readProfileImage(Long id) { // 프로필 이미지 가져오기
+    public String readProfileImagePath(Long id) { // 프로필 이미지 가져오기
         ProfileImage image = imageRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(ExceptionMessage.IMAGE_DATA_NOT_FOUND.get()));
 
-        Resource resource = new FileSystemResource(
-                filePath + image.getStoreFileName());
-
-        if (!resource.exists()) throw new NoSuchElementException(ExceptionMessage.FILE_NOT_FOUND.get());
-
-        return resource;
+        return amazonS3.getUrl(bucket, "ProfileImages/" + image.getStoreFileName()).toString();
     }
 
     private void saveDefaultImageFile(String storeFileName) { // 기본 프로필 이미지 파일 저장
-        Resource resource = new FileSystemResource(filePath + defaultFileName + defaultExtension);
-        try {
-            File file = resource.getFile();
-            File copy = new File(filePath + storeFileName);
-            Files.copy(file.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            log.warn("IOException happened", e);
-        }
+        amazonS3.copyObject(
+                bucket, "ProfileImages/defaultImage.png", bucket, "ProfileImages/" + storeFileName);
     }
 
-    private void saveImageFile(String fileName, MultipartFile file) {
+    private void saveImageFile(String storeFileName, MultipartFile file) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
         try {
-            String savedPath = filePath + fileName;
-            File path = new File(savedPath); // 파일 저장될 경로 설정
-            file.transferTo(path); // @RequestPart로 받은 file을 지정 경로에 저장
+            amazonS3.putObject(bucket, "ProfileImages/" + storeFileName, file.getInputStream(), metadata);
         } catch (IOException e) {
             log.warn("IOException happened", e);
         }
@@ -96,8 +84,7 @@ public class ProfileImageService {
 
     private void deleteImageFile(Long memberId) {
         ProfileImage findImage = findVerifiedImage(memberId);
-        File file = new File(filePath + findImage.getStoreFileName());
-        file.delete();
+        amazonS3.deleteObject(bucket, "ProfileImages/" + findImage.getStoreFileName());
     }
 
     public ProfileImage findVerifiedImage(Long memberId) {

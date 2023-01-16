@@ -1,5 +1,3 @@
-
-
 import styled from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './style.css';
@@ -15,7 +13,7 @@ import Quit from './pages/Quit';
 import ProfileEdit from './pages/ProfileEdit';
 import GameRecommend from "./components/GameRecommend";
 import StoryDetail from "./pages/StoryDetail";
-
+import Signup from "./pages/Signup";
 
 const Wrap = styled.div`
   display: flex;
@@ -40,6 +38,7 @@ const MainWrap = styled.section`
 
 const App = () => {
 
+
   return (
     <Wrap>
       <Router basename={process.env.PUBLIC_URL}>
@@ -50,6 +49,7 @@ const App = () => {
           <main className="container">
             <Routes>
               <Route path="/login" element={<Login />} />
+              	<Route path="/signup" element={<Signup />} />
               <Route path="/matchwrite" element={<MatchingWrite />} />
               <Route path={`/game`} element={<GameRecommend />} />
               <Route path="/" element={<Matching />} />
@@ -58,12 +58,7 @@ const App = () => {
               <Route path="/userid" element={<Profile />} />
               <Route path="/userid/edit" element={<ProfileEdit />} />
               <Route path="/boardid" element={<MatchingDetail />} />
-              <Route path="/quit" element={<Quit />} />
-              {/* <Route path="/signup" element={<Signup />} />
-              <Route
-                path={`/:${user - id}/:${board - id}`}
-                element={<StoryDetail />}
-              /> */}
+              <Route path="/quit" element={<Quit />} />  
 
             </Routes>
           </main>
@@ -71,6 +66,7 @@ const App = () => {
       </Router>
     </Wrap>
   );
+
 
 };
 

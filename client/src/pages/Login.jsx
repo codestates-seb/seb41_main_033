@@ -61,7 +61,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isValid, setIsValid] = useState("");
   const idValid = /^[A-z0-9]{4,16}$/;
-  const psdValid = /^(?=.*[A-z])(?=.*\d)(?=.*[~!@])[A-z\d~!@]{8,}$/;
+  const psdValid = /^(?=.*[A-z])(?=.*\d)(?=.*[~!@])[A-z\d~!@]{8,20}$/;
   const idValueCheck = idValid.test(identifier);
   const psdValueCheck = psdValid.test(password);
 

@@ -48,9 +48,10 @@ public class MatchBoardController {
 
     @PatchMapping("/{match-id}")
     public ResponseEntity patchMatchBoard(@PathVariable("match-id") @Positive(message = "id 값은 0보다 커야합니다.") Long id,
-                                          @RequestBody @Valid MatchBoardDto.Patch patch) {
+                                          @RequestBody @Valid MatchBoardDto.Patch patch,
+                                          @AuthenticationPrincipal Member member) {
         patch.setId(id);
-        MatchBoard matchBoard = matchBoardService.updateMatchBoard(mapper.patchMatchBoardToMatchBoard(patch));
+        MatchBoard matchBoard = matchBoardService.updateMatchBoard(mapper.patchMatchBoardToMatchBoard(patch), member);
 
         return new ResponseEntity(
                 new SingleResponseDto<>(mapper.matchBoardToMatchBoardResponse(matchBoard)), HttpStatus.OK);
@@ -80,8 +81,9 @@ public class MatchBoardController {
 
     @DeleteMapping("/{match-id}")
     public ResponseEntity deleteMatchBoard(@PathVariable("match-id")
-                                               @Positive(message = "id 값은 0보다 커야합니다.") Long id) {
-        matchBoardService.deleteMatchBoard(id);
+                                               @Positive(message = "id 값은 0보다 커야합니다.") Long id,
+                                           @AuthenticationPrincipal Member member) {
+        matchBoardService.deleteMatchBoard(member, id);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

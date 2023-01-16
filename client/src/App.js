@@ -1,4 +1,5 @@
 
+
 import styled from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './style.css';
@@ -13,6 +14,7 @@ import Profile from './pages/Profile';
 import Quit from './pages/Quit';
 import ProfileEdit from './pages/ProfileEdit';
 import GameRecommend from "./components/GameRecommend";
+import StoryDetail from "./pages/StoryDetail";
 
 
 const Wrap = styled.div`
@@ -37,6 +39,7 @@ const MainWrap = styled.section`
 `;
 
 const App = () => {
+
   return (
     <Wrap>
       <Router basename={process.env.PUBLIC_URL}>
@@ -51,6 +54,7 @@ const App = () => {
               <Route path={`/game`} element={<GameRecommend />} />
               <Route path="/" element={<Matching />} />
               <Route path="/story" element={<Story />} />
+              <Route path="/storyid" element={<StoryDetail />} />
               <Route path="/userid" element={<Profile />} />
               <Route path="/userid/edit" element={<ProfileEdit />} />
               <Route path="/boardid" element={<MatchingDetail />} />
@@ -67,6 +71,7 @@ const App = () => {
       </Router>
     </Wrap>
   );
+
 };
 
 export default App;

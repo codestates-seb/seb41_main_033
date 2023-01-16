@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 import { ReactComponent as BoardLikeIcon } from "./../assets/heartIcon.svg";
 import { ReactComponent as BoardCommentIcon } from "./../assets/sms.svg";
+import SinglePofileWrap from "./SingleProfileWrap";
 
 const StoryWrap = styled.div`
 	.storyMain {
@@ -97,15 +98,7 @@ const StorySingle = ({ data }) => {
 			<div className="storyMain">
 				<TextArea>
 					<a href="" title="유저 프로필로 이동">
-						<div className="profile">
-							<div className="profile_img_wrap">
-								<DefaultProfileImg />
-							</div>
-							<div className="profile_info_wrap">
-								<div className="username">{data.nickname}</div>
-								<div className="time">{data.createdAt}</div>
-							</div>
-						</div>
+						<SinglePofileWrap name={data.nickname} subInfo={data.createdAt} />
 					</a>
 					<div className="content">{data.content}</div>
 				</TextArea>

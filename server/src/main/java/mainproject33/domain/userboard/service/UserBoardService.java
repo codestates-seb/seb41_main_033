@@ -1,6 +1,8 @@
 package mainproject33.domain.userboard.service;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.boardfile.entity.UserBoardFile;
+import mainproject33.domain.boardfile.service.UserBoardFileService;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
@@ -11,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,9 +25,18 @@ public class UserBoardService
 {
     private final UserBoardRepository userBoardRepository;
 
+    private final UserBoardFileService boardFileService;
 
-    public UserBoard postUserBoard(UserBoard request, Member member)
+    public UserBoard postUserBoard(UserBoard request, Member member, MultipartFile file) throws IOException
     {
+
+        if(file != null)
+        {
+            boardFileService.verifyContentType(file);
+            UserBoardFile userBoardFile = boardFileService.storeFile(file);
+            userBoardFile.addUserBoard(request);
+        }
+
         UserBoard userBoard = userBoardRepository.save(request);
 
         userBoard.addMember(member);
@@ -57,11 +70,11 @@ public class UserBoardService
         return userBoardRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
     }
 
-
     public void deleteOne(Long id)
     {
         verifyExistBoard(id);
 
+        boardFileService.deleteUploadFile(id);
         userBoardRepository.deleteById(id);
     }
 

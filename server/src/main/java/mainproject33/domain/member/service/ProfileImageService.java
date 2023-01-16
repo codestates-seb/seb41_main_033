@@ -21,8 +21,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProfileImageService {
     private final ProfileImageRepository imageRepository;
-    private final String bucket = "gameto";
     private final AmazonS3 amazonS3;
+    private final String bucket = "gameto";
     private final String defaultFileName = "defaultImage";
     private final String defaultExtension = ".png";
 

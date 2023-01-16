@@ -31,7 +31,6 @@ public class MemberService {
 
     private final LikesRepository likesRepository;
     private final ProfileImageService imageService;
-
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;

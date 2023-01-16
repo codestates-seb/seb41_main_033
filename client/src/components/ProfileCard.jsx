@@ -161,9 +161,9 @@ const ProfileCard = ({
         <div className="inform_title">주로하는 게임</div>
         <GameWrap>
           <ul>
-            {games.map((game, idx) => (
-              <li key={idx} className="normal game_title">
-                {game}
+            {games.map((game) => (
+              <li key={game.id} className="normal game_title">
+                {game.korTitle}
               </li>
             ))}
           </ul>

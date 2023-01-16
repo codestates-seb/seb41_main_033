@@ -80,10 +80,6 @@ public class MemberMapper {
 
         MemberDto.ProfileResponse profileResponse = new MemberDto.ProfileResponse();
 
-        int follower = followRepository.findByFollowerId(member.getId()).size();
-        int following = followRepository.findByFollowingId(member.getId()).size();
-        int liker = memberLikesRepository.findByLikerId(member.getId()).size();
-
         List<GameDB> games = new ArrayList<>();
         for(int i=0; i<member.getProfile().getGames().size(); i++) {
             games.add(gameDBRepository.findByKorTitle(member.getProfile().getGames().get(i)));
@@ -98,9 +94,9 @@ public class MemberMapper {
         profileResponse.setId(member.getProfile().getId());
         profileResponse.setNickname(member.getNickname());
         profileResponse.setImage(member.getProfile().getImage());
-        profileResponse.setFollower(follower);
-        profileResponse.setFollowing(following);
-        profileResponse.setLikes(liker);
+        profileResponse.setFollower(member.getProfile().getFollower());
+        profileResponse.setFollowing(member.getProfile().getFollowing());
+        profileResponse.setLikes(member.getProfile().getLikes());
         profileResponse.setBlock(member.getProfile().isBlock());
         profileResponse.setIntroduction(member.getProfile().getIntroduction());
         profileResponse.setGames(games);

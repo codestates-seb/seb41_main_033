@@ -2,9 +2,7 @@ package mainproject33.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.member.dto.MemberDto;
-import mainproject33.domain.member.entity.Follow;
 import mainproject33.domain.member.entity.Member;
-import mainproject33.domain.member.entity.MemberLikes;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.SingleResponseDto;
@@ -73,26 +71,22 @@ public class MemberController {
     public ResponseEntity follow(@PathVariable("member-id") @Positive Long memberId,
                                  @AuthenticationPrincipal Member principal) {
 
-        Follow follow = memberService.follow(memberId, principal);
-
-        if(follow == null) {
-            return new ResponseEntity<>("팔로우가 취소되었습니다.", HttpStatus.OK);
+        if(memberService.follow(memberId, principal)) {
+            return new ResponseEntity<>("팔로우가 완료되었습니다.", HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("팔로우가 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("팔로우가 취소되었습니다.", HttpStatus.OK);
     }
 
     @PostMapping("/{member-id}/likes")
     public ResponseEntity like(@PathVariable("member-id") @Positive Long memberId,
                                @AuthenticationPrincipal Member principal) {
 
-        MemberLikes memberLikes = memberService.like(memberId, principal);
-
-        if(memberLikes == null) {
-            return new ResponseEntity<>("좋아요가 취소되었습니다.", HttpStatus.OK);
+        if(memberService.like(memberId, principal)) {
+            return new ResponseEntity<>("좋아요가 완료되었습니다.", HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("좋아요가 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("좋아요가 취소되었습니다.", HttpStatus.OK);
     }
 
     @PostMapping("/{member-id}/blocks")

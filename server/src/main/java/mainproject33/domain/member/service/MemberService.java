@@ -81,7 +81,7 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
-    public Follow follow(Long memberId, Member principal) {
+    public boolean follow(Long memberId, Member principal) {
 
         Member follower = findVerifiedMember(memberId); // 팔로우를 받는 사람
         Member following = findVerifiedMember(principal.getId()); // 팔로우를 하는 사람
@@ -98,14 +98,20 @@ public class MemberService {
                 followRepository.findByFollow(follow.getFollower().getId(), follow.getFollowing().getId());
 
         if(verifyExistsFollow.isPresent()) {
+            follower.getProfile().setFollower(follower.getProfile().getFollower() -1);
+            following.getProfile().setFollowing(following.getProfile().getFollowing() -1);
             followRepository.delete(verifyExistsFollow.get());
-            return null;
+            return false;
         }
 
-        return followRepository.save(follow);
+        follower.getProfile().setFollower(follower.getProfile().getFollower() +1);
+        following.getProfile().setFollowing(following.getProfile().getFollowing() +1);
+        followRepository.save(follow);
+
+        return true;
     }
 
-    public MemberLikes like(Long memberId, Member principal) {
+    public boolean like(Long memberId, Member principal) {
 
         Member liker = findVerifiedMember(memberId);
         Member liking = findVerifiedMember(principal.getId());
@@ -122,11 +128,16 @@ public class MemberService {
                 memberLikesRepository.findByMemberLikes(likes.getLiker().getId(), likes.getLiking().getId());
 
         if(verifyExistsMemberLikes.isPresent()) {
+            liker.getProfile().setLikes(liker.getProfile().getLikes() -1);
             memberLikesRepository.delete(verifyExistsMemberLikes.get());
-            return null;
+
+            return false;
         }
 
-        return memberLikesRepository.save(likes);
+        liker.getProfile().setLikes(liker.getProfile().getLikes() +1);
+        memberLikesRepository.save(likes);
+
+        return true;
     }
 
     public Block block(Long memberId, Member principal) {

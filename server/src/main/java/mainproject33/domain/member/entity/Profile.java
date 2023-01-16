@@ -18,7 +18,9 @@ public class Profile extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String image;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private ProfileImage image;
 
     private int follower;
 
@@ -33,6 +35,4 @@ public class Profile extends Auditable {
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> games = new ArrayList<>();
-
-
 }

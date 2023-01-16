@@ -27,7 +27,6 @@ import java.util.List;
 public class CommentController
 {
     private final CommentService commentService;
-
     private final MemberService memberService;
     private final CommentMapper mapper;
 

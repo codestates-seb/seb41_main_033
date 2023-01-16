@@ -1,8 +1,13 @@
 package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.like.entity.Like;
+import mainproject33.domain.member.entity.Follow;
+import mainproject33.domain.member.entity.Likes;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.entity.Profile;
+import mainproject33.domain.member.repository.FollowRepository;
+import mainproject33.domain.member.repository.LikesRepository;
 import mainproject33.domain.member.repository.MemberRepository;
 import mainproject33.domain.member.repository.ProfileRepository;
 import mainproject33.global.exception.BusinessLogicException;
@@ -11,6 +16,7 @@ import mainproject33.global.security.redis.RedisDao;
 import mainproject33.global.security.utils.CustomAuthorityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +28,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+
+    private final LikesRepository likesRepository;
+    private final ProfileImageService imageService;
+    private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
 
@@ -51,28 +61,79 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public void updateProfile(Long memberId, Member patch, Member principal) {
+    public Member updateProfile(Long memberId, Member patch, Member principal, MultipartFile file) {
 
         Member findMember = findVerifiedMember(memberId);
         verifyMember(findMember.getId(), principal);
 
-        Optional.ofNullable(findMember.getNickname())
-                .ifPresent(nickname -> findMember.setNickname(patch.getNickname()));
-        Optional.ofNullable(findMember.getProfile().getImage())
-                .ifPresent(image -> findMember.getProfile().setImage(patch.getProfile().getImage()));
-        Optional.ofNullable(findMember.getProfile().getIntroduction())
-                .ifPresent(introduction ->
-                        findMember.getProfile().setIntroduction(patch.getProfile().getIntroduction()));
-        Optional.ofNullable(findMember.getProfile().getGames())
-                .ifPresent(image -> findMember.getProfile().setGames(patch.getProfile().getGames()));
+        if (patch != null) {
+            Optional.ofNullable(patch.getNickname())
+                    .ifPresent(nickname -> findMember.setNickname(patch.getNickname()));
+            Optional.ofNullable(patch.getProfile().getIntroduction())
+                    .ifPresent(introduction -> findMember.getProfile().setIntroduction(introduction));
+            Optional.ofNullable(patch.getProfile().getGames())
+                    .ifPresent(games -> findMember.getProfile().setGames(games));
+        }
 
-        memberRepository.save(findMember);
+        if (file != null) imageService.updateProfileImage(findMember.getProfile(), file);
+
+        return memberRepository.save(findMember);
     }
 
     public Member findProfile(Long memberId) {
 
         return findVerifiedMember(memberId);
     }
+
+    public Follow follow(Long memberId, Member principal) {
+
+        Member follower = findVerifiedMember(memberId); // 팔로우를 받는 사람
+        Member following = findVerifiedMember(principal.getId()); // 팔로우를 하는 사람
+
+        Follow follow = new Follow();
+        follow.setFollower(follower);
+        follow.setFollowing(following);
+
+        if(Objects.equals(follow.getFollower().getId(), follow.getFollowing().getId())) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_FOLLOW_NOT_ALLOWED);
+        }
+
+        Optional<Follow> verifyExistsFollow =
+                followRepository.findByFollow(follow.getFollower().getId(), follow.getFollowing().getId());
+
+        if(verifyExistsFollow.isPresent()) {
+            followRepository.delete(verifyExistsFollow.get());
+            return null;
+        }
+
+        return followRepository.save(follow);
+    }
+
+    public Likes like(Long memberId, Member principal) {
+
+        Member liker = findVerifiedMember(memberId);
+        Member liking = findVerifiedMember(principal.getId());
+
+        Likes likes = new Likes();
+        likes.setLiker(liker);
+        likes.setLiking(liking);
+
+        if(Objects.equals(likes.getLiker().getId(), likes.getLiking().getId())) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
+        }
+
+        Optional<Likes> verifyExistsLikes =
+                likesRepository.findByLikes(likes.getLiker().getId(), likes.getLiking().getId());
+
+        if(verifyExistsLikes.isPresent()) {
+            likesRepository.delete(verifyExistsLikes.get());
+            return null;
+        }
+
+        return likesRepository.save(likes);
+    }
+
+
 
     public void verifyMember(Long memberId, Member principal) {
 
@@ -99,7 +160,7 @@ public class MemberService {
     public Profile createProfile() {
 
         Profile profile = new Profile();
-        profile.setImage("디폴트 이미지");
+        imageService.createDefaultProfileImage(profile);
         profile.setFollower(0);
         profile.setFollowing(0);
         profile.setLikes(0);

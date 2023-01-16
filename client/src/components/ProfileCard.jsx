@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as ProfileImg } from '../assets/defaultImg.svg';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
@@ -95,7 +96,7 @@ const GameWrap = styled.div`
 
 const ProfileCard = () => {
   /* 더미 데이터 */
-  const isMe = false;
+  const isMe = true;
 
   return (
     <div>
@@ -110,7 +111,9 @@ const ProfileCard = () => {
           {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
           {isMe ? (
             <div className="icon">
-              <Setting className="setting" />
+              <Link to="/userid/edit">
+                <Setting className="setting" />
+              </Link>
             </div>
           ) : (
             <div className="icon">

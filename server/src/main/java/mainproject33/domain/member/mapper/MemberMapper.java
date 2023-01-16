@@ -8,6 +8,8 @@ import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.entity.Profile;
+import mainproject33.domain.member.repository.FollowRepository;
+import mainproject33.domain.member.repository.LikesRepository;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import org.springframework.stereotype.Component;
@@ -20,8 +22,10 @@ import java.util.List;
 public class MemberMapper {
 
     private final GameDBRepository gameDBRepository;
-    private final MatchBoardMapper matchBoardMapper;
 
+    private final FollowRepository followRepository;
+    private final LikesRepository likesRepository;
+    private final MatchBoardMapper matchBoardMapper;
     private final UserBoardMapper userBoardMapper;
 
     public Member postToMember(MemberDto.Post post) {
@@ -43,13 +47,13 @@ public class MemberMapper {
 
         Member member = new Member();
 
-        Profile profile = new Profile();
-        member.setProfile(profile);
-
         member.setNickname(patch.getNickname());
-        member.getProfile().setImage(patch.getImage());
-        member.getProfile().setIntroduction(patch.getIntroduction());
-        member.getProfile().setGames(patch.getGames());
+
+        Profile profile = new Profile();
+        profile.setIntroduction(patch.getIntroduction());
+        profile.setGames(patch.getGames());
+
+        member.setProfile(profile);
 
         return member;
     }
@@ -76,30 +80,31 @@ public class MemberMapper {
 
         MemberDto.ProfileResponse profileResponse = new MemberDto.ProfileResponse();
 
-        profileResponse.setId(member.getProfile().getId());
-        profileResponse.setNickname(member.getNickname());
-        profileResponse.setImage(member.getProfile().getImage());
-        profileResponse.setFollower(member.getProfile().getFollower());
-        profileResponse.setFollowing(member.getProfile().getFollowing());
-        profileResponse.setLikes(member.getProfile().getLikes());
-        profileResponse.setBlock(member.getProfile().isBlock());
-        profileResponse.setIntroduction(member.getProfile().getIntroduction());
+        int follower = followRepository.findByFollowerId(member.getId()).size();
+        int following = followRepository.findByFollowingId(member.getId()).size();
+        int liker = likesRepository.findByLikerId(member.getId()).size();
 
         List<GameDB> games = new ArrayList<>();
         for(int i=0; i<member.getProfile().getGames().size(); i++) {
             games.add(gameDBRepository.findByKorTitle(member.getProfile().getGames().get(i)));
         }
 
-        profileResponse.setGames(games);
-
         List<MatchBoardDto.Response> matchBoards =
                 matchBoardMapper.matchBoardsToMatchBoardResponses(member.getMatchBoards());
-
-        profileResponse.setMatchBoards(matchBoards);
 
         List<UserBoardResponseDto> userBoards =
                 userBoardMapper.userBoardToResponses(member.getUserBoards());
 
+        profileResponse.setId(member.getProfile().getId());
+        profileResponse.setNickname(member.getNickname());
+        profileResponse.setImage(member.getProfile().getImage());
+        profileResponse.setFollower(follower);
+        profileResponse.setFollowing(following);
+        profileResponse.setLikes(liker);
+        profileResponse.setBlock(member.getProfile().isBlock());
+        profileResponse.setIntroduction(member.getProfile().getIntroduction());
+        profileResponse.setGames(games);
+        profileResponse.setMatchBoards(matchBoards);
         profileResponse.setUserBoards(userBoards);
         profileResponse.setCreatedAt(member.getProfile().getCreatedAt());
         profileResponse.setModifiedAt(member.getProfile().getModifiedAt());

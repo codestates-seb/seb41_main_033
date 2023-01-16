@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import Input from "../components/input";
-import Dropdown from "../components/DropDown";
-import React, { useState } from "react";
+import styled from 'styled-components';
+import Input from '../components/Input';
+import Dropdown from '../components/DropDown';
+import React, { useState } from 'react';
 
-const MacthContainer = styled.form`
+const MatchContainer = styled.form`
   .user_info {
     display: flex;
     flex-direction: column;
@@ -26,21 +26,25 @@ const MacthContainer = styled.form`
 const Wrap = styled.div`
   width: 100%;
 `;
-const MacthBox = styled.div`
+
+const MatchBox = styled.div`
   display: flex;
   justify-content: center;
 `;
+
 const UserImg = styled.img`
   border-radius: 50%;
   width: 80px;
   height: 80px;
   margin-right: 16px;
 `;
+
 const UserInfo = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 24px;
 `;
+
 const UserDiv = styled.div`
   .nickname {
     font-weight: var(--font-weight-medium);
@@ -48,11 +52,13 @@ const UserDiv = styled.div`
     color: var(--white);
   }
 `;
-const MacthBtn = styled.button`
+
+const MatchBtn = styled.button`
   width: 280px;
   padding: 12px 16px;
   margin: 32px 8px;
 `;
+
 const Label = styled.label`
   font-style: normal;
   font-weight: 500;
@@ -60,6 +66,7 @@ const Label = styled.label`
   line-height: 150%;
   letter-spacing: -0.023em;
 `;
+
 const TagsInput = styled.div`
   display: flex;
   flex-direction: row;
@@ -119,16 +126,16 @@ const TagsInput = styled.div`
     }
   }
 `;
+
 const MatchingWrite = () => {
   const [info, setInfo] = useState({
-    title: "",
-    game: "",
-    team: "",
-    content: "",
+    title: '',
+    game: '',
+    team: '',
+    content: '',
   });
-
   const [tags, setTags] = useState([]);
-  const [game, setGame] = useState("게임을 선택하세요");
+  const [game, setGame] = useState('게임을 선택하세요');
 
   const removeTags = (index) => {
     const newTag = tags.filter((_, idx) => idx !== index);
@@ -136,17 +143,17 @@ const MatchingWrite = () => {
   };
 
   const addTags = (event) => {
-    const newTag = event.target.value.replace(/ /g, "").substring(0, 6);
+    const newTag = event.target.value.replace(/ /g, '').substring(0, 6);
     if (
       !tags.includes(newTag) &&
-      event.key === "Enter" &&
+      event.key === 'Enter' &&
       tags.length < 3 &&
       newTag.length > 0
     ) {
       setTags([...tags, `#${newTag}`]);
-      event.target.value = "";
+      event.target.value = '';
     } else if (tags.length >= 3) {
-      event.target.value = "";
+      event.target.value = '';
     }
   };
   const changeValue = (e) => {
@@ -169,7 +176,7 @@ const MatchingWrite = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <MacthContainer className="card big" onsubmit="return false">
+    <MatchContainer className="card big" onsubmit="return false">
       <Wrap>
         <UserInfo>
           <UserImg src="https://cdn.pixabay.com/photo/2021/11/12/03/04/woman-6787784_1280.png" />
@@ -178,14 +185,14 @@ const MatchingWrite = () => {
             <div>유저아이디 </div>
           </UserDiv>
         </UserInfo>
-        <MacthBox className="user_info">
+        <MatchBox className="user_info">
           <div>
             <Label htmlFor="title">제목</Label>
             <Input
               type="text"
               name="title"
               id="title"
-              length={"30"}
+              length={'30'}
               placeholder="제목을 입력하세요"
               onChange={changeValue}
             />
@@ -243,15 +250,15 @@ const MatchingWrite = () => {
               onChange={changeValue}
             />
           </div>
-        </MacthBox>
-        <MacthBox>
-          <MacthBtn type="submit" onClick={submitBtn} className="em">
+        </MatchBox>
+        <MatchBox>
+          <MatchBtn type="submit" onClick={submitBtn} className="em">
             작성완료
-          </MacthBtn>
-          <MacthBtn className="normal">취소</MacthBtn>
-        </MacthBox>
+          </MatchBtn>
+          <MatchBtn className="normal">취소</MatchBtn>
+        </MatchBox>
       </Wrap>
-    </MacthContainer>
+    </MatchContainer>
   );
 };
 export default MatchingWrite;

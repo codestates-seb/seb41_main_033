@@ -1,7 +1,10 @@
 package mainproject33.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.member.dto.MemberDto;
+import mainproject33.domain.member.entity.Follow;
+import mainproject33.domain.member.entity.Likes;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -45,12 +49,15 @@ public class MemberController {
 
     @PatchMapping("/{member-id}")
     public ResponseEntity patchProfile(@PathVariable("member-id") @Positive Long memberId,
-                                       @RequestBody @Valid MemberDto.Patch patch,
+                                       @RequestPart(value = "data", required = false) @Valid MemberDto.Patch patch,
+                                       @RequestPart(value = "image", required = false) MultipartFile file,
                                        @AuthenticationPrincipal Member principal) {
 
-        memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal);
+        Member member = memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal, file);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member);
 
-        return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")
@@ -61,6 +68,32 @@ public class MemberController {
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @PostMapping("/{member-id}/follows")
+    public ResponseEntity follow(@PathVariable("member-id") @Positive Long memberId,
+                                 @AuthenticationPrincipal Member principal) {
+
+        Follow follow = memberService.follow(memberId, principal);
+
+        if(follow == null) {
+            return new ResponseEntity<>("팔로우가 취소되었습니다.", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("팔로우가 완료되었습니다.", HttpStatus.OK);
+    }
+
+    @PostMapping("/{member-id}/likes")
+    public ResponseEntity like(@PathVariable("member-id") @Positive Long memberId,
+                               @AuthenticationPrincipal Member principal) {
+
+        Likes likes = memberService.like(memberId, principal);
+
+        if(likes == null) {
+            return new ResponseEntity<>("좋아요가 취소되었습니다.", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("좋아요가 완료되었습니다.", HttpStatus.OK);
     }
 
 }

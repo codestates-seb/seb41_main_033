@@ -11,39 +11,43 @@ const ProfileWrap = styled.div`
 
 const Profile = () => {
   const URL = `https://f841-14-63-98-43.jp.ngrok.io`;
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const isMatch = false;
   const isStory = true;
 
   useEffect(() => {
-    async function getMember() {
-      await axios
-        .get(`${URL}/api/members/98`, {
-          // ngrok get cors 해결용
-          headers: { 'ngrok-skip-browser-warning': '69420' },
-        })
-        .then((res) => setUser(res.data.data));
-    }
-    getMember();
+    axios
+      .get(`${URL}/api/members/98`, {
+        // ngrok get cors 해결용
+        headers: { 'ngrok-skip-browser-warning': '69420' },
+      })
+      .then((res) => setUser(res.data.data));
   }, []);
 
-  console.log(user);
-
-  return (
-    <ProfileWrap>
-      <ProfileCard
-        iamge={user.iamge}
-        nickname={user.nickname}
-        identifier={'user.identifier'}
-        following={user.following}
-        follower={user.follower}
-        likes={user.likes}
-        games={user.games}
-        introduction={user.introduction}
-      />
-      <ProfileContent isMatch={isMatch} isStory={isStory} />
-    </ProfileWrap>
-  );
+  if (user) {
+    return (
+      <ProfileWrap>
+        <ProfileCard
+          iamge={user.iamge}
+          nickname={user.nickname}
+          identifier={'user.identifier'}
+          following={user.following}
+          follower={user.follower}
+          likes={user.likes}
+          games={user.games}
+          introduction={user.introduction}
+        />
+        <ProfileContent
+          isMatch={isMatch}
+          isStory={isStory}
+          matchBoards={user.matchBoards}
+          userBoards={user.userBoards}
+        />
+      </ProfileWrap>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default Profile;

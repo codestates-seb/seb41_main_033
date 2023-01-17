@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../data/apiUrl";
 import axios from "axios";
 const Flex = styled.div`
   display: flex;
@@ -20,6 +22,9 @@ const Space = styled.div`
   flex-direction: column;
   width: 100%;
   margin: 8px;
+  &.btn {
+    margin-top: 50px;
+  }
 `;
 const Title = styled.div`
   font-size: var(--font-head2-size);
@@ -50,42 +55,42 @@ const Label = styled.label`
   padding: 8px;
   text-align: left;
 `;
-const Valid = styled.span`
-  color: var(--red);
-  display: block;
-  padding: 8px;
-  text-align: left;
-`;
+
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [isValid, setIsValid] = useState("");
+  const [idError, setIdError] = useState(false);
+  const [psdError, setPsdError] = useState(false);
   const idValid = /^[A-z0-9]{4,16}$/;
   const psdValid = /^(?=.*[A-z])(?=.*\d)(?=.*[~!@])[A-z\d~!@]{8,20}$/;
   const idValueCheck = idValid.test(identifier);
   const psdValueCheck = psdValid.test(password);
-
+  const navigate = useNavigate();
   const submitHandle = (e) => {
     e.preventDefault();
     if (!idValueCheck) {
-      setIsValid("아이디 형식이 올바르지 않아요");
+      setIdError(true);
     } else if (!psdValueCheck) {
-      setIsValid("");
-      setIsValid("패스워드 형식이 올바르지 않아요");
+      setIdError(false);
+      setPsdError(true);
     } else if (idValueCheck && psdValueCheck) {
-      const data = { identifier, password };
-      console.log(data);
-      //   axios
-      //     .post(
-      //       "https://813c-14-63-98-43.jp.ngrok.io/games",
-      //       {
-      //         data,
-      //       },
-      //       {
-      //         withCredentials: true,
-      //       }
-      //     )
-      //     .then((res) => console.log(res));
+      axios
+        .post(
+          `${API_URL}/api/members/login`,
+          {
+            identifier,
+            password,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          navigate(`/`);
+          console.log(res.headers.authorization);
+          const token = res.headers.authorization;
+          localStorage.setItem("key", token);
+        });
     }
   };
 
@@ -98,23 +103,34 @@ const Login = () => {
             <Space>
               <Label htmlFor="id"> 아이디</Label>
               <LoginInput
+                className={idError && "error"}
+                placeholder="4~16자의 영문, 숫자의 아이디를 입력하세요"
                 id="id"
                 type="text"
                 onChange={(e) => setIdentifier(e.target.value)}
               />
+              {idError && (
+                <div className="error_caption">
+                  아이디는 4~16자의 영문, 숫자만 가능합니다.
+                </div>
+              )}
             </Space>
             <Space>
               <Label htmlFor="pwd">비밀번호</Label>
               <LoginInput
+                className={psdError && "error"}
+                placeholder="영문, 숫자, 특수문자(~,!,@) 포함 8자 이상 입력하세요"
                 id="pwd"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {psdError && (
+                <div className="error_caption">
+                  비밀번호 8~20자의 영문, 숫자, 특수문자(~, !, @)를 입력하세요
+                </div>
+              )}
             </Space>
-            <Space>
-              <Valid>{isValid}</Valid>
-            </Space>
-            <Space>
+            <Space className="btn">
               <LoginBtn type="submit" onClick={submitHandle} className="em">
                 로그인
               </LoginBtn>

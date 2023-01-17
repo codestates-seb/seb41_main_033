@@ -12,6 +12,9 @@ import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -70,11 +73,10 @@ public class CommentController
     }
 
     @GetMapping("/{board-id}/comments")
-    public ResponseEntity getComments(@PathVariable("board-id") @Positive long boardId,
-                                      @RequestParam(defaultValue = "1") @Positive int page,
-                                      @RequestParam(defaultValue = "15") @Positive int size)
+    public ResponseEntity getComments(@PageableDefault(size = 10, sort = "likeCount", direction = Sort.Direction.DESC)Pageable pageable,
+                                      @PathVariable("board-id") @Positive long boardId)
     {
-        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(page - 1, size, boardId);
+        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable, boardId);
         List<Comment> comments = pageComments.getContent();
 
         List<CommentResponseDto> responses = mapper.commentToResponses(comments);

@@ -1,3 +1,7 @@
+import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import ProfileCard from '../components/ProfileCard';
 import ProfileContent from '../components/ProfileContent';
@@ -7,15 +11,43 @@ const ProfileWrap = styled.div`
 `;
 
 const Profile = () => {
+  const [user, setUser] = useState(null);
   const isMatch = false;
   const isStory = true;
 
-  return (
-    <ProfileWrap>
-      <ProfileCard />
-      <ProfileContent isMatch={isMatch} isStory={isStory} />
-    </ProfileWrap>
-  );
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/members/98`, {
+        // ngrok get cors 해결용
+        headers: { 'ngrok-skip-browser-warning': '69420' },
+      })
+      .then((res) => setUser(res.data.data));
+  }, []);
+
+  if (user) {
+    return (
+      <ProfileWrap>
+        <ProfileCard
+          iamge={user.iamge}
+          nickname={user.nickname}
+          identifier={'user.identifier'}
+          following={user.following}
+          follower={user.follower}
+          likes={user.likes}
+          games={user.games}
+          introduction={user.introduction}
+        />
+        <ProfileContent
+          isMatch={isMatch}
+          isStory={isStory}
+          matchBoards={user.matchBoards}
+          userBoards={user.userBoards}
+        />
+      </ProfileWrap>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default Profile;

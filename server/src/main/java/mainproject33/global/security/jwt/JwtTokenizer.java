@@ -133,4 +133,21 @@ public class JwtTokenizer { // 토큰을 생성하고 검증하는 역할을 수
         return true;
     }
 
+    public Long tokenToMemberId(String token) {
+
+        if(token.equals("필요없음")) {
+            return null;
+        }
+
+        String jws = token.replace("Bearer ", "");
+
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jws)
+                .getBody();
+
+        return claims.get("id", Long.class);
+    }
+
 }

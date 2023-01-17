@@ -174,7 +174,6 @@ const ProfileEdit = () => {
           Authorization: `Bearer ${ACCESS_TOKEN}`,
         },
       })
-      .then((res) => console.log(res));
   };
 
   useEffect(() => {

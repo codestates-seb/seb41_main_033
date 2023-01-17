@@ -94,7 +94,11 @@ public class MemberController {
     public ResponseEntity block(@PathVariable("member-id") @Positive Long memberId,
                                 @AuthenticationPrincipal Member user) {
 
-        return null;
+        if(memberService.block(memberId, user)) {
+            return new ResponseEntity<>("해당 유저를 차단하셨습니다.", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("해당 유저 차단을 취소하셨습니다.", HttpStatus.OK);
     }
 
 }

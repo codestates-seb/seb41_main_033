@@ -2,10 +2,7 @@ package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.member.entity.*;
-import mainproject33.domain.member.repository.FollowRepository;
-import mainproject33.domain.member.repository.MemberLikesRepository;
-import mainproject33.domain.member.repository.MemberRepository;
-import mainproject33.domain.member.repository.ProfileRepository;
+import mainproject33.domain.member.repository.*;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import mainproject33.global.security.redis.RedisDao;
@@ -25,6 +22,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
     private final MemberLikesRepository memberLikesRepository;
+
+    private final BlockRepository blockRepository;
     private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
@@ -129,12 +128,28 @@ public class MemberService {
         }
     }
 
-    public Block block(Long memberId, Member principal) {
+    public boolean block(Long memberId, Member user) {
+        verifyBlock(user.getId(), memberId);
 
-        return null;
+        Member blocker = findVerifiedMember(user.getId());
+        Member blocked = findVerifiedMember(memberId);
+
+        Block block = new Block();
+        block.setBlocker(blocker);
+        block.setBlocked(blocked);
+
+        Optional<Block> optionalBlock =
+                blockRepository.findByBlock(user.getId(), memberId);
+
+        if(optionalBlock.isEmpty()) {
+            blockRepository.save(block);
+            return true;
+        } else {
+            blockRepository.delete(optionalBlock.get());
+            return false;
+        }
+
     }
-
-
 
     public void verifyMember(Long memberId, Member principal) {
 
@@ -170,6 +185,12 @@ public class MemberService {
         }
     }
 
+    private void verifyBlock(Long blockerId, Long blockedId) {
+        if(blockerId == blockedId) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_BLOCK_NOT_ALLOWED);
+        }
+    }
+
     public Profile createProfile() {
 
         Profile profile = new Profile();
@@ -177,7 +198,6 @@ public class MemberService {
         profile.setFollowerCount(0);
         profile.setFollowingCount(0);
         profile.setLikeCount(0);
-        profile.setBlock(false);
         profile.setIntroduction("소개문을 작성해주세요");
 
         return profileRepository.save(profile);

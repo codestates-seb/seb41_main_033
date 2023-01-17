@@ -6,16 +6,20 @@ import mainproject33.domain.gamedb.repository.GameDBRepository;
 import mainproject33.domain.matchboard.dto.MatchBoardDto;
 import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.member.dto.MemberDto;
+import mainproject33.domain.member.entity.Follow;
 import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.entity.MemberLikes;
 import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.repository.FollowRepository;
-import mainproject33.domain.member.repository.LikesRepository;
+import mainproject33.domain.member.repository.MemberLikesRepository;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.domain.userboard.mapper.UserBoardMapper;
+import mainproject33.global.security.jwt.JwtTokenizer;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -24,9 +28,10 @@ public class MemberMapper {
     private final GameDBRepository gameDBRepository;
 
     private final FollowRepository followRepository;
-    private final LikesRepository likesRepository;
+    private final MemberLikesRepository memberLikesRepository;
     private final MatchBoardMapper matchBoardMapper;
     private final UserBoardMapper userBoardMapper;
+    private final JwtTokenizer jwtTokenizer;
 
     public Member postToMember(MemberDto.Post post) {
 
@@ -74,15 +79,13 @@ public class MemberMapper {
         return response;
     }
 
-    public MemberDto.ProfileResponse ProfileToResponse(Member member) {
+    public MemberDto.ProfileResponse ProfileToResponse(Member member, String token) {
 
         if(member == null) return null;
 
         MemberDto.ProfileResponse profileResponse = new MemberDto.ProfileResponse();
 
-        int follower = followRepository.findByFollowerId(member.getId()).size();
-        int following = followRepository.findByFollowingId(member.getId()).size();
-        int liker = likesRepository.findByLikerId(member.getId()).size();
+        Long watchingMemberId = jwtTokenizer.tokenToMemberId(token);
 
         List<GameDB> games = new ArrayList<>();
         for(int i=0; i<member.getProfile().getGames().size(); i++) {
@@ -96,11 +99,14 @@ public class MemberMapper {
                 userBoardMapper.userBoardToResponses(member.getUserBoards());
 
         profileResponse.setId(member.getProfile().getId());
+        profileResponse.setIdentifier(member.getIdentifier());
         profileResponse.setNickname(member.getNickname());
         profileResponse.setImage(member.getProfile().getImage());
-        profileResponse.setFollower(follower);
-        profileResponse.setFollowing(following);
-        profileResponse.setLikes(liker);
+        profileResponse.setFollower(member.getProfile().getFollower());
+        profileResponse.setFollowing(member.getProfile().getFollowing());
+        profileResponse.setFollowInfo(verifyFollow(member.getId(), watchingMemberId));
+        profileResponse.setLikes(member.getProfile().getLikes());
+        profileResponse.setLikesInfo(verifyLike(member.getId(), watchingMemberId));
         profileResponse.setBlock(member.getProfile().isBlock());
         profileResponse.setIntroduction(member.getProfile().getIntroduction());
         profileResponse.setGames(games);
@@ -110,6 +116,28 @@ public class MemberMapper {
         profileResponse.setModifiedAt(member.getProfile().getModifiedAt());
 
         return profileResponse;
+    }
+
+    public boolean verifyFollow(Long memberId, Long watchingMemberId) {
+
+        Optional<Follow> checkFollow = followRepository.findByFollow(memberId, watchingMemberId);
+
+        if(checkFollow.isPresent()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean verifyLike(Long memberId, Long watchingMemberId) {
+
+        Optional<MemberLikes> checkLike = memberLikesRepository.findByMemberLikes(memberId, watchingMemberId);
+
+        if(checkLike.isPresent()) {
+            return true;
+        }
+
+        return false;
     }
 
 }

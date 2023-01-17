@@ -2,8 +2,6 @@ package mainproject33.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.member.dto.MemberDto;
-import mainproject33.domain.member.entity.Follow;
-import mainproject33.domain.member.entity.MemberLikes;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
@@ -53,17 +51,18 @@ public class MemberController {
                                        @AuthenticationPrincipal Member principal) {
 
         Member member = memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal, file);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, "필요없음");
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")
-    public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId) {
+    public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId,
+                                     @RequestHeader(required = false) String token) {
 
         Member member = memberService.findProfile(memberId);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, token);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
@@ -73,26 +72,29 @@ public class MemberController {
     public ResponseEntity follow(@PathVariable("member-id") @Positive Long memberId,
                                  @AuthenticationPrincipal Member principal) {
 
-        Follow follow = memberService.follow(memberId, principal);
-
-        if(follow == null) {
-            return new ResponseEntity<>("팔로우가 취소되었습니다.", HttpStatus.OK);
+        if(memberService.follow(memberId, principal)) {
+            return new ResponseEntity<>("팔로우가 완료되었습니다.", HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("팔로우가 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("팔로우가 취소되었습니다.", HttpStatus.OK);
     }
 
     @PostMapping("/{member-id}/likes")
     public ResponseEntity like(@PathVariable("member-id") @Positive Long memberId,
                                @AuthenticationPrincipal Member principal) {
 
-        MemberLikes likes = memberService.like(memberId, principal);
-
-        if(likes == null) {
-            return new ResponseEntity<>("좋아요가 취소되었습니다.", HttpStatus.OK);
+        if(memberService.like(memberId, principal)) {
+            return new ResponseEntity<>("좋아요가 완료되었습니다.", HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("좋아요가 완료되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("좋아요가 취소되었습니다.", HttpStatus.OK);
+    }
+
+    @PostMapping("/{member-id}/blocks")
+    public ResponseEntity block(@PathVariable("member-id") @Positive Long memberId,
+                                @AuthenticationPrincipal Member principal) {
+
+        return null;
     }
 
 }

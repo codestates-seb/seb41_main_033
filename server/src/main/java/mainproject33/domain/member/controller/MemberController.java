@@ -51,17 +51,18 @@ public class MemberController {
                                        @AuthenticationPrincipal Member principal) {
 
         Member member = memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal, file);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, "필요없음");
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")
-    public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId) {
+    public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId,
+                                     @RequestHeader(required = false) String token) {
 
         Member member = memberService.findProfile(memberId);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, token);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);

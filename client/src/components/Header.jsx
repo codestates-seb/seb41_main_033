@@ -67,10 +67,10 @@ const Header = () => {
 				</div>
 			</ProfileWrap>
 			<BtnWrap>
-				<NavLink to="/signup" activeClassName="active">
+				<NavLink to="/signup" className={({ isActive }) => (isActive ? "active" : "")}>
 					회원가입
 				</NavLink>
-				<NavLink to="/login" activeClassName="active">
+				<NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
 					로그인
 				</NavLink>
 			</BtnWrap>

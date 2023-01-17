@@ -20,7 +20,9 @@ public interface CommentMapper
     {
         CommentResponseDto response = CommentResponseDto.builder()
                 .memberId(entity.getMember().getId())
+                .identifier(entity.getMember().getIdentifier())
                 .nickname(entity.getMember().getNickname())
+                .image(entity.getMember().getProfile().getImage())
                 .userBoardId(entity.getUserBoard().getId())
                 .id(entity.getId())
                 .content(entity.getContent())

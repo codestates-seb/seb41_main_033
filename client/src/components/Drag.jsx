@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { ReactComponent as Game } from './../assets/mohagi.svg';
-import styled from 'styled-components';
-import Confetti from './Confetti';
-import useAudio from '../hooks/useAudio';
-import sound from '../assets/game.mp3';
-import drum from '../assets/drum.mp3';
-import RandomRolling from '../components/RandomRolling';
-
+import { useState } from "react";
+import { ReactComponent as Game } from "./../assets/mohagi.svg";
+import styled from "styled-components";
+import Confetti from "./Confetti";
+import useAudio from "../hooks/useAudio";
+import sound from "../assets/game.mp3";
+import drum from "../assets/drum.mp3";
+import RandomRolling from "../components/RandomRolling";
+import axios from "axios";
+import { API_URL } from "../data/apiUrl";
 const Icon = styled.div`
   div {
     animation: vibration 0.4s infinite;
@@ -25,16 +26,22 @@ const Random = styled.div`
   display: flex;
   justify-content: center;
 `;
+const Title = styled.div`
+  font-size: var(--font-head2-size);
+  text-align: center;
+  margin-top: 20px;
+`;
 const Drag = () => {
-  const [DnD, setDnD] = useState({ draggedTo: null, isDragging: false });
+  const [DnD, setDnD] = useState({ dragEnd: false, isDragging: false });
   const [isDrag, setDrag] = useState(false);
   const [play, setPlaying] = useAudio(sound);
   const [pass, setPass] = useAudio(drum);
   const [recommend, setRecommend] = useState(false);
+  const [gameInfo, setGameInfo] = useState("");
   const onDragStart = (e) => {
     setDnD({
-      ...DnD,
       isDragging: true,
+      dragEnd: false,
     });
     setDrag(false);
   };
@@ -42,36 +49,45 @@ const Drag = () => {
     e.preventDefault();
     setDnD({
       isDragging: true,
-      draggedTo: '중간지점',
+      ...DnD,
     });
     setDrag(false);
     setRecommend(true);
     setPass(true);
   };
   const onDragLeave = (e) => {
+    axios
+      .get(`${API_URL}/api/games/random`, {
+        headers: { "ngrok-skip-browser-warning": "69420" },
+      })
+      .then((res) => {
+        setGameInfo(res.data.data);
+      });
     setPlaying(true);
     setDrag(true);
     setRecommend(false);
     setPass(false);
     setDnD({
       isDragging: false,
-      draggedTo: '끝',
+      dragEnd: true,
     });
   };
-
+  console.log(DnD.dragEnd);
   return (
     <div>
-      <Random>{recommend && <RandomRolling />}</Random>
+      <div>{isDrag && play && <Confetti />}</div>
+      <Random>{recommend && !DnD.dragEnd && <RandomRolling />}</Random>
       <Icon
         draggable
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragEnd={onDragLeave}
       >
-        <div>{!recommend && <Game />}</div>
-
-        <div>{isDrag && play && <Confetti />}</div>
+        <div>{!DnD.dragEnd && !recommend && <Game />}</div>
       </Icon>
+      {DnD.dragEnd && <div>여기에는 이미지가 옵니당</div>}
+      {DnD.dragEnd && <Title>{gameInfo.korTitle}</Title>}
+      {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
     </div>
   );
 };

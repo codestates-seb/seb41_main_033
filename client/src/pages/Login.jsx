@@ -104,14 +104,14 @@ const Login = () => {
               <Label htmlFor="id"> 아이디</Label>
               <LoginInput
                 className={idError && "error"}
-                placeholder="4~16자의 영문, 숫자의 아이디를 입력하세요"
+                placeholder="아이디를 입력하세요"
                 id="id"
                 type="text"
                 onChange={(e) => setIdentifier(e.target.value)}
               />
               {idError && (
                 <div className="error_caption">
-                  아이디는 4~16자의 영문, 숫자만 가능합니다.
+                  올바른 아이디를 입력해 주세요
                 </div>
               )}
             </Space>
@@ -119,14 +119,14 @@ const Login = () => {
               <Label htmlFor="pwd">비밀번호</Label>
               <LoginInput
                 className={psdError && "error"}
-                placeholder="영문, 숫자, 특수문자(~,!,@) 포함 8자 이상 입력하세요"
+                placeholder="비밀번호를 입력하세요"
                 id="pwd"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
               {psdError && (
                 <div className="error_caption">
-                  비밀번호 8~20자의 영문, 숫자, 특수문자(~, !, @)를 입력하세요
+                  올바른 비밀번호를 입력해주세요.
                 </div>
               )}
             </Space>

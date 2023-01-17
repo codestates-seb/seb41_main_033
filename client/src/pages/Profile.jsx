@@ -31,10 +31,10 @@ const Profile = () => {
         <ProfileCard
           iamge={user.iamge}
           nickname={user.nickname}
-          identifier={'user.identifier'}
-          following={user.following}
-          follower={user.follower}
-          likes={user.likes}
+          identifier={user.identifier}
+          following={user.followingCount}
+          follower={user.followerCount}
+          likes={user.likeCount}
           games={user.games}
           introduction={user.introduction}
         />

@@ -10,6 +10,7 @@ import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,9 +58,9 @@ public class CommentService
     }
 
     @Transactional(readOnly = true)
-    public Page<Comment> findAllCommentsByBoardId(int page, int size, long userBoardId)
+    public Page<Comment> findAllCommentsByBoardId(Pageable pageable, long userBoardId)
     {
-        return commentRepository.findAllByUserBoardId(PageRequest.of(page, size, Sort.by("likeCount").descending()), userBoardId);
+        return commentRepository.findAllByUserBoardId(pageable, userBoardId);
     }
 
     public void deleteComment(long id)

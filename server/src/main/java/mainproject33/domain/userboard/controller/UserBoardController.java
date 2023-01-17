@@ -13,6 +13,9 @@ import mainproject33.domain.userboard.service.UserBoardService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -67,7 +70,8 @@ public class UserBoardController
     }
 
     @GetMapping("/{board-id}")
-    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId)
+    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId,
+                                   @AuthenticationPrincipal Member member)
     {
         UserBoard userBoard = boardService.findUserBoard(boardId);
 
@@ -78,10 +82,10 @@ public class UserBoardController
     }
 
     @GetMapping
-    public ResponseEntity getBoards(@RequestParam(defaultValue = "1") @Positive int page,
-                                    @RequestParam(defaultValue = "15") @Positive int size)
+    public ResponseEntity getBoards(@PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
+                                    Pageable pageable)
     {
-        Page<UserBoard> pageBoards = boardService.findAllUserBoards(page - 1, size);
+        Page<UserBoard> pageBoards = boardService.findAllUserBoards(pageable.previousOrFirst());
 
         List<UserBoard> boards = pageBoards.getContent();
         List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards);

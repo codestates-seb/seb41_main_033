@@ -1,9 +1,8 @@
 package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
-import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.member.entity.Follow;
-import mainproject33.domain.member.entity.Likes;
+import mainproject33.domain.member.entity.MemberLikes;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.repository.FollowRepository;
@@ -109,12 +108,12 @@ public class MemberService {
         return followRepository.save(follow);
     }
 
-    public Likes like(Long memberId, Member principal) {
+    public MemberLikes like(Long memberId, Member principal) {
 
         Member liker = findVerifiedMember(memberId);
         Member liking = findVerifiedMember(principal.getId());
 
-        Likes likes = new Likes();
+        MemberLikes likes = new MemberLikes();
         likes.setLiker(liker);
         likes.setLiking(liking);
 
@@ -122,7 +121,7 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
         }
 
-        Optional<Likes> verifyExistsLikes =
+        Optional<MemberLikes> verifyExistsLikes =
                 likesRepository.findByLikes(likes.getLiker().getId(), likes.getLiking().getId());
 
         if(verifyExistsLikes.isPresent()) {

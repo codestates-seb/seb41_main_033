@@ -43,17 +43,14 @@ const PostPatch = ({
       <ButtonWrap>
         <button
           className="em"
-          onClick={() => {
-            handleSubmit();
+          onClick={async () => {
+            await handleSubmit();
             navigate(`${link1}`);
           }}
         >
           {button1}
         </button>
-        <button
-          className="normal"
-          onClick={() => navigate(`${link2}`)}
-        >
+        <button className="normal" onClick={() => navigate(`${link2}`)}>
           {button2}
         </button>
       </ButtonWrap>

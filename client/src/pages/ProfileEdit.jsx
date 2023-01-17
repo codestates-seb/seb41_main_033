@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import { ReactComponent as ImgUploadIcon } from './../assets/addPhoto.svg';
 import PostPatch from '../components/PostPatch';
 import InputWrap from '../components/InputWrap';
+import gameList from '../data/gameList.json';
 import dummyUser from '../data/dummyUser.json';
+import { useCallback } from 'react';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -18,7 +20,7 @@ const NicknameWrap = styled.div`
   margin-bottom: 16px;
 `;
 
-const GameWrap = styled.div`
+const ProfileWrap = styled.div`
   .custom_label {
     margin-bottom: 8px;
   }
@@ -66,6 +68,38 @@ const GameWrap = styled.div`
   }
 `;
 
+const GameWrap = styled.div`
+  .game_list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 8px;
+    div {
+      margin-right: 6px;
+    }
+    div:last-child {
+      margin-right: 0;
+    }
+  }
+  .game {
+    margin-top: 8px;
+  }
+  input[type='checkbox'] {
+    display: none;
+  }
+  .game_title {
+    padding: 8px 12px;
+    background: var(--input-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-btn);
+    font-size: var(--font-caption-size);
+    cursor: pointer;
+  }
+  input[type='checkbox']:checked + .game_title {
+    background: var(--bg-color);
+    color: var(--yellow);
+  }
+`;
+
 const BioWrap = styled.div`
   margin: 24px 0 16px 0;
   textarea {
@@ -87,15 +121,24 @@ const ProfileEdit = () => {
   const [fileName, setFileName] = useState(
     '파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)'
   );
-  const [game, setGame] = useState('게임을 선택하세요');
+  const [checkedGame, setCheckedGame] = useState([]);
 
   const handleNickname = (e) => {
     setUser({ ...user, nickname: e.target.value });
   };
 
-  const handleOnchange = (e) => {
+  const handleOnChange = (e) => {
     setFileName(e.currentTarget.files[0].name);
   };
+
+  const handleCheckbox = useCallback(
+    (checked, item) => {
+      checked
+        ? setCheckedGame((prev) => [...prev, item])
+        : setCheckedGame(checkedGame.filter((game) => game !== item));
+    },
+    [checkedGame]
+  );
 
   const handleBio = (e) => {
     setUser({ ...user, introduction: e.target.value });
@@ -125,28 +168,46 @@ const ProfileEdit = () => {
             onChange={handleNickname}
           />
         </NicknameWrap>
-        <GameWrap>
+        <ProfileWrap>
           <div className="custom_label">프로필 이미지 수정</div>
           <div className="custom_input_wrap">
             <div className="custom_input">
               {fileName}
               <input
                 type="file"
-                onChange={(e) => handleOnchange(e)}
+                onChange={(e) => handleOnChange(e)}
                 id="selectImg"
-              ></input>
+              />
             </div>
             <label htmlFor="selectImg" className="custom_btn">
               <ImgUploadIcon />
               이미지 업로드
             </label>
           </div>
+        </ProfileWrap>
+        <GameWrap>
           <label htmlFor="game">주로하는 게임 (중복 선택 가능)</label>
+          <div className="game_list">
+            {gameList.games.map((game) => (
+              <div className="game" key={game.id}>
+                <input
+                  type="checkbox"
+                  id={game.title}
+                  onChange={(e) =>
+                    handleCheckbox(e.target.checked, e.target.id)
+                  }
+                />
+                <label className="game_title" htmlFor={game.title}>
+                  {game.title}
+                </label>
+              </div>
+            ))}
+          </div>
         </GameWrap>
         <BioWrap>
           <label htmlFor="bio">자기소개 수정</label>
           <textarea
-            name="bio"
+            id="bio"
             value={user.introduction || ''}
             placeholder="내용을 입력하세요"
             onChange={handleBio}

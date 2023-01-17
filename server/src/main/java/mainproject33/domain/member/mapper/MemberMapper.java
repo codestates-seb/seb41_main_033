@@ -5,10 +5,8 @@ import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.gamedb.repository.GameDBRepository;
 import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.member.dto.MemberDto;
-import mainproject33.domain.member.entity.Follow;
-import mainproject33.domain.member.entity.Member;
-import mainproject33.domain.member.entity.MemberLikes;
-import mainproject33.domain.member.entity.Profile;
+import mainproject33.domain.member.entity.*;
+import mainproject33.domain.member.repository.BlockRepository;
 import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.MemberLikesRepository;
 import mainproject33.domain.member.service.ProfileImageService;
@@ -27,6 +25,8 @@ public class MemberMapper {
     private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final MemberLikesRepository memberLikesRepository;
+
+    private final BlockRepository blockRepository;
     private final MatchBoardMapper matchBoardMapper;
     private final UserBoardMapper userBoardMapper;
 
@@ -104,21 +104,20 @@ public class MemberMapper {
         profileResponse.setUserBoards(
                 userBoardMapper.userBoardToResponses(member.getUserBoards(), user));
 
-        // 차단
-        profileResponse.setBlockStatus(member.getProfile().isBlock());
-
         // 팔로우 및 좋아요 수
         profileResponse.setFollowerCount(member.getProfile().getFollowerCount());
         profileResponse.setFollowingCount(member.getProfile().getFollowingCount());
         profileResponse.setLikeCount(member.getProfile().getLikeCount());
 
-        // 팔로우 및 좋아요 상태
+        // 팔로우, 좋아요, 차단 상태
         if (user != null) {
             profileResponse.setFollowStatus(verifyFollow(user.getId(), member.getId()));
             profileResponse.setLikeStatus(verifyLike(user.getId(), member.getId()));
+            profileResponse.setBlockStatus(verifyBlock(user.getId(), member.getId()));
         } else {
             profileResponse.setFollowStatus(false);
             profileResponse.setLikeStatus(false);
+            profileResponse.setBlockStatus(false);
         }
 
         profileResponse.setCreatedAt(member.getProfile().getCreatedAt());
@@ -127,19 +126,24 @@ public class MemberMapper {
         return profileResponse;
     }
 
-    public boolean verifyFollow(Long memberId, Long userId) {
-        Optional<Follow> checkFollow = followRepository.findByFollow(memberId, userId);
+    public boolean verifyFollow(Long userId, Long memberId) {
+        Optional<Follow> checkFollow = followRepository.findByFollow(userId, memberId);
 
         if (checkFollow.isPresent()) return true;
-
         return false;
     }
 
-    public boolean verifyLike(Long memberId, Long userId) {
-        Optional<MemberLikes> checkLike = memberLikesRepository.findByMemberLikes(memberId, userId);
+    public boolean verifyLike(Long userId, Long memberId) {
+        Optional<MemberLikes> checkLike = memberLikesRepository.findByMemberLikes(userId, memberId);
 
         if (checkLike.isPresent()) return true;
+        return false;
+    }
 
+    public boolean verifyBlock(Long userId, Long memberId) {
+        Optional<Block> checkBlock = blockRepository.findByBlock(userId, memberId);
+
+        if (checkBlock.isPresent()) return true;
         return false;
     }
 }

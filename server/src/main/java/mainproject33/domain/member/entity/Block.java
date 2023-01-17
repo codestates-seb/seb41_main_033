@@ -19,6 +19,6 @@ public class Block {
     private Member Blocker;
 
     @ManyToOne
-    @JoinColumn(name = "blocking_id")
-    private Member Blocking;
+    @JoinColumn(name = "blocked_id")
+    private Member Blocked;
 }

@@ -27,6 +27,7 @@ const PostPatch = ({
   button1,
   link2,
   button2,
+  handleSubmit,
 }) => {
   const navigate = useNavigate();
 
@@ -38,25 +39,26 @@ const PostPatch = ({
         name={nickname}
         subInfo={identifier}
       />
-      <form onSubmit={() => {}}>
-        {children}
-        <ButtonWrap>
-          <button
-            className="em"
-            type="submit"
-            onClick={() => navigate(`${link1}`)}
-          >
-            {button1}
-          </button>
-          <button
-            className="normal"
-            type="button"
-            onClick={() => navigate(`${link2}`)}
-          >
-            {button2}
-          </button>
-        </ButtonWrap>
-      </form>
+      {children}
+      <ButtonWrap>
+        <button
+          className="em"
+          type="submit"
+          onClick={() => {
+            handleSubmit();
+            navigate(`${link1}`);
+          }}
+        >
+          {button1}
+        </button>
+        <button
+          className="normal"
+          type="button"
+          onClick={() => navigate(`${link2}`)}
+        >
+          {button2}
+        </button>
+      </ButtonWrap>
     </CardWrap>
   );
 };

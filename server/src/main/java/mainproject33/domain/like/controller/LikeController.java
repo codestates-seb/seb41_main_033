@@ -15,12 +15,12 @@ import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/boards")
 public class LikeController
 {
     private final LikeService likeService;
 
-    @PostMapping("/boards/{board-id}/likes")
+    @PostMapping("/{board-id}/likes")
     public ResponseEntity boardLikes(@PathVariable("board-id") @Positive long boardId,
                                      @AuthenticationPrincipal Member member)
     {

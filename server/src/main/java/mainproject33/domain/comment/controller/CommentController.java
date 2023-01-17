@@ -71,8 +71,8 @@ public class CommentController
 
     @GetMapping("/{board-id}/comments")
     public ResponseEntity getComments(@PathVariable("board-id") @Positive long boardId,
-                                      @RequestParam @Positive int page,
-                                      @RequestParam @Positive int size)
+                                      @RequestParam(defaultValue = "1") @Positive int page,
+                                      @RequestParam(defaultValue = "15") @Positive int size)
     {
         Page<Comment> pageComments = commentService.findAllCommentsByBoardId(page - 1, size, boardId);
         List<Comment> comments = pageComments.getContent();

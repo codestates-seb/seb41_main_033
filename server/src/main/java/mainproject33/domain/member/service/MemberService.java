@@ -1,10 +1,13 @@
 package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.member.entity.Follow;
+import mainproject33.domain.member.entity.Likes;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.repository.FollowRepository;
+import mainproject33.domain.member.repository.LikesRepository;
 import mainproject33.domain.member.repository.MemberRepository;
 import mainproject33.domain.member.repository.ProfileRepository;
 import mainproject33.global.exception.BusinessLogicException;
@@ -25,8 +28,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
-    private final ProfileImageService imageService;
 
+    private final LikesRepository likesRepository;
+    private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
@@ -104,6 +108,32 @@ public class MemberService {
 
         return followRepository.save(follow);
     }
+
+    public Likes like(Long memberId, Member principal) {
+
+        Member liker = findVerifiedMember(memberId);
+        Member liking = findVerifiedMember(principal.getId());
+
+        Likes likes = new Likes();
+        likes.setLiker(liker);
+        likes.setLiking(liking);
+
+        if(Objects.equals(likes.getLiker().getId(), likes.getLiking().getId())) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
+        }
+
+        Optional<Likes> verifyExistsLikes =
+                likesRepository.findByLikes(likes.getLiker().getId(), likes.getLiking().getId());
+
+        if(verifyExistsLikes.isPresent()) {
+            likesRepository.delete(verifyExistsLikes.get());
+            return null;
+        }
+
+        return likesRepository.save(likes);
+    }
+
+
 
     public void verifyMember(Long memberId, Member principal) {
 

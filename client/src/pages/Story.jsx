@@ -4,15 +4,15 @@ import SearchBar from "./../components/SearchBar";
 import StorySingle from "../components/StorySingle";
 import WriteFloatButton from "../components/WriteFloatButton";
 
-const TitleWrap = styled.ul`
+const TitleWrap = styled.div`
 	display: flex;
 	margin-bottom: 32px;
-	li {
+	h3 {
 		margin-right: 24px;
 		letter-spacing: -0.5px;
 		font-size: var(--font-head2-size);
 	}
-	li.active {
+	h3.active {
 		font-weight: var(--font-weight-medium);
 		color: var(--primary-color);
 	}
@@ -29,8 +29,8 @@ const Story = () => {
 	return (
 		<div>
 			<TitleWrap>
-				<li className="active">모두의 스토리</li>
-				<li>친구의 스토리</li>
+				<h3 className="active">모두의 스토리</h3>
+				<h3>친구의 스토리</h3>
 			</TitleWrap>
 			<SearchBar />
 			<StoryBoardWrap>

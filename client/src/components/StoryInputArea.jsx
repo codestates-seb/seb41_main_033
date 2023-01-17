@@ -57,7 +57,7 @@ const InputFile = styled.div`
 				opacity: 0;
 			}
 		}
-		.cutomt_btn {
+		.custom_btn {
 			flex: none;
 			display: flex;
 			align-items: center;
@@ -111,7 +111,7 @@ const StoryInputArea = ({ page }) => {
 								{fileName}
 								<input type="file" onChange={(e) => handleOnchange(e)} id="selectImg"></input>
 							</div>
-							<label htmlFor="selectImg" className="cutomt_btn">
+							<label htmlFor="selectImg" className="custom_btn">
 								<ImgUploadIcon />
 								파일 업로드
 							</label>

@@ -9,7 +9,7 @@ import MatchingWrite from "./pages/MatchingWrite";
 import Story from "./pages/Story";
 import StoryDetail from "./pages/StoryDetail";
 import StoryWrite from "./pages/StoryWrite";
-import StoryEdit from "./pages/StoyEdit";
+import StoryEdit from "./pages/StoryEdit";
 import Profile from "./pages/Profile";
 import ProfileEdit from "./pages/ProfileEdit";
 import Login from "./pages/Login";

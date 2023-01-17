@@ -2,93 +2,75 @@
   "games": [
     {
       "id": 1,
-      "title": "리그 오브 레전드",
-      "engTitle": "lol"
+      "title": "리그 오브 레전드"
     },
     {
       "id": 2,
-      "title": "발로란트",
-      "engTitle": "valrorant"
+      "title": "발로란트"
     },
     {
       "id": 3,
-      "title": "오버워치 2",
-      "engTitle": "overwatchii"
+      "title": "오버워치 2"
     },
     {
       "id": 4,
-      "title": "로스트아크",
-      "engTitle": "lostark"
+      "title": "로스트아크"
     },
     {
       "id": 5,
-      "title": "메이플스토리",
-      "engTitle": "maplestory"
+      "title": "메이플스토리"
     },
     {
       "id": 6,
-      "title": "서든어택",
-      "engTitle": "suddenattack"
+      "title": "서든어택"
     },
     {
       "id": 7,
-      "title": "배틀그라운드",
-      "engTitle": "battleground"
+      "title": "배틀그라운드"
     },
     {
       "id": 8,
-      "title": "던전앤파이터",
-      "engTitle": "dungeonnfigther"
+      "title": "던전앤파이터"
     },
     {
       "id": 9,
-      "title": "사이퍼즈",
-      "engTitle": "cyphers"
+      "title": "사이퍼즈"
     },
     {
       "id": 10,
-      "title": "마인크래프트",
-      "engTitle": "minecraft"
+      "title": "마인크래프트"
     },
     {
       "id": 11,
-      "title": "디아블로 2",
-      "engTitle": "diabloii"
+      "title": "디아블로 2"
     },
     {
       "id": 12,
-      "title": "디아블로 3",
-      "engTitle": "diabloiii"
+      "title": "디아블로 3"
     },
     {
       "id": 13,
-      "title": "어몽어스",
-      "engTitle": "amongus"
+      "title": "어몽어스"
     },
     {
       "id": 14,
-      "title": "파이널 판타지 14",
-      "engTitle": "ffxiv"
+      "title": "파이널 판타지 14"
     },
     {
       "id": 15,
-      "title": "이터널 리턴",
-      "engTitle": "eternalreturn"
+      "title": "이터널 리턴"
     },
     {
       "id": 16,
-      "title": "스팀 게임",
-      "engTitle": "steam"
+      "title": "스팀 게임"
     },
     {
       "id": 17,
-      "title": "닌텐도 게임",
-      "engTitle": "nintendo"
+      "title": "닌텐도 게임"
     },
     {
       "id": 18,
-      "title": "기타",
-      "engTitle": "etc"
+      "title": "기타"
     }
   ]
 }

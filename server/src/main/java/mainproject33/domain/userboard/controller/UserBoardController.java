@@ -12,7 +12,11 @@ import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import mainproject33.domain.userboard.service.UserBoardService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
+import mainproject33.global.security.jwt.JwtTokenizer;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,7 +47,7 @@ public class UserBoardController
 
         UserBoard userBoard = boardService.postUserBoard(mapper.postToUserBoard(postDto), findMember, file);
 
-        UserBoardResponseDto response = mapper.userBoardToResponse(userBoard);
+        UserBoardResponseDto response = mapper.userBoardToResponse(userBoard, member);
 
         log.info("등록 완료");
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
@@ -60,31 +64,33 @@ public class UserBoardController
 
         UserBoard userBoard = boardService.patchUserBoard(mapper.patchToUserBoard(patchDto));
 
-        UserBoardResponseDto response = mapper.userBoardToResponse(userBoard);
+        UserBoardResponseDto response = mapper.userBoardToResponse(userBoard, member);
 
         log.info("수정 완료");
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{board-id}")
-    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId)
+    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId,
+                                   @AuthenticationPrincipal Member member)
     {
         UserBoard userBoard = boardService.findUserBoard(boardId);
 
-        UserBoardResponseDto response = mapper.userBoardToResponse(userBoard);
+        UserBoardResponseDto response = mapper.userBoardToResponse(userBoard, member);
 
         log.info("글 조회 완료 = {}", boardId);
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity getBoards(@RequestParam(defaultValue = "1") @Positive int page,
-                                    @RequestParam(defaultValue = "15") @Positive int size)
+    public ResponseEntity getBoards(@PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
+                                    Pageable pageable,
+                                    @AuthenticationPrincipal Member member)
     {
-        Page<UserBoard> pageBoards = boardService.findAllUserBoards(page - 1, size);
+        Page<UserBoard> pageBoards = boardService.findAllUserBoards(pageable.previousOrFirst());
 
         List<UserBoard> boards = pageBoards.getContent();
-        List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards);
+        List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards, member);
 
         log.info("글 전체 조회 완료");
         return new ResponseEntity(new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);

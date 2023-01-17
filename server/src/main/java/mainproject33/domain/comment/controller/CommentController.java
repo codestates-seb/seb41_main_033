@@ -12,6 +12,9 @@ import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,7 +42,7 @@ public class CommentController
 
         Comment comment = commentService.postComment(boardId, mapper.commentPostToComment(request), findMember);
 
-        CommentResponseDto response = mapper.commentToResponse(comment);
+        CommentResponseDto response = mapper.commentToResponse(comment, member);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
@@ -54,30 +57,31 @@ public class CommentController
         request.setId(commentId);
         Comment comment = commentService.updateComment(mapper.commentPatchToComment(request));
 
-        CommentResponseDto response = mapper.commentToResponse(comment);
+        CommentResponseDto response = mapper.commentToResponse(comment, member);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/comments/{comment-id}")
-    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId)
+    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId,
+                                     @AuthenticationPrincipal Member member)
     {
         Comment comment = commentService.findComment(commentId);
 
-        CommentResponseDto response = mapper.commentToResponse(comment);
+        CommentResponseDto response = mapper.commentToResponse(comment, member);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{board-id}/comments")
-    public ResponseEntity getComments(@PathVariable("board-id") @Positive long boardId,
-                                      @RequestParam(defaultValue = "1") @Positive int page,
-                                      @RequestParam(defaultValue = "15") @Positive int size)
+    public ResponseEntity getComments(@PageableDefault(size = 10, sort = "likeCount", direction = Sort.Direction.DESC)Pageable pageable,
+                                      @PathVariable("board-id") @Positive long boardId,
+                                      @AuthenticationPrincipal Member member)
     {
-        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(page - 1, size, boardId);
+        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable, boardId);
         List<Comment> comments = pageComments.getContent();
 
-        List<CommentResponseDto> responses = mapper.commentToResponses(comments);
+        List<CommentResponseDto> responses = mapper.commentToResponses(comments, member);
 
         return new ResponseEntity(new MultiResponseDto<>(responses, pageComments), HttpStatus.OK);
     }

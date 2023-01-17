@@ -10,6 +10,7 @@ import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,20 +66,26 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
-    public Page<UserBoard> findAllUserBoards(int page, int size)
+    public Page<UserBoard> findAllUserBoards(Pageable pageable)
     {
-        return userBoardRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
+        return userBoardRepository.findAll(pageable);
     }
 
     public void deleteOne(Long id)
     {
         verifyExistBoard(id);
 
-        boardFileService.deleteUploadFile(id);
+        UserBoard userBoard = findUserBoard(id);
+
+        if(userBoard.getUserBoardFile() != null)
+        {
+            boardFileService.deleteUploadFile(id);
+        }
+
         userBoardRepository.deleteById(id);
     }
 
-    public void verifyExistBoard(Long id)
+    private void verifyExistBoard(Long id)
     {
         Optional<UserBoard> findBoard = userBoardRepository.findById(id);
 

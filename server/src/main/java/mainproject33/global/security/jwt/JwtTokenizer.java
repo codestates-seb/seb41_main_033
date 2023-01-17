@@ -132,5 +132,4 @@ public class JwtTokenizer { // 토큰을 생성하고 검증하는 역할을 수
 
         return true;
     }
-
 }

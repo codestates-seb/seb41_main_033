@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { ReactComponent as ProfileImg } from '../assets/defaultImg.svg';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
-import games from '../data/dummyGames.json';
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -94,7 +93,16 @@ const GameWrap = styled.div`
   }
 `;
 
-const ProfileCard = () => {
+const ProfileCard = ({
+  image,
+  nickname,
+  identifier,
+  following,
+  follower,
+  likes,
+  games,
+  introduction,
+}) => {
   /* 더미 데이터 */
   const isMe = true;
 
@@ -102,11 +110,18 @@ const ProfileCard = () => {
     <div>
       <ProfileWrap className="card sm">
         <InformWrap>
-          <ProfileImg className="img_profile" />
+          {image ? (
+            <img
+              className="img_profile"
+              src={image.storeFileName}
+              alt="프로필 이미지"
+            />
+          ) : (
+            <ProfileImg className="img_profile" />
+          )}
           <div className="name_content">
-            {/* 정보 수정 필요 */}
-            <div className="nickname">닉네임</div>
-            <div className="identifier">아이디</div>
+            <div className="nickname">{nickname}</div>
+            <div className="identifier">{identifier}</div>
           </div>
           {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
           {isMe ? (
@@ -122,18 +137,17 @@ const ProfileCard = () => {
           )}
         </InformWrap>
         <FollowWrap>
-          {/* 정보 수정 필요 */}
           <Follow>
             <div className="follow">팔로잉</div>
-            <div className="number">123</div>
+            <div className="number">{following}</div>
           </Follow>
           <Follow>
             <div className="follow">팔로워</div>
-            <div className="number">1234</div>
+            <div className="number">{follower}</div>
           </Follow>
           <Follow>
             <div className="follow">좋아요</div>
-            <div className="number">1234</div>
+            <div className="number">{likes}</div>
           </Follow>
         </FollowWrap>
         {isMe ? null : (
@@ -147,18 +161,17 @@ const ProfileCard = () => {
         <div className="inform_title">주로하는 게임</div>
         <GameWrap>
           <ul>
-            {games.games.map((game) => (
+            {games.map((game) => (
               <li key={game.id} className="normal game_title">
-                {game.title}
+                {game.korTitle}
               </li>
             ))}
           </ul>
         </GameWrap>
       </ProfileWrap>
       <ProfileWrap className="card sm">
-        {/* 정보 수정 필요 */}
         <div className="inform_title">자기 소개</div>
-        <div className="inform_content">에우프로시네 갈사람</div>
+        <div className="inform_content">{introduction}</div>
       </ProfileWrap>
     </div>
   );

@@ -1,15 +1,8 @@
 package mainproject33.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
-import mainproject33.domain.like.entity.Like;
-import mainproject33.domain.member.entity.Follow;
-import mainproject33.domain.member.entity.Likes;
-import mainproject33.domain.member.entity.Member;
-import mainproject33.domain.member.entity.Profile;
-import mainproject33.domain.member.repository.FollowRepository;
-import mainproject33.domain.member.repository.LikesRepository;
-import mainproject33.domain.member.repository.MemberRepository;
-import mainproject33.domain.member.repository.ProfileRepository;
+import mainproject33.domain.member.entity.*;
+import mainproject33.domain.member.repository.*;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import mainproject33.global.security.redis.RedisDao;
@@ -28,8 +21,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+    private final MemberLikesRepository memberLikesRepository;
 
-    private final LikesRepository likesRepository;
+    private final BlockRepository blockRepository;
     private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final PasswordEncoder passwordEncoder;
@@ -85,55 +79,77 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
-    public Follow follow(Long memberId, Member principal) {
+    public boolean follow(Long memberId, Member user) {
+        verifyFollow(user.getId(), memberId);
 
-        Member follower = findVerifiedMember(memberId); // 팔로우를 받는 사람
-        Member following = findVerifiedMember(principal.getId()); // 팔로우를 하는 사람
+        Member follower = findVerifiedMember(user.getId()); // 팔로우를 하는 사람
+        Member followed = findVerifiedMember(memberId); // 팔로우를 받는 사람
 
         Follow follow = new Follow();
         follow.setFollower(follower);
-        follow.setFollowing(following);
+        follow.setFollowed(followed);
 
-        if(Objects.equals(follow.getFollower().getId(), follow.getFollowing().getId())) {
-            throw new BusinessLogicException(ExceptionMessage.SELF_FOLLOW_NOT_ALLOWED);
+        Optional<Follow> optionalFollow = followRepository.findByFollow(user.getId(), memberId);
+
+        if (optionalFollow.isEmpty()) {
+            follower.getProfile().addFollowingCount();
+            followed.getProfile().addFollowerCount();
+            followRepository.save(follow);
+            return true;
+        } else {
+            follower.getProfile().subtractFollowingCount();
+            followed.getProfile().subtractFollowerCount();
+            followRepository.delete(optionalFollow.get());
+            return false;
         }
-
-        Optional<Follow> verifyExistsFollow =
-                followRepository.findByFollow(follow.getFollower().getId(), follow.getFollowing().getId());
-
-        if(verifyExistsFollow.isPresent()) {
-            followRepository.delete(verifyExistsFollow.get());
-            return null;
-        }
-
-        return followRepository.save(follow);
     }
 
-    public Likes like(Long memberId, Member principal) {
+    public boolean like(Long memberId, Member user) {
+        verifyLike(user.getId(), memberId);
 
-        Member liker = findVerifiedMember(memberId);
-        Member liking = findVerifiedMember(principal.getId());
+        Member liker = findVerifiedMember(user.getId());
+        Member liked = findVerifiedMember(memberId);
 
-        Likes likes = new Likes();
+        MemberLikes likes = new MemberLikes();
         likes.setLiker(liker);
-        likes.setLiking(liking);
+        likes.setLiked(liked);
 
-        if(Objects.equals(likes.getLiker().getId(), likes.getLiking().getId())) {
-            throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
+        Optional<MemberLikes> optionalLikes =
+                memberLikesRepository.findByMemberLikes(user.getId(), memberId);
+
+        if (optionalLikes.isEmpty()) {
+            liked.getProfile().addLikeCount();
+            memberLikesRepository.save(likes);
+            return true;
+        } else {
+            liked.getProfile().subtractLikeCount();
+            memberLikesRepository.delete(optionalLikes.get());
+            return false;
         }
-
-        Optional<Likes> verifyExistsLikes =
-                likesRepository.findByLikes(likes.getLiker().getId(), likes.getLiking().getId());
-
-        if(verifyExistsLikes.isPresent()) {
-            likesRepository.delete(verifyExistsLikes.get());
-            return null;
-        }
-
-        return likesRepository.save(likes);
     }
 
+    public boolean block(Long memberId, Member user) {
+        verifyBlock(user.getId(), memberId);
 
+        Member blocker = findVerifiedMember(user.getId());
+        Member blocked = findVerifiedMember(memberId);
+
+        Block block = new Block();
+        block.setBlocker(blocker);
+        block.setBlocked(blocked);
+
+        Optional<Block> optionalBlock =
+                blockRepository.findByBlock(user.getId(), memberId);
+
+        if(optionalBlock.isEmpty()) {
+            blockRepository.save(block);
+            return true;
+        } else {
+            blockRepository.delete(optionalBlock.get());
+            return false;
+        }
+
+    }
 
     public void verifyMember(Long memberId, Member principal) {
 
@@ -157,14 +173,31 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionMessage.MEMBER_EXISTS);
     }
 
+    private void verifyFollow(Long followerId, Long followedId) {
+        if (followerId == followedId) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_FOLLOW_NOT_ALLOWED);
+        }
+    }
+
+    private void verifyLike(Long likerId, Long likedId) {
+        if(likerId == likedId) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
+        }
+    }
+
+    private void verifyBlock(Long blockerId, Long blockedId) {
+        if(blockerId == blockedId) {
+            throw new BusinessLogicException(ExceptionMessage.SELF_BLOCK_NOT_ALLOWED);
+        }
+    }
+
     public Profile createProfile() {
 
         Profile profile = new Profile();
         imageService.createDefaultProfileImage(profile);
-        profile.setFollower(0);
-        profile.setFollowing(0);
-        profile.setLikes(0);
-        profile.setBlock(false);
+        profile.setFollowerCount(0);
+        profile.setFollowingCount(0);
+        profile.setLikeCount(0);
         profile.setIntroduction("소개문을 작성해주세요");
 
         return profileRepository.save(profile);

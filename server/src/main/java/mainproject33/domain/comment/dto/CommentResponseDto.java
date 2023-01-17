@@ -3,8 +3,6 @@ package mainproject33.domain.comment.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import mainproject33.domain.comment.entity.Comment;
-import mainproject33.domain.member.entity.Member;
 
 import java.time.LocalDateTime;
 
@@ -15,8 +13,10 @@ public class CommentResponseDto
 {
     private Long memberId;
 
+    private String identifier;
     private String nickname;
 
+    private String image;
     private Long userBoardId;
 
     private Long id;
@@ -25,6 +25,7 @@ public class CommentResponseDto
 
     private int likeCount;
 
+    private boolean likeStatus;
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;

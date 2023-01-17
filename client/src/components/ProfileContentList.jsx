@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { ReactComponent as Comment } from '../assets/sms.svg';
-import dummyMatchContents from '../data/dummyMatchContents.json';
-import dummyStoryContents from '../data/dummyStoryContents.json';
 
 const ListWrap = styled.div`
   li {
@@ -74,58 +72,51 @@ const ListWrap = styled.div`
   }
 `;
 
-const ProfileContentList = ({ isMatch, isStory }) => {
+const ProfileContentList = ({ isMatch, isStory, matchBoards, userBoards }) => {
   return (
     <ListWrap>
       <ul>
         {isMatch
-          ? dummyMatchContents.contents.map((content) => (
-              <li key={content.id}>
+          ? matchBoards.map((match) => (
+              <li key={match.id}>
                 <div className="game_container">
-                  <img
-                    className="game_icon"
-                    src={content.icon}
-                    alt="게임 아이콘"
-                  />
+                  <img className="game_icon" src={''} alt="게임 아이콘" />
                 </div>
                 <div className="content_container match">
-                  <div className="content_title">{content.title}</div>
+                  <div className="content_title">{match.title}</div>
                   <div className="content_date">
-                    {new Date(content.createdAt).toLocaleString()}
+                    {new Date(match.createdAt).toLocaleString()}
                   </div>
                 </div>
               </li>
             ))
           : null}
         {isStory
-          ? dummyStoryContents.contents.map((content) => (
-              <li key={content.id}>
+          ? userBoards.map((story) => (
+              <li key={story.id}>
                 <div className="content_container story">
-                  <div className="content_title">{content.title}</div>
+                  <div className="content_title">{story.content}</div>
                   <div className="content_date">
-                    {new Date(content.createdAt).toLocaleString()}
+                    {new Date(story.createdAt).toLocaleString()}
                   </div>
                   <div className="content_count">
-                    {content.likeCount ? (
+                    {story.likeCount ? (
                       <div className="content_like">
                         <Heart width="10px" />
-                        <span>{content.likeCount}</span>
+                        <span>{story.likeCount}</span>
                       </div>
                     ) : null}
-                    {content.commentCount ? (
+                    {story.commentCount ? (
                       <div className="content_comment">
                         <Comment width="10px" />
-                        <span>{content.commentCount}</span>
+                        <span>{story.commentCount}</span>
                       </div>
                     ) : null}
                   </div>
                 </div>
-                {content.content.contentImage ? (
+                {story.image ? (
                   <div className="image_container">
-                    <img
-                      src={content.content.contentImage}
-                      alt="스토리 이미지"
-                    />
+                    <img src={story.image.storeFileName} alt="스토리 이미지" />
                   </div>
                 ) : null}
               </li>

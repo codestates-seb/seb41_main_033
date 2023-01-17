@@ -1,18 +1,14 @@
 package mainproject33.domain.member.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-public class Likes {
+public class MemberLikes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +19,6 @@ public class Likes {
     private Member liker;
 
     @ManyToOne
-    @JoinColumn(name = "liking_id")
-    private Member liking;
-
+    @JoinColumn(name = "liked_id")
+    private Member liked;
 }

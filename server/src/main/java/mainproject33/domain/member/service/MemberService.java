@@ -83,29 +83,29 @@ public class MemberService {
 
     public boolean follow(Long memberId, Member principal) {
 
-        Member follower = findVerifiedMember(memberId); // 팔로우를 받는 사람
-        Member following = findVerifiedMember(principal.getId()); // 팔로우를 하는 사람
+        Member taker = findVerifiedMember(memberId); // 팔로우를 받는 사람
+        Member giver = findVerifiedMember(principal.getId()); // 팔로우를 하는 사람
 
         Follow follow = new Follow();
-        follow.setFollower(follower);
-        follow.setFollowing(following);
+        follow.setTaker(taker);
+        follow.setGiver(giver);
 
-        if(Objects.equals(follow.getFollower().getId(), follow.getFollowing().getId())) {
+        if(Objects.equals(follow.getGiver().getId(), follow.getTaker().getId())) {
             throw new BusinessLogicException(ExceptionMessage.SELF_FOLLOW_NOT_ALLOWED);
         }
 
         Optional<Follow> verifyExistsFollow =
-                followRepository.findByFollow(follow.getFollower().getId(), follow.getFollowing().getId());
+                followRepository.findByFollow(follow.getGiver().getId(), follow.getTaker().getId());
 
         if(verifyExistsFollow.isPresent()) {
-            follower.getProfile().setFollower(follower.getProfile().getFollower() -1);
-            following.getProfile().setFollowing(following.getProfile().getFollowing() -1);
+            taker.getProfile().setFollower(taker.getProfile().getFollower() -1);
+            giver.getProfile().setFollowing(giver.getProfile().getFollowing() -1);
             followRepository.delete(verifyExistsFollow.get());
             return false;
         }
 
-        follower.getProfile().setFollower(follower.getProfile().getFollower() +1);
-        following.getProfile().setFollowing(following.getProfile().getFollowing() +1);
+        taker.getProfile().setFollower(taker.getProfile().getFollower() +1);
+        giver.getProfile().setFollowing(giver.getProfile().getFollowing() +1);
         followRepository.save(follow);
 
         return true;
@@ -113,28 +113,28 @@ public class MemberService {
 
     public boolean like(Long memberId, Member principal) {
 
-        Member liker = findVerifiedMember(memberId);
-        Member liking = findVerifiedMember(principal.getId());
+        Member taker = findVerifiedMember(memberId);
+        Member giver = findVerifiedMember(principal.getId());
 
         MemberLikes likes = new MemberLikes();
-        likes.setLiker(liker);
-        likes.setLiking(liking);
+        likes.setTaker(taker);
+        likes.setGiver(giver);
 
-        if(Objects.equals(likes.getLiker().getId(), likes.getLiking().getId())) {
+        if(Objects.equals(likes.getTaker().getId(), likes.getGiver().getId())) {
             throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
         }
 
         Optional<MemberLikes> verifyExistsMemberLikes =
-                memberLikesRepository.findByMemberLikes(likes.getLiker().getId(), likes.getLiking().getId());
+                memberLikesRepository.findByMemberLikes(likes.getTaker().getId(), likes.getGiver().getId());
 
         if(verifyExistsMemberLikes.isPresent()) {
-            liker.getProfile().setLikes(liker.getProfile().getLikes() -1);
+            taker.getProfile().setLikes(taker.getProfile().getLikes() -1);
             memberLikesRepository.delete(verifyExistsMemberLikes.get());
 
             return false;
         }
 
-        liker.getProfile().setLikes(liker.getProfile().getLikes() +1);
+        taker.getProfile().setLikes(taker.getProfile().getLikes() +1);
         memberLikesRepository.save(likes);
 
         return true;

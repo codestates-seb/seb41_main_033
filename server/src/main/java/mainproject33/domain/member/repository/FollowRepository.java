@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    @Query(value = "SELECT * FROM FOLLOW WHERE TAKER_ID = :takerId AND GIVER_ID = :giverId", nativeQuery = true)
-
-    Optional<Follow> findByFollow(Long takerId, Long giverId);
-    List<Follow> findByTakerId(Long takerId);
-    List<Follow> findByGiverId(Long giverId);
+    @Query(value = "SELECT * FROM FOLLOW WHERE FOLLOWER_ID = :followerId AND FOLLOWED_ID = :followedId", nativeQuery = true)
+    Optional<Follow> findByFollow(Long followerId, Long followedId);
 }

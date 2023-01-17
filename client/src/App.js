@@ -6,6 +6,7 @@ import Nav from "./components/Nav";
 import Matching from "./pages/Matching";
 import MatchingDetail from "./pages/MatchingDetail";
 import MatchingWrite from "./pages/MatchingWrite";
+import MatchingEdit from "./pages/MatchingEdit";
 import Story from "./pages/Story";
 import StoryDetail from "./pages/StoryDetail";
 import StoryWrite from "./pages/StoryWrite";
@@ -51,6 +52,7 @@ const App = () => {
 							<Route path="/" element={<Matching />} />
 							<Route path="/:boardid" element={<MatchingDetail />} />
 							<Route path="/matchwrite" element={<MatchingWrite />} />
+							<Route path="/:boardid/edit" element={<MatchingEdit />} />
 							<Route path="/story" element={<Story />} />
 							<Route path="/:userid/:boardid" element={<StoryDetail />} />
 							<Route path="/:userid/:boardid/edit" element={<StoryEdit />} />

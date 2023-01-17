@@ -85,7 +85,7 @@ public class UserBoardService
         userBoardRepository.deleteById(id);
     }
 
-    public void verifyExistBoard(Long id)
+    private void verifyExistBoard(Long id)
     {
         Optional<UserBoard> findBoard = userBoardRepository.findById(id);
 

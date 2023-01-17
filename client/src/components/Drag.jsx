@@ -8,6 +8,7 @@ import drum from "../assets/drum.mp3";
 import RandomRolling from "../components/RandomRolling";
 import axios from "axios";
 import { API_URL } from "../data/apiUrl";
+import matchGame from "../util/matchGame";
 const Icon = styled.div`
   div {
     animation: vibration 0.4s infinite;
@@ -85,7 +86,7 @@ const Drag = () => {
       >
         <div>{!DnD.dragEnd && !recommend && <Game />}</div>
       </Icon>
-      {DnD.dragEnd && <div>여기에는 이미지가 옵니당</div>}
+      {DnD.dragEnd && <img src={matchGame(gameInfo).image} alt="게임아이콘" />}
       {DnD.dragEnd && <Title>{gameInfo.korTitle}</Title>}
       {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
     </div>

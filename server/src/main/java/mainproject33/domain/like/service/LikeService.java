@@ -29,7 +29,9 @@ public class LikeService
     {
         UserBoard userBoard = boardService.findUserBoard(boardId);
 
-        if(checkLikedBoard(member.getId(), boardId))
+        boolean findLike = checkLikedBoard(member.getId(), boardId);
+
+        if(findLike)
         {
             boardLikeRepository.save(new Like(member, userBoard));
             return true;
@@ -45,8 +47,9 @@ public class LikeService
     public boolean changeCommentLike(Member member, long commentId)
     {
         Comment comment = commentService.findComment(commentId);
+        boolean findLike = checkLikedComment(member.getId(), comment.getId());
 
-        if(checkLikedComment(member.getId(), comment.getId()))
+        if(findLike)
         {
             boardLikeRepository.save(new Like(member, comment));
             return true;

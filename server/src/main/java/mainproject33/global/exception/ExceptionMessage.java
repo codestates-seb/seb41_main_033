@@ -14,8 +14,10 @@ public enum ExceptionMessage {
     MEMBER_EXISTS("회원이 이미 존재합니다."),
 
     SELF_FOLLOW_NOT_ALLOWED("자기 자신을 팔로우 할 수 없습니다."),
+    FOLLOW_NOT_FOUND("존재하지 않는 팔로우 정보입니다."),
 
     SELF_LIKE_NOT_ALLOWED("자기 자신을 좋아요 할 수 없습니다."),
+    LIKE_NOT_FOUND("존재하지 않는 좋아요 정보입니다."),
 
     //=========userBoard=========//
     USER_BOARD_NOT_FOUND("존재하지 않는 게시글입니다."),

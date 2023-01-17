@@ -62,12 +62,16 @@ public class MemberDto {
     public static class ProfileResponse {
 
         private Long id;
+        private String identifier;
         private String nickname;
         private ProfileImage image;
         private int follower;
         private int following;
+        private Boolean followInfo;
         private int likes;
+        private Boolean likesInfo;
         private boolean block;
+        private Boolean blockInfo;
         private String introduction;
         private List<GameDB> games;
         private List<MatchBoardDto.Response> matchBoards;

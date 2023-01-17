@@ -41,10 +41,18 @@ const PostPatch = ({
       <form onSubmit={() => {}}>
         {children}
         <ButtonWrap>
-          <button className="em" onClick={() => navigate(`/${link1}`)}>
+          <button
+            className="em"
+            type="submit"
+            onClick={() => navigate(`/${link1}`)}
+          >
             {button1}
           </button>
-          <button className="normal" onClick={() => navigate(`/${link2}`)}>
+          <button
+            className="normal"
+            type="button"
+            onClick={() => navigate(`/${link2}`)}
+          >
             {button2}
           </button>
         </ButtonWrap>

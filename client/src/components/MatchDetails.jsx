@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import displayedAt from "../util/displayedAt";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { API_URL } from "../data/apiUrl";
+import axios from "axios";
+import { Link } from "react-router-dom";
 const Detail = styled.div`
   width: var(--col-9);
   margin-right: 32px;
@@ -59,8 +62,20 @@ const Tag = styled.div`
 const Description = styled.div`
   margin-bottom: 32px;
 `;
-const MatchDetails = ({ data }) => {
-  console.log(data);
+const MatchDetails = ({ data, matchId }) => {
+  const [same, setSame] = useState(false);
+  useEffect(() => {
+    if (matchId === "memberId") {
+      setSame(true);
+    }
+  }, [matchId]);
+  const deleteBtn = () => {
+    axios
+      .get(`${API_URL}/api/matches/${matchId}`, {
+        headers: { "ngrok-skip-browser-warning": "69420" },
+      })
+      .then((res) => console.log(res));
+  };
 
   return (
     <Detail className="card big">
@@ -69,11 +84,14 @@ const MatchDetails = ({ data }) => {
           <div className="title">{data.title}</div>
           <div className="game">{data.game}</div>
         </Info>
-        <img src="https://new-version.download/wp-content/uploads/league-of-legends.png"></img>
+        <img
+          src="https://new-version.download/wp-content/uploads/league-of-legends.png"
+          alt="게임아이콘"
+        ></img>
       </Div>
       <Div>
         <span>팀원수</span>
-        <Span>{data.team}</Span>
+        <Span>{data.team} 명</Span>
         <span>매칭생성시간</span>
         <Span>{displayedAt(data.createdAt)}</Span>
       </Div>
@@ -84,15 +102,18 @@ const MatchDetails = ({ data }) => {
       </Div>
       <Div className="description">
         <div>상세설명</div>
-        <Description>
-          여기는 데이터를 요청받아 뿌릴것이당 하지만 까먹어서 넣지못했다 어차피
-          요청해줄테니 기다리자 😋
-        </Description>
+        <Description>{data.content}</Description>
       </Div>
-      <Div>
-        <button className="em">수정하기</button>
-        <button className="normal">삭제하기</button>
-      </Div>
+      {same && (
+        <Div>
+          <Link to={"/matchwrite"}>
+            <button className="em">수정하기</button>
+          </Link>
+          <button className="normal" onClick={deleteBtn}>
+            삭제하기
+          </button>
+        </Div>
+      )}
     </Detail>
   );
 };

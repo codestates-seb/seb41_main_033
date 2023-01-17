@@ -1,8 +1,10 @@
-import styled from 'styled-components';
-import Dropdown from '../components/DropDown';
-import React, { useState } from 'react';
-import InputWrap from '../components/InputWrap';
-
+import styled from "styled-components";
+import Dropdown from "../components/DropDown";
+import React, { useState } from "react";
+import InputWrap from "../components/InputWrap";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../data/apiUrl";
 const MatchContainer = styled.form`
   .user_info {
     display: flex;
@@ -128,14 +130,15 @@ const TagsInput = styled.div`
 `;
 
 const MatchingWrite = () => {
+  const navigate = useNavigate();
   const [info, setInfo] = useState({
-    title: '',
-    game: '',
-    team: '',
-    content: '',
+    title: "",
+    game: "",
+    team: "",
+    content: "",
   });
   const [tags, setTags] = useState([]);
-  const [game, setGame] = useState('게임을 선택하세요');
+  const [game, setGame] = useState("게임을 선택하세요");
 
   const removeTags = (index) => {
     const newTag = tags.filter((_, idx) => idx !== index);
@@ -143,17 +146,17 @@ const MatchingWrite = () => {
   };
 
   const addTags = (event) => {
-    const newTag = event.target.value.replace(/ /g, '').substring(0, 6);
+    const newTag = event.target.value.replace(/ /g, "").substring(0, 6);
     if (
       !tags.includes(newTag) &&
-      event.key === 'Enter' &&
+      event.key === "Enter" &&
       tags.length < 3 &&
       newTag.length > 0
     ) {
       setTags([...tags, `#${newTag}`]);
-      event.target.value = '';
+      event.target.value = "";
     } else if (tags.length >= 3) {
-      event.target.value = '';
+      event.target.value = "";
     }
   };
   const changeValue = (e) => {
@@ -170,7 +173,13 @@ const MatchingWrite = () => {
 
     const data = { title, game, team, tags, content };
     if (!isEmpty(data)) {
-      console.log(data);
+      axios
+        .post(`${API_URL}/api/matches`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("key")}`,
+          },
+        })
+        .then(() => navigate("/"));
     }
   };
   const [isOpen, setIsOpen] = useState(false);
@@ -192,7 +201,7 @@ const MatchingWrite = () => {
               type="text"
               name="title"
               id="title"
-              length={'30'}
+              length={"30"}
               placeholder="제목을 입력하세요"
               onChange={changeValue}
             />
@@ -255,7 +264,9 @@ const MatchingWrite = () => {
           <MatchBtn type="submit" onClick={submitBtn} className="em">
             작성완료
           </MatchBtn>
-          <MatchBtn className="normal">취소</MatchBtn>
+          <MatchBtn className="normal" onClick={() => navigate("/")}>
+            취소
+          </MatchBtn>
         </MatchBox>
       </Wrap>
     </MatchContainer>

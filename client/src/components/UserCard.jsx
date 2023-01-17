@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as Heart } from "./../assets/heartIcon.svg";
 
@@ -38,15 +39,17 @@ const Like = styled.span`
     }
   }
 `;
-const UserCard = () => {
+const UserCard = ({ data }) => {
   return (
     <Card className="card big">
       <Div>
-        <Img src="https://cdn.pixabay.com/photo/2021/11/12/03/04/woman-6787784_1280.png" />
-        <Name>맑음터공원</Name>
+        <Link to={`/${data.memberId}`}>
+          <Img src={data.image} alt="유저프로필" />
+          <Name>{data.nickname}</Name>
+        </Link>
         <Like>Likes</Like>
         <Like className="number">
-          0
+          {data.likeCount}
           <span className="logo_span">
             <Heart className="logo" />
           </span>

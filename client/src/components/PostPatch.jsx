@@ -44,14 +44,14 @@ const PostPatch = ({
           <button
             className="em"
             type="submit"
-            onClick={() => navigate(`/${link1}`)}
+            onClick={() => navigate(`${link1}`)}
           >
             {button1}
           </button>
           <button
             className="normal"
             type="button"
-            onClick={() => navigate(`/${link2}`)}
+            onClick={() => navigate(`${link2}`)}
           >
             {button2}
           </button>

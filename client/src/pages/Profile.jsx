@@ -29,7 +29,7 @@ const Profile = () => {
     return (
       <ProfileWrap>
         <ProfileCard
-          iamge={user.iamge}
+          image={user.image}
           nickname={user.nickname}
           identifier={user.identifier}
           following={user.followingCount}

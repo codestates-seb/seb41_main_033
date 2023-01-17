@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import mainproject33.domain.comment.dto.CommentResponseDto;
-import mainproject33.domain.comment.entity.Comment;
-import mainproject33.domain.member.entity.ProfileImage;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +20,8 @@ public class UserBoardResponseDto
 
     private String nickname;
 
-    private ProfileImage image;
+    private String image;
+
     private long id;
 
     private String content;
@@ -30,7 +29,10 @@ public class UserBoardResponseDto
     private String uploadFileName;
 
     private int commentCount;
+
     private int likeCount;
+
+    private boolean likeStatus;
 
     private LocalDateTime createdAt;
 

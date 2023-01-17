@@ -42,7 +42,7 @@ public class CommentController
 
         Comment comment = commentService.postComment(boardId, mapper.commentPostToComment(request), findMember);
 
-        CommentResponseDto response = mapper.commentToResponse(comment);
+        CommentResponseDto response = mapper.commentToResponse(comment, member);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
@@ -57,29 +57,31 @@ public class CommentController
         request.setId(commentId);
         Comment comment = commentService.updateComment(mapper.commentPatchToComment(request));
 
-        CommentResponseDto response = mapper.commentToResponse(comment);
+        CommentResponseDto response = mapper.commentToResponse(comment, member);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/comments/{comment-id}")
-    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId)
+    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId,
+                                     @AuthenticationPrincipal Member member)
     {
         Comment comment = commentService.findComment(commentId);
 
-        CommentResponseDto response = mapper.commentToResponse(comment);
+        CommentResponseDto response = mapper.commentToResponse(comment, member);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/{board-id}/comments")
     public ResponseEntity getComments(@PageableDefault(size = 10, sort = "likeCount", direction = Sort.Direction.DESC)Pageable pageable,
-                                      @PathVariable("board-id") @Positive long boardId)
+                                      @PathVariable("board-id") @Positive long boardId,
+                                      @AuthenticationPrincipal Member member)
     {
         Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable, boardId);
         List<Comment> comments = pageComments.getContent();
 
-        List<CommentResponseDto> responses = mapper.commentToResponses(comments);
+        List<CommentResponseDto> responses = mapper.commentToResponses(comments, member);
 
         return new ResponseEntity(new MultiResponseDto<>(responses, pageComments), HttpStatus.OK);
     }

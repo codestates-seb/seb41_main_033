@@ -13,7 +13,6 @@ import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.MemberLikesRepository;
 import mainproject33.domain.member.service.ProfileImageService;
 import mainproject33.domain.userboard.mapper.UserBoardMapper;
-import mainproject33.global.security.jwt.JwtTokenizer;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class MemberMapper {
     private final MemberLikesRepository memberLikesRepository;
     private final MatchBoardMapper matchBoardMapper;
     private final UserBoardMapper userBoardMapper;
-    private final JwtTokenizer jwtTokenizer;
 
     public Member postToMember(MemberDto.Post post) {
 
@@ -107,12 +105,12 @@ public class MemberMapper {
                 userBoardMapper.userBoardToResponses(member.getUserBoards()));
 
         // 차단
-        profileResponse.setBlock(member.getProfile().isBlock());
+        profileResponse.setBlockStatus(member.getProfile().isBlock());
 
         // 팔로우 및 좋아요 수
-        profileResponse.setFollower(member.getProfile().getFollowerCount());
-        profileResponse.setFollowing(member.getProfile().getFollowingCount());
-        profileResponse.setLikes(member.getProfile().getLikeCount());
+        profileResponse.setFollowerCount(member.getProfile().getFollowerCount());
+        profileResponse.setFollowingCount(member.getProfile().getFollowingCount());
+        profileResponse.setLikeCount(member.getProfile().getLikeCount());
 
         // 팔로우 및 좋아요 상태
         if (user != null) {

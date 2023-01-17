@@ -64,14 +64,14 @@ public class MemberDto {
         private Long id;
         private String identifier;
         private String nickname;
-        private ProfileImage image;
+        private String image;
         private int follower;
         private int following;
-        private Boolean followInfo;
+        private Boolean followStatus;
         private int likes;
-        private Boolean likesInfo;
+        private Boolean likeStatus;
         private boolean block;
-        private Boolean blockInfo;
+        private Boolean blockStatus;
         private String introduction;
         private List<GameDB> games;
         private List<MatchBoardDto.Response> matchBoards;

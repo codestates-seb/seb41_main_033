@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
+        String token = request.getHeader("Authorization");
         String[] urls = new String[] {"/api/members/signup", "/api/members/login", "/h2.*"};
 
         log.info("======= method name : {} =======", "shouldNotFilter");
@@ -49,7 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("method : " + method);
         log.info("match : " + Arrays.stream(urls).anyMatch(s -> path.matches(s)));
 
-        return Arrays.stream(urls).anyMatch(s -> path.matches(s)) || method.equals("GET");
+        return Arrays.stream(urls).anyMatch(s -> path.matches(s)) ||
+                ( method.equals("GET") && token == null ) ;
     }
 
 

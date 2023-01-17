@@ -8,6 +8,7 @@ const DropdownContainer = styled.div`
 const DropdownBody = styled.div`
   background-color: var(--darkgrey2);
   border: 1px solid var(--grey);
+  color: var(--white);
   border-radius: 8px;
   padding: 12px 16px;
   font-size: 14px;

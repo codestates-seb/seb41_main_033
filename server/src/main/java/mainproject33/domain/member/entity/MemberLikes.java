@@ -19,6 +19,6 @@ public class MemberLikes {
     private Member liker;
 
     @ManyToOne
-    @JoinColumn(name = "liking_id")
-    private Member liking;
+    @JoinColumn(name = "liked_id")
+    private Member liked;
 }

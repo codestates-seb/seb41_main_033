@@ -3,26 +3,28 @@ package mainproject33.domain.member.mapper;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.gamedb.repository.GameDBRepository;
-import mainproject33.domain.matchboard.dto.MatchBoardDto;
 import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.member.dto.MemberDto;
+import mainproject33.domain.member.entity.Follow;
 import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.entity.MemberLikes;
 import mainproject33.domain.member.entity.Profile;
 import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.MemberLikesRepository;
-import mainproject33.domain.userboard.dto.UserBoardResponseDto;
+import mainproject33.domain.member.service.ProfileImageService;
 import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class MemberMapper {
 
     private final GameDBRepository gameDBRepository;
-
+    private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final MemberLikesRepository memberLikesRepository;
     private final MatchBoardMapper matchBoardMapper;
@@ -74,39 +76,70 @@ public class MemberMapper {
         return response;
     }
 
-    public MemberDto.ProfileResponse ProfileToResponse(Member member) {
+    public MemberDto.ProfileResponse ProfileToResponse(Member member, Member user) {
 
         if(member == null) return null;
 
         MemberDto.ProfileResponse profileResponse = new MemberDto.ProfileResponse();
 
-        List<GameDB> games = new ArrayList<>();
-        for(int i=0; i<member.getProfile().getGames().size(); i++) {
-            games.add(gameDBRepository.findByKorTitle(member.getProfile().getGames().get(i)));
-        }
-
-        List<MatchBoardDto.Response> matchBoards =
-                matchBoardMapper.matchBoardsToMatchBoardResponses(member.getMatchBoards());
-
-        List<UserBoardResponseDto> userBoards =
-                userBoardMapper.userBoardToResponses(member.getUserBoards());
-
+        // 기본 정보
         profileResponse.setId(member.getProfile().getId());
         profileResponse.setIdentifier(member.getIdentifier());
         profileResponse.setNickname(member.getNickname());
-        profileResponse.setImage(member.getProfile().getImage());
-        profileResponse.setFollower(member.getProfile().getFollower());
-        profileResponse.setFollowing(member.getProfile().getFollowing());
-        profileResponse.setLikes(member.getProfile().getLikes());
-        profileResponse.setBlock(member.getProfile().isBlock());
+
+        // 프로필 기본 정보
+        profileResponse.setImage(imageService.readProfileImagePath(member.getId())); // 이미지 url 반환
+
         profileResponse.setIntroduction(member.getProfile().getIntroduction());
+
+        List<GameDB> games = new ArrayList<>();
+        for(String game : member.getProfile().getGames()) {
+            games.add(gameDBRepository.findByKorTitle(game));
+        }
         profileResponse.setGames(games);
-        profileResponse.setMatchBoards(matchBoards);
-        profileResponse.setUserBoards(userBoards);
+
+        profileResponse.setMatchBoards(
+                matchBoardMapper.matchBoardsToMatchBoardResponses(member.getMatchBoards()));
+
+        profileResponse.setUserBoards(
+                userBoardMapper.userBoardToResponses(member.getUserBoards()));
+
+        // 차단
+        profileResponse.setBlockStatus(member.getProfile().isBlock());
+
+        // 팔로우 및 좋아요 수
+        profileResponse.setFollowerCount(member.getProfile().getFollowerCount());
+        profileResponse.setFollowingCount(member.getProfile().getFollowingCount());
+        profileResponse.setLikeCount(member.getProfile().getLikeCount());
+
+        // 팔로우 및 좋아요 상태
+        if (user != null) {
+            profileResponse.setFollowStatus(verifyFollow(user.getId(), member.getId()));
+            profileResponse.setLikeStatus(verifyLike(user.getId(), member.getId()));
+        } else {
+            profileResponse.setFollowStatus(false);
+            profileResponse.setLikeStatus(false);
+        }
+
         profileResponse.setCreatedAt(member.getProfile().getCreatedAt());
         profileResponse.setModifiedAt(member.getProfile().getModifiedAt());
 
         return profileResponse;
     }
 
+    public boolean verifyFollow(Long memberId, Long userId) {
+        Optional<Follow> checkFollow = followRepository.findByFollow(memberId, userId);
+
+        if (checkFollow.isPresent()) return true;
+
+        return false;
+    }
+
+    public boolean verifyLike(Long memberId, Long userId) {
+        Optional<MemberLikes> checkLike = memberLikesRepository.findByMemberLikes(memberId, userId);
+
+        if (checkLike.isPresent()) return true;
+
+        return false;
+    }
 }

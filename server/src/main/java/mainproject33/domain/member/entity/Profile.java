@@ -17,16 +17,15 @@ public class Profile extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "image_id")
     private ProfileImage image;
 
+    private int followerCount;
 
-    private int follower;
+    private int followingCount;
 
-    private int following;
-
-    private int likes;
+    private int likeCount;
 
     private boolean block;
 
@@ -35,4 +34,28 @@ public class Profile extends Auditable {
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> games = new ArrayList<>();
+
+    public void addFollowerCount() {
+        followerCount++;
+    }
+
+    public void subtractFollowerCount() {
+        followerCount--;
+    }
+
+    public void addFollowingCount() {
+        followingCount++;
+    }
+
+    public void subtractFollowingCount() {
+        followingCount--;
+    }
+
+    public void addLikeCount() {
+        likeCount++;
+    }
+
+    public void subtractLikeCount() {
+        likeCount--;
+    }
 }

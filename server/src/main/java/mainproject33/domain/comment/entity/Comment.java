@@ -24,16 +24,16 @@ public class Comment extends Auditable
 
     private int likeCount = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_board_id")
     private UserBoard userBoard;
 
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private Set<Like> likes = new HashSet<>();
 
     @Builder

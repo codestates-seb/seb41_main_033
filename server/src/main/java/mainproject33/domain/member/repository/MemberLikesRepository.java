@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberLikesRepository extends JpaRepository<MemberLikes, Long> {
+    @Query(value = "SELECT * FROM MEMBER_LIKES WHERE LIKER_ID = :likerId AND LIKED_ID = :likedId", nativeQuery = true)
+    Optional<MemberLikes> findByMemberLikes(Long likerId, Long likedId);
 
-    @Query(value = "SELECT * FROM MEMBER_LIKES WHERE LIKER_ID = :likerId AND LIKING_ID = :likingId", nativeQuery = true)
-    Optional<MemberLikes> findByMemberLikes(Long likerId, Long likingId);
-
-    List<MemberLikes> findByLikerId(Long likerId);
+    List<MemberLikes> findByLikedId(Long likedId);
 }

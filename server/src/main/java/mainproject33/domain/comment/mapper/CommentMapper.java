@@ -18,8 +18,21 @@ public interface CommentMapper
 
     default CommentResponseDto commentToResponse(Comment entity)
     {
-        return new CommentResponseDto(entity);
+        CommentResponseDto response = CommentResponseDto.builder()
+                .memberId(entity.getMember().getId())
+                .identifier(entity.getMember().getIdentifier())
+                .nickname(entity.getMember().getNickname())
+                .image(entity.getMember().getProfile().getImage())
+                .userBoardId(entity.getUserBoard().getId())
+                .id(entity.getId())
+                .content(entity.getContent())
+                .likeCount(entity.getLikeCount())
+                .createdAt(entity.getCreatedAt())
+                .modifiedAt(entity.getModifiedAt())
+                .build();
+        return response;
     }
+
 
     default List<CommentResponseDto> commentToResponses(List<Comment> entities)
     {

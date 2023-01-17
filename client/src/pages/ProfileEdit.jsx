@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import PostPatch from '../components/PostPatch';
-import Input from '../components/Input';
+import InputWrap from '../components/InputWrap';
 import dummyUser from '../data/dummyUser.json';
 import Dropdown from '../components/DropDown';
 
@@ -59,7 +59,7 @@ const ProfileEdit = () => {
       <ContentWrap>
         <NicknameWrap>
           <label htmlFor="nickname">닉네임 수정</label>
-          <Input
+          <InputWrap
             type="text"
             name="nickname"
             value={user.nickname || ''}
@@ -77,7 +77,7 @@ const ProfileEdit = () => {
         </GameWrap>
         <BioWrap>
           <label htmlFor="bio">자기소개 수정</label>
-          <Input
+          <InputWrap
             className="bio"
             type="text"
             name="bio"

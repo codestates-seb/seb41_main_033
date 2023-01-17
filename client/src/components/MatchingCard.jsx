@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import displayedAt from "../util/displayedAt";
-
+import matchGame from "../util/matchGame";
 const Card = styled.div`
   width: var(--col-6);
   padding: 16px;
@@ -62,7 +62,7 @@ const MatchingCard = ({ data }) => {
   return (
     <Card className="card">
       <Space>
-        <Img src="https://new-version.download/wp-content/uploads/league-of-legends.png" />
+        <Img src={matchGame(data).image} />
         <Title>
           <div className="game_title">{data.title}</div>
           <div>{data.nickname}</div>

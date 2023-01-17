@@ -167,13 +167,12 @@ const ProfileEdit = () => {
       formData.append('image', file);
     }
 
-    axios
-      .patch(`${API_URL}/api/members/3`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${ACCESS_TOKEN}`,
-        },
-      })
+    axios.patch(`${API_URL}/api/members/3`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+    });
   };
 
   useEffect(() => {

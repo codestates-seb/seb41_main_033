@@ -102,7 +102,7 @@ public class MemberMapper {
                 matchBoardMapper.matchBoardsToMatchBoardResponses(member.getMatchBoards()));
 
         profileResponse.setUserBoards(
-                userBoardMapper.userBoardToResponses(member.getUserBoards()));
+                userBoardMapper.userBoardToResponses(member.getUserBoards(), user));
 
         // 차단
         profileResponse.setBlockStatus(member.getProfile().isBlock());

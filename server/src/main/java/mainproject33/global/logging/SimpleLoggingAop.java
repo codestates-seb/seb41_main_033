@@ -34,7 +34,11 @@ public class SimpleLoggingAop {
     @Pointcut("within(mainproject33.domain.userboard.service..*)")
     private void inUserBoard() {}
 
-    @Pointcut("anyPublicOperation() && ( inMatchBoard() || inGameDB() || inComment() || inMember() || inUserBoard() )")
+    @Pointcut("within(mainproject33.global.security.service..*)")
+    private void inSecurity() {}
+
+    @Pointcut("anyPublicOperation() &&" +
+            "( inMatchBoard() || inGameDB() || inComment() || inMember() || inUserBoard() || inSecurity() )")
     private void cut() {}
 
     @Before("cut()")

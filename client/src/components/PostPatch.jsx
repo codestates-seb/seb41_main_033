@@ -43,7 +43,6 @@ const PostPatch = ({
       <ButtonWrap>
         <button
           className="em"
-          type="submit"
           onClick={() => {
             handleSubmit();
             navigate(`${link1}`);
@@ -53,7 +52,6 @@ const PostPatch = ({
         </button>
         <button
           className="normal"
-          type="button"
           onClick={() => navigate(`${link2}`)}
         >
           {button2}

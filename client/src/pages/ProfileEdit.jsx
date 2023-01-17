@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as ImgUploadIcon } from './../assets/addPhoto.svg';
 import PostPatch from '../components/PostPatch';
 import InputWrap from '../components/InputWrap';
 import gameList from '../data/gameList.json';
 import dummyUser from '../data/dummyUser.json';
-import { useCallback } from 'react';
+import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -121,7 +121,9 @@ const ProfileEdit = () => {
   const [fileName, setFileName] = useState(
     '파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)'
   );
+  const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
+  const ACCESS_TOKEN = `eyJhbGciOiJIUzM4NCJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic3ViIjoiYXBlYWNoIiwiaWF0IjoxNjczOTYyNjg1LCJleHAiOjE2NzQxNzg2ODV9.G0cZ34HtacHYq5-j3FtX_3y6kvBSsjgFHczcHa1DH4QjzeE0cZ8XUqvoD7yElC61`;
 
   const handleNickname = (e) => {
     setUser({ ...user, nickname: e.target.value });
@@ -129,6 +131,7 @@ const ProfileEdit = () => {
 
   const handleOnChange = (e) => {
     setFileName(e.currentTarget.files[0].name);
+    setFile(e.currentTarget.files[0]);
   };
 
   const handleCheckbox = useCallback(
@@ -144,6 +147,36 @@ const ProfileEdit = () => {
     setUser({ ...user, introduction: e.target.value });
   };
 
+  const handlePatch = () => {
+    const formData = new FormData();
+    const data = {
+      nickname: user.nickname,
+      introduction: user.introduction,
+      games: checkedGame,
+    };
+
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(data)], {
+        type: 'application/json',
+      })
+    );
+    if (
+      fileName !== '파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)'
+    ) {
+      formData.append('image', file);
+    }
+
+    axios
+      .patch(`${API_URL}/api/members/3`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+        },
+      })
+      .then((res) => console.log(res));
+  };
+
   useEffect(() => {
     setUser({ nickname });
   }, []);
@@ -157,6 +190,7 @@ const ProfileEdit = () => {
       button1="수정완료"
       link2="/quit"
       button2="탈퇴하기"
+      handleSubmit={handlePatch}
     >
       <ContentWrap>
         <NicknameWrap>
@@ -175,6 +209,7 @@ const ProfileEdit = () => {
               {fileName}
               <input
                 type="file"
+                placeholder="파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)"
                 onChange={(e) => handleOnChange(e)}
                 id="selectImg"
               />

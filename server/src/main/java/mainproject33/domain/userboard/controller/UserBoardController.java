@@ -70,8 +70,7 @@ public class UserBoardController
     }
 
     @GetMapping("/{board-id}")
-    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId,
-                                   @AuthenticationPrincipal Member member)
+    public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId)
     {
         UserBoard userBoard = boardService.findUserBoard(boardId);
 

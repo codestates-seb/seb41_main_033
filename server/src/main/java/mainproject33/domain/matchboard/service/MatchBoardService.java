@@ -20,16 +20,13 @@ public class MatchBoardService {
     private final MatchBoardRepository matchBoardRepository;
 
     public MatchBoard createMatchBoard(MatchBoard matchBoard) {
-
         return matchBoardRepository.save(matchBoard);
     }
 
-    public MatchBoard updateMatchBoard(MatchBoard matchBoard, Member member) {
-        if (verifyMember(member, matchBoard.getId())) {
-            MatchBoard findMatchBoard = matchBoardRepository.findById(matchBoard.getId())
-                    .orElseThrow(()
-                            -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
+    public MatchBoard updateMatchBoard(Member member, MatchBoard matchBoard) {
+        MatchBoard findMatchBoard = findVerifiedMatchBoard(matchBoard.getId());
 
+        if (verifyMember(member, findMatchBoard)) {
             Optional.ofNullable(matchBoard.getTitle())
                     .ifPresent(title -> findMatchBoard.setTitle(title));
             Optional.ofNullable(matchBoard.getContent())
@@ -63,20 +60,21 @@ public class MatchBoardService {
     }
 
     public void deleteMatchBoard(Member member, long id) {
-        if (verifyMember(member, id)) {
-            MatchBoard findMatchBoard = matchBoardRepository.findById(id)
-                    .orElseThrow(()
-                            -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
+        MatchBoard findMatchBoard = findVerifiedMatchBoard(id);
 
+        if (verifyMember(member, findMatchBoard)) {
             matchBoardRepository.delete(findMatchBoard);
         } else {
             throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
         }
     }
 
-    public boolean verifyMember(Member principal, long id) {
-        Optional<MatchBoard> optionalMatchBoard = matchBoardRepository.findById(id);
+    public boolean verifyMember(Member principal, MatchBoard matchBoard) {
+        return matchBoard.getMember().getId() == principal.getId();
+    }
 
-        return optionalMatchBoard.isPresent() && (optionalMatchBoard.get().getMember().getId() == principal.getId());
+    private MatchBoard findVerifiedMatchBoard(long id) {
+        return matchBoardRepository.findById(id).orElseThrow(() ->
+                new BusinessLogicException(ExceptionMessage.MATCH_BOARD_NOT_FOUND));
     }
 }

@@ -11,7 +11,7 @@ import mainproject33.global.validator.notspace.NotSpace;
 import mainproject33.global.validator.password.Password;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,6 +41,7 @@ public class MemberDto {
         private String nickname;
         private String image;
         private String introduction;
+        @Size(max = 5)
         private List<String> games;
     }
 
@@ -63,7 +64,7 @@ public class MemberDto {
         private Long id;
         private String identifier;
         private String nickname;
-        private String image;
+        private String profileImage;
         private int followerCount;
         private int followingCount;
         private boolean followStatus;

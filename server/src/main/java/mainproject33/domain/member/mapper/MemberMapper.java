@@ -83,7 +83,7 @@ public class MemberMapper {
         profileResponse.setNickname(member.getNickname());
 
         // 프로필 기본 정보
-        profileResponse.setImage(imageService.readProfileImagePath(member.getId())); // 이미지 url 반환
+        profileResponse.setProfileImage(imageService.readProfileImagePath(member.getId())); // 이미지 url 반환
 
         profileResponse.setIntroduction(member.getProfile().getIntroduction());
 

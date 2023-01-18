@@ -67,7 +67,8 @@ public class MatchBoardDto {
         private long memberId;
         private String identifier;
         private String nickname;
-        private String image;
+        private String profileImage;
+        private int memberLikeCount;
         private long id;
         private String title;
         private String content;

@@ -14,8 +14,10 @@ public class NicknameValidator implements ConstraintValidator<Nickname, String>
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context)
     {
-        String reg = "^[A-z0-9가-힣]{2,8}$";
-
-        return value.matches(reg);
+        if (value != null) {
+            String reg = "^[A-z0-9가-힣]{2,8}$";
+            return value.matches(reg);
+        }
+        return true;
     }
 }

@@ -1,7 +1,5 @@
 package mainproject33.global.validator.tags;
 
-import mainproject33.global.validator.tags.Tags;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
@@ -11,7 +9,7 @@ public class TagsValidator implements ConstraintValidator<Tags, List<String>> {
     public boolean isValid(List<String> value, ConstraintValidatorContext context) {
 
         for (String s : value) {
-            if (!s.matches("#[a-z]{1,6}|#[가-힣]{1,6}")) return false;
+            if (!s.matches("#[A-zㄱ-ㅎ가-힣0-9]{1,6}")) return false;
         }
         return true;
     }

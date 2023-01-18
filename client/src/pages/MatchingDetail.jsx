@@ -11,24 +11,27 @@ const Wrap = styled.div`
 
 const MatchingDetail = () => {
   const [info, setInfo] = useState("");
+  const { boardid } = useParams();
 
-  const { boarId } = useParams();
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/matches/${boarId}`, {
-
+      .get(`${API_URL}/api/matches/${boardid}`, {
         headers: { "ngrok-skip-browser-warning": "69420" },
       })
-      .then((res) => setInfo(res?.data.data));
+      .then((res) => {
+        setInfo(res.data.data);
+      });
   }, []);
 
   return (
-    <Wrap>
-
-      <MatchDetails data={info} boarId={boarId} />
-
-      <UserCard data={info} />
-    </Wrap>
+    <>
+      {info && (
+        <Wrap>
+          <MatchDetails data={info} boardId={boardid} />
+          <UserCard data={info} />
+        </Wrap>
+      )}
+    </>
   );
 };
 export default MatchingDetail;

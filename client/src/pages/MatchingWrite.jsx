@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import InputWrap from "../components/InputWrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 import { API_URL } from "../data/apiUrl";
 const MatchContainer = styled.form`
   .user_info {
@@ -174,7 +175,7 @@ const MatchingWrite = () => {
     const data = { title, game, team, tags, content };
     if (!isEmpty(data)) {
       axios
-        .post(`${API_URL}/api/matches`, {
+        .post(`${API_URL}/api/matches`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("key")}`,
           },

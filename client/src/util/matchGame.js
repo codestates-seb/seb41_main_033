@@ -1,5 +1,5 @@
 const matchGame = (game) => {
-  const BASE_URL = '/images';
+  const BASE_URL = "/images";
 
   switch (game.id) {
     case 1:
@@ -39,7 +39,7 @@ const matchGame = (game) => {
     case 18:
       return { title: game.korTitle, image: `${BASE_URL}/기타.png` };
     default:
-      alert('없는 게임입니다.');
+      alert("없는 게임입니다.");
   }
 };
 

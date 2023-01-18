@@ -69,6 +69,10 @@ const App = () => {
 			</Router>
 		</Wrap>
 	);
+<<<<<<< HEAD
+=======
+
+>>>>>>> cc686ffa6eaac46a89558a49fb44a25b557029cb
 };
 
 export default App;

@@ -32,6 +32,10 @@ const Title = styled.div`
   text-align: center;
   margin-top: 20px;
 `;
+const GameImg = styled.img`
+  width: 100%;
+  height: 100%;
+`;
 const Drag = () => {
   const [DnD, setDnD] = useState({ dragEnd: false, isDragging: false });
   const [isDrag, setDrag] = useState(false);
@@ -63,17 +67,25 @@ const Drag = () => {
       })
       .then((res) => {
         setGameInfo(res.data.data);
-      });
-    setPlaying(true);
-    setDrag(true);
-    setRecommend(false);
-    setPass(false);
-    setDnD({
-      isDragging: false,
-      dragEnd: true,
-    });
+        setPlaying(true);
+        setDrag(true);
+        setRecommend(false);
+        setPass(false);
+        setDnD({
+          isDragging: false,
+          dragEnd: true,
+        });
+      })
+      .then(
+        setTimeout(() => {
+          setDnD({
+            isDragging: false,
+            dragEnd: false,
+          });
+        }, 5000)
+      );
   };
-  console.log(DnD.dragEnd);
+
   return (
     <div>
       <div>{isDrag && play && <Confetti />}</div>
@@ -86,7 +98,10 @@ const Drag = () => {
       >
         <div>{!DnD.dragEnd && !recommend && <Game />}</div>
       </Icon>
-      {DnD.dragEnd && <img src={matchGame(gameInfo).image} alt="게임아이콘" />}
+      {DnD.dragEnd && (
+        <GameImg src={matchGame(gameInfo)?.image} alt="게임아이콘" />
+      )}
+      <div></div>
       {DnD.dragEnd && <Title>{gameInfo.korTitle}</Title>}
       {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
     </div>

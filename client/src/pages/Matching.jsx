@@ -21,6 +21,7 @@ const Ul = styled.ul`
 const Matching = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [matchinglist, setMatchinglist] = useState([]);
+
   const navigate = useNavigate();
   const matchingBtn = () => {
     if (isLogin) {
@@ -46,11 +47,11 @@ const Matching = () => {
       <SearchBar />
       <Ul>
         {matchinglist?.map((el) => (
-          <Link to={"/el.id"}>
-            <li key={el.id}>
+          <li key={el.id}>
+            <Link to={`/${el.id}/detail`}>
               <MatchingCard data={el} />
-            </li>
-          </Link>
+            </Link>
+          </li>
         ))}
       </Ul>
       <WriteFloatButton click={matchingBtn} />

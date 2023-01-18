@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mainproject33.domain.boardfile.entity.UserBoardFile;
 import mainproject33.domain.boardfile.repository.UserBoardFileRepository;
-import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -109,9 +109,22 @@ public class UserBoardFileService
         amazonS3.deleteObject(bucket, "StoryFiles/" + userBoardFile.getStoreFileName());
     }
 
-    public UserBoardFile verifyFile(long boardId)
+    private UserBoardFile verifyFile(long boardId)
     {
         return fileRepository.findByUserBoardId(boardId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionMessage.FILE_NOT_FOUND));
+    }
+
+    public String readUserBoardFilePath(long boardId)
+    {
+        Optional<UserBoardFile> findUserBoardFile = fileRepository.findByUserBoardId(boardId);
+        if(findUserBoardFile.isEmpty())
+            return null;
+
+        UserBoardFile userBoardFile = findUserBoardFile.get();
+
+        String storeFileName = userBoardFile.getStoreFileName();
+
+        return amazonS3.getUrl(bucket, "StoryFiles/" + storeFileName).toString();
     }
 }

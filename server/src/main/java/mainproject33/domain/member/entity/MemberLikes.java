@@ -15,10 +15,10 @@ public class MemberLikes {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "taker_id")
-    private Member taker;
+    @JoinColumn(name = "liker_id")
+    private Member liker;
 
     @ManyToOne
-    @JoinColumn(name = "giver_id")
-    private Member giver;
+    @JoinColumn(name = "liked_id")
+    private Member liked;
 }

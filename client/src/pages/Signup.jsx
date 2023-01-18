@@ -40,50 +40,44 @@ const InputWrap = styled.div`
 `;
 
 const Signup = () => {
-  const navigate = useNavigate();
-  //회원가입 상태
-  const [form, setForm] = useState({
-    identifier: "",
-    password: "",
-    nickname: "",
-  });
-  const [isError, setIsError] = useState({
-    identifier: false,
-    password: false,
-    nickname: false,
-  });
-  //회원가입 입력
-  const handleInputValue = (key, e) => {
-    setForm({ ...form, [key]: e.currentTarget.value });
-  };
-  //회원가입 API
-  const handleSignup = () => {
-    const { identifier, password, nickname } = form;
-    console.log(form);
-    if (!identifier || !/(?=.*\d)|(?=.*[a-zA-Z]).{4,16}/.test(identifier)) {
-      setIsError({ ...isError, identifier: true });
-      return;
-    } else if (
-      !password ||
-      !/(?=.*\d)(?=.*[a-zA-Z])(?=.*[~!@]).{8,20}/.test(password)
-    ) {
-      setIsError({ ...isError, password: true });
-      return;
-    } else if (
-      !nickname ||
-      !/(?=.*\d)|(?=.*[a-zA-Z])|(?=.*[가-힣]).{2,8}/.test(nickname)
-    ) {
-      setIsError({ ...isError, nickname: true });
-      return;
-    }
-    return axios
-      .post(`${API_URL}/api/members/signup`, form)
-      .then((res) => {
-        alert("가입을 환영합니다!");
-        navigate("/login");
-      })
-      .catch((err) => alert("회원가입에 실패하였습니다."));
-  };
+	const navigate = useNavigate();
+	//회원가입 상태
+	const [form, setForm] = useState({
+		identifier: "",
+		password: "",
+		nickname: "",
+	});
+	const [isError, setIsError] = useState({
+		identifier: false,
+		password: false,
+		nickname: false,
+	});
+	//회원가입 입력
+	const handleInputValue = (key, e) => {
+		setForm({ ...form, [key]: e.currentTarget.value });
+	};
+	//회원가입 API
+	const handleSignup = () => {
+		const { identifier, password, nickname } = form;
+		console.log(form);
+		if (!identifier || !/(?=.*\d)|(?=.*[a-zA-Z]).{4,16}/.test(identifier)) {
+			setIsError({ ...isError, identifier: true });
+			return;
+		} else if (!password || !/(?=.*\d)(?=.*[a-zA-Z])(?=.*[~!@]).{8,20}/.test(password)) {
+			setIsError({ ...isError, password: true });
+			return;
+		} else if (!nickname || !/(?=.*\d)|(?=.*[a-zA-Z])|(?=.*[가-힣]).{2,8}/.test(nickname)) {
+			setIsError({ ...isError, nickname: true });
+			return;
+		}
+		return axios
+			.post(`${API_URL}/api/members/signup`, form)
+			.then((res) => {
+				alert("가입을 환영합니다!");
+				navigate("/login");
+			})
+			.catch((err) => alert("회원가입에 실패하였습니다."));
+	};
 
   return (
     <Wrap className="card big">

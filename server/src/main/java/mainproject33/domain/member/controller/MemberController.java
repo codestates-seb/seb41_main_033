@@ -37,9 +37,9 @@ public class MemberController {
 
     @DeleteMapping("/{member-id}")
     public ResponseEntity dropOut(@PathVariable("member-id") @Positive Long memberId,
-                                  @AuthenticationPrincipal Member principal) {
+                                  @AuthenticationPrincipal Member user) {
 
-        memberService.deleteMember(memberId, principal);
+        memberService.deleteMember(memberId, user);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -48,10 +48,10 @@ public class MemberController {
     public ResponseEntity patchProfile(@PathVariable("member-id") @Positive Long memberId,
                                        @RequestPart(value = "data", required = false) @Valid MemberDto.Patch patch,
                                        @RequestPart(value = "image", required = false) MultipartFile file,
-                                       @AuthenticationPrincipal Member principal) {
+                                       @AuthenticationPrincipal Member user) {
 
-        Member member = memberService.updateProfile(memberId, mapper.patchToProfile(patch), principal, file);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, "필요없음");
+        Member member = memberService.updateProfile(memberId, mapper.patchToProfile(patch), user, file);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, user);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
@@ -59,10 +59,10 @@ public class MemberController {
 
     @GetMapping("/{member-id}")
     public ResponseEntity getProfile(@PathVariable("member-id") @Positive Long memberId,
-                                     @RequestHeader(required = false) String token) {
+                                     @AuthenticationPrincipal Member user) {
 
         Member member = memberService.findProfile(memberId);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, token);
+        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, user);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
@@ -70,9 +70,9 @@ public class MemberController {
 
     @PostMapping("/{member-id}/follows")
     public ResponseEntity follow(@PathVariable("member-id") @Positive Long memberId,
-                                 @AuthenticationPrincipal Member principal) {
+                                 @AuthenticationPrincipal Member user) {
 
-        if(memberService.follow(memberId, principal)) {
+        if(memberService.follow(memberId, user)) {
             return new ResponseEntity<>("팔로우가 완료되었습니다.", HttpStatus.OK);
         }
 
@@ -80,10 +80,10 @@ public class MemberController {
     }
 
     @PostMapping("/{member-id}/likes")
-    public ResponseEntity like(@PathVariable("member-id") @Positive Long memberId,
-                               @AuthenticationPrincipal Member principal) {
+    public ResponseEntity memberLike(@PathVariable("member-id") @Positive Long memberId,
+                                     @AuthenticationPrincipal Member user) {
 
-        if(memberService.like(memberId, principal)) {
+        if(memberService.like(memberId, user)) {
             return new ResponseEntity<>("좋아요가 완료되었습니다.", HttpStatus.OK);
         }
 
@@ -92,9 +92,13 @@ public class MemberController {
 
     @PostMapping("/{member-id}/blocks")
     public ResponseEntity block(@PathVariable("member-id") @Positive Long memberId,
-                                @AuthenticationPrincipal Member principal) {
+                                @AuthenticationPrincipal Member user) {
 
-        return null;
+        if(memberService.block(memberId, user)) {
+            return new ResponseEntity<>("해당 유저를 차단하셨습니다.", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("해당 유저 차단을 취소하셨습니다.", HttpStatus.OK);
     }
 
 }

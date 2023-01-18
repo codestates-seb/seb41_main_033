@@ -75,6 +75,7 @@ const MatchingCard = ({ data }) => {
         <ImgWrap>
           <img src={matchGame(data.game).image} />
         </ImgWrap>
+
         <Title>
           <div className="game_title">{data.title}</div>
           <div>{data.nickname}</div>
@@ -85,7 +86,6 @@ const MatchingCard = ({ data }) => {
           <span></span>
           {data.team}명
         </div>
-
         <div>{displayedAt(data.createdAt)}</div>
       </Space>
       <Space>

@@ -98,10 +98,7 @@ const Drag = () => {
       >
         <div>{!DnD.dragEnd && !recommend && <Game />}</div>
       </Icon>
-      {DnD.dragEnd && (
-        <GameImg src={matchGame(gameInfo)?.image} alt="게임아이콘" />
-      )}
-      <div></div>
+      {DnD.dragEnd && <img src={matchGame(gameInfo).image} alt="게임아이콘" />}
       {DnD.dragEnd && <Title>{gameInfo.korTitle}</Title>}
       {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
     </div>

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import MatchingCard from "../components/MatchingCard";
 import SearchBar from "../components/SearchBar";
 import WriteFloatButton from "../components/WriteFloatButton";
+import MatchPagination from "../components/MatchPagination";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { API_URL } from "../data/apiUrl";
@@ -21,7 +22,8 @@ const Ul = styled.ul`
 const Matching = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [matchinglist, setMatchinglist] = useState([]);
-
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(1);
   const navigate = useNavigate();
   const matchingBtn = () => {
     if (isLogin) {
@@ -37,11 +39,14 @@ const Matching = () => {
   }, [isLogin]);
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/matches`, {
+      .get(`${API_URL}/api/matches?page=${page}`, {
         headers: { "ngrok-skip-browser-warning": "69420" },
       })
-      .then((res) => setMatchinglist(res.data.data));
-  }, []);
+      .then((res) => {
+        setMatchinglist(res.data.data);
+        setTotal(res.data.pageInfo.totalPages);
+      });
+  }, [page]);
   return (
     <Wrap>
       <SearchBar />
@@ -55,6 +60,7 @@ const Matching = () => {
         ))}
       </Ul>
       <WriteFloatButton click={matchingBtn} />
+      <MatchPagination setPage={setPage} page={page} total={total} />
     </Wrap>
   );
 };

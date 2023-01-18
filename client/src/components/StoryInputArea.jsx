@@ -90,17 +90,25 @@ const BtnWrap = styled.div`
 	}
 `;
 
-const StoryInputArea = ({ page }) => {
+const StoryInputArea = ({ page, handleSubmit }) => {
 	const [fileName, setFileName] = useState("이미지는 jpeg, jpg, png만 업로드 가능합니다");
-	const handleOnchange = (e) => {
+	const [file, setFile] = useState(null);
+	const [content, setContent] = useState("");
+	const handleContentOnChange = (e) => {
+		setContent(e.currentTarget.value);
+		//console.log(e.currentTarget.value);
+	};
+	const handleFileOnChange = (e) => {
 		setFileName(e.currentTarget.files[0].name);
+		setFile(e.currentTarget.files[0]);
+		//console.log(e.currentTarget.files[0]);
 	};
 	return (
 		<Wrap className="card big">
 			<SinglePofileWrap imgSize="big" name="맑게고인신나현" subInfo="nahyeon123" />
 			<TextArea>
 				<label>내용</label>
-				<textarea placeholder="내용을 입력하세요"></textarea>
+				<textarea placeholder="내용을 입력하세요" onChange={(e) => handleContentOnChange(e)}></textarea>
 			</TextArea>
 			{page === "write" ? (
 				<>
@@ -109,7 +117,7 @@ const StoryInputArea = ({ page }) => {
 						<div className="custom_input_wrap">
 							<div className="custom_input">
 								{fileName}
-								<input type="file" onChange={(e) => handleOnchange(e)} id="selectImg"></input>
+								<input type="file" onChange={(e) => handleFileOnChange(e)} id="selectImg"></input>
 							</div>
 							<label htmlFor="selectImg" className="custom_btn">
 								<ImgUploadIcon />
@@ -121,7 +129,9 @@ const StoryInputArea = ({ page }) => {
 			) : null}
 
 			<BtnWrap>
-				<button className="em">{page === "edit" ? "수정완료" : "작성완료"}</button>
+				<button className="em" onClick={() => handleSubmit(content, file)}>
+					{page === "edit" ? "수정완료" : "작성완료"}
+				</button>
 				<button className="normal">취소</button>
 			</BtnWrap>
 		</Wrap>

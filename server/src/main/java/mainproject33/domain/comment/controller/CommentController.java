@@ -74,11 +74,11 @@ public class CommentController
     }
 
     @GetMapping("/{board-id}/comments")
-    public ResponseEntity getComments(@PageableDefault(size = 10, sort = "likeCount", direction = Sort.Direction.DESC)Pageable pageable,
+    public ResponseEntity getComments(@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC)Pageable pageable,
                                       @PathVariable("board-id") @Positive long boardId,
                                       @AuthenticationPrincipal Member member)
     {
-        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable, boardId);
+        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable.previousOrFirst(), boardId);
         List<Comment> comments = pageComments.getContent();
 
         List<CommentResponseDto> responses = mapper.commentToResponses(comments, member);

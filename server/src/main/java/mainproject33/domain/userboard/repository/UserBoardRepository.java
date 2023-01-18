@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserBoardRepository extends JpaRepository<UserBoard, Long>
 {
+
+    @Query(value = "select * from user_board where content like %:keyword%", nativeQuery = true)
+    Page<UserBoard> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
     @Query(value = "SELECT * FROM USER_BOARD WHERE MEMBER_ID = :memberId", nativeQuery = true)
     Page<UserBoard> findByMemberId(@Param("memberId")Long memberId, Pageable pageable);
 }

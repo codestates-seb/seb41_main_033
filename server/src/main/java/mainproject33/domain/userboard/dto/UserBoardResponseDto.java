@@ -20,13 +20,15 @@ public class UserBoardResponseDto
 
     private String nickname;
 
-    private String image;
+    private String profileImage;
 
     private long id;
 
     private String content;
 
     private String uploadFileName;
+
+    private String contentType;
 
     private int commentCount;
 

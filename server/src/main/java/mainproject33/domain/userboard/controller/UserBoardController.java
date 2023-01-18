@@ -79,11 +79,12 @@ public class UserBoardController
     }
 
     @GetMapping
-    public ResponseEntity getBoards(@PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
+    public ResponseEntity getBoards(@RequestParam(value = "keyword", required = false) String keyword,
+                                    @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
                                     Pageable pageable,
                                     @AuthenticationPrincipal Member member)
     {
-        Page<UserBoard> pageBoards = boardService.findAllUserBoards(pageable.previousOrFirst());
+        Page<UserBoard> pageBoards = boardService.findAllUserBoards(keyword, pageable.previousOrFirst());
 
         List<UserBoard> boards = pageBoards.getContent();
         List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards, member);

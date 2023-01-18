@@ -72,6 +72,7 @@ public class UserBoardMapper
                 .id(entity.getId())
                 .content(entity.getContent())
                 .uploadFileName(fileService.readUserBoardFilePath(entity.getId()))
+                .contentType(getContentType(entity))
                 .commentCount(entity.getComments().size())
                 .likeCount(entity.getLikeCount())
                 .likeStatus(likeStatus)
@@ -94,7 +95,7 @@ public class UserBoardMapper
         return responses;
     }
 
-    private String getUploadFileName(UserBoard userBoard)
+    private String getContentType(UserBoard userBoard)
     {
         if(userBoard == null)
             return null;
@@ -103,11 +104,12 @@ public class UserBoardMapper
         if(userBoardFile == null)
             return null;
 
-        String uploadFileName = userBoardFile.getUploadFileName();
-        if(uploadFileName == null)
-            uploadFileName = "";
+        String contentType = userBoardFile.getContentType();
 
-        return uploadFileName;
+        if(contentType == null)
+            return null;
+
+        return contentType;
     }
 
     private boolean checkBoardLikeStatus(Member member, UserBoard userBoard)

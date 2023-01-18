@@ -31,8 +31,9 @@ public class UserBoardService
 
         if(file != null)
         {
-            boardFileService.verifyContentType(file);
+            String contentType = boardFileService.verifyContentType(file);
             UserBoardFile userBoardFile = boardFileService.storeFile(file);
+            userBoardFile.addContentType(contentType);
             userBoardFile.addUserBoard(request);
         }
 
@@ -64,9 +65,12 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
-    public Page<UserBoard> findAllUserBoards(Pageable pageable)
+    public Page<UserBoard> findAllUserBoards(String keyword, Pageable pageable)
     {
-        return userBoardRepository.findAll(pageable);
+        if(keyword == null)
+            return userBoardRepository.findAll(pageable);
+
+        return userBoardRepository.findByKeyword(keyword, pageable);
     }
 
     public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {

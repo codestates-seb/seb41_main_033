@@ -9,14 +9,14 @@ import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,8 +70,10 @@ public class UserBoardService
             return findBoard;
 
         //멤버가 있을 경우 들
-        if(getBlackList(member.getId()).contains(findBoard.getId()))
-            throw new BusinessLogicException(ExceptionMessage.COMMENT_NOT_FOUND);
+        List<Long> blackList = getBlackList(member.getId());
+
+        if(blackList.contains(findBoard.getMember().getId()))
+            throw new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND);
 
         return findBoard;
     }
@@ -89,12 +91,14 @@ public class UserBoardService
     @Transactional(readOnly = true)
     public Page<UserBoard> findAllBoards(String keyword, Pageable pageable, Member member)
     {
-        if(member == null)
+        if(member == null) //비 로그인일 경우
         {
             if(keyword == null) return userBoardRepository.findAll(pageable);
 
             return getPagedBoard(userBoardRepository.findByKeyword(keyword), pageable);
         }
+
+        //로그인 한 유저 일 경우
 
         List<Long> blockList = getBlackList(member.getId());
 
@@ -154,7 +158,7 @@ public class UserBoardService
         }
     }
 
-    //========블랙 리스트 관련 기능========//
+    //========블랙 리스트 관련 기능들========//
     private List<Long> getBlackList(Long blockerId)
     {
         List<Long> blockList = blockRepository.findBlockedIdByBlockerId(blockerId);

@@ -97,7 +97,7 @@ public class CommentService
     }
 
     //========블랙 리스트 관련 기능========//
-    private List<Long> getBlockList(Long blockerId)
+    public List<Long> getBlockList(Long blockerId)
     {
         List<Long> blockList = blockRepository.findBlockedIdByBlockerId(blockerId);
 
@@ -106,14 +106,14 @@ public class CommentService
 
     private Page<Comment> getPagedComments(List<Comment> comments, Pageable pageable)
     {
-        final int start = (int)pageable.getOffset();
-        final int end = Math.min(start + pageable.getPageSize(), comments.size());
-        final Page<Comment> page = new PageImpl<>(comments.subList(start, end), pageable, comments.size());
+        int start = (int)pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), comments.size());
+        Page<Comment> page = new PageImpl<>(comments.subList(start, end), pageable, comments.size());
 
         return page;
     }
 
-    private List<Comment> filterComments(List<Long> blockList, List<Comment> comments)
+    public List<Comment> filterComments(List<Long> blockList, List<Comment> comments)
     {
         return comments.stream()
                 .filter(comment -> !blockList.contains(comment.getMember().getId()))

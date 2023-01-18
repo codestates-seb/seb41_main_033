@@ -69,6 +69,9 @@ public class UserBoardService
         return userBoardRepository.findAll(pageable);
     }
 
+    public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {
+        return userBoardRepository.findByMemberId(memberId, pageable);
+    }
     public void deleteOne(Long id)
     {
         verifyExistBoard(id);

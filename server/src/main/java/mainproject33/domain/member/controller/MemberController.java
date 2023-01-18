@@ -1,11 +1,24 @@
 package mainproject33.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.domain.matchboard.dto.MatchBoardDto;
+import mainproject33.domain.matchboard.entity.MatchBoard;
+import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
+import mainproject33.domain.matchboard.service.MatchBoardService;
 import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
+import mainproject33.domain.userboard.dto.UserBoardResponseDto;
+import mainproject33.domain.userboard.entity.UserBoard;
+import mainproject33.domain.userboard.mapper.UserBoardMapper;
+import mainproject33.domain.userboard.service.UserBoardService;
+import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,13 +37,19 @@ import javax.validation.constraints.Positive;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberMapper mapper;
+    private final MemberMapper memberMapper;
+
+    private final UserBoardService userBoardService;
+    private final UserBoardMapper userBoardMapper;
+
+    private final MatchBoardService matchBoardService;
+    private final MatchBoardMapper matchBoardMapper;
 
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody @Valid MemberDto.Post post) {
 
-        Member member = memberService.createMember(mapper.postToMember(post));
-        MemberDto.Response response = mapper.memberToResponse(member);
+        Member member = memberService.createMember(memberMapper.postToMember(post));
+        MemberDto.Response response = memberMapper.memberToResponse(member);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.CREATED);
@@ -50,8 +70,8 @@ public class MemberController {
                                        @RequestPart(value = "image", required = false) MultipartFile file,
                                        @AuthenticationPrincipal Member user) {
 
-        Member member = memberService.updateProfile(memberId, mapper.patchToProfile(patch), user, file);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, user);
+        Member member = memberService.updateProfile(memberId, memberMapper.patchToProfile(patch), user, file);
+        MemberDto.ProfileResponse response = memberMapper.ProfileToResponse(member, user);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
@@ -62,7 +82,7 @@ public class MemberController {
                                      @AuthenticationPrincipal Member user) {
 
         Member member = memberService.findProfile(memberId);
-        MemberDto.ProfileResponse response = mapper.ProfileToResponse(member, user);
+        MemberDto.ProfileResponse response = memberMapper.ProfileToResponse(member, user);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(response), HttpStatus.OK);
@@ -99,6 +119,33 @@ public class MemberController {
         }
 
         return new ResponseEntity<>("해당 유저 차단을 취소하셨습니다.", HttpStatus.OK);
+    }
+
+    @GetMapping("/{member-id}/boards")
+    public ResponseEntity getUserBoards(@PathVariable("member-id") @Positive Long memberId,
+                                        @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
+                                        @AuthenticationPrincipal Member user) {
+
+        Page<UserBoard> pageBoards = userBoardService.findProfileUserBoards(memberId, pageable.previousOrFirst());
+
+        List<UserBoard> boards = pageBoards.getContent();
+        List<UserBoardResponseDto> responses = userBoardMapper.userBoardToResponses(boards, user);
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);
+    }
+    @GetMapping("/{member-id}/matches")
+    public ResponseEntity getMatchesBoards(@PathVariable("member-id") @Positive Long memberId,
+                                           @PageableDefault(size = 8, sort = "id",
+                                                   direction = Sort.Direction.DESC)Pageable pageable) {
+
+        Page<MatchBoard> pageMatches = matchBoardService.readProfileMatchBoards(memberId, pageable);
+
+        List<MatchBoard> matchBoards = pageMatches.getContent();
+        List<MatchBoardDto.Response> responses = matchBoardMapper.matchBoardsToMatchBoardResponses(matchBoards);
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(responses, pageMatches), HttpStatus.OK);
     }
 
 }

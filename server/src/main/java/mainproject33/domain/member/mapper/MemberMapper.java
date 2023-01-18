@@ -3,14 +3,12 @@ package mainproject33.domain.member.mapper;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.gamedb.repository.GameDBRepository;
-import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.*;
 import mainproject33.domain.member.repository.BlockRepository;
 import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.MemberLikesRepository;
 import mainproject33.domain.member.service.ProfileImageService;
-import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,10 +23,7 @@ public class MemberMapper {
     private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final MemberLikesRepository memberLikesRepository;
-
     private final BlockRepository blockRepository;
-    private final MatchBoardMapper matchBoardMapper;
-    private final UserBoardMapper userBoardMapper;
 
     public Member postToMember(MemberDto.Post post) {
 
@@ -97,12 +92,6 @@ public class MemberMapper {
             games.add(gameDBRepository.findByKorTitle(game));
         }
         profileResponse.setGames(games);
-
-        profileResponse.setMatchBoards(
-                matchBoardMapper.matchBoardsToMatchBoardResponses(member.getMatchBoards()));
-
-        profileResponse.setUserBoards(
-                userBoardMapper.userBoardToResponses(member.getUserBoards(), user));
 
         // 팔로우 및 좋아요 수
         profileResponse.setFollowerCount(member.getProfile().getFollowerCount());

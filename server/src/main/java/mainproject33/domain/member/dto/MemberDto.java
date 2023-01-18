@@ -72,8 +72,6 @@ public class MemberDto {
         private boolean blockStatus;
         private String introduction;
         private List<GameDB> games;
-        private List<MatchBoardDto.Response> matchBoards;
-        private List<UserBoardResponseDto> userBoards;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
     }

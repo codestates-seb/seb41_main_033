@@ -12,7 +12,6 @@ import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import mainproject33.domain.userboard.service.UserBoardService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
-import mainproject33.global.security.jwt.JwtTokenizer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,7 +39,7 @@ public class UserBoardController
 
     @PostMapping
     public ResponseEntity postBoard(@Valid @RequestPart(value = "data") UserBoardPostDto postDto,
-                                    @RequestPart(value = "image", required = false) MultipartFile file,
+                                    @RequestPart(value = "file", required = false) MultipartFile file,
                                     @AuthenticationPrincipal Member member) throws IOException
     {
         Member findMember = memberService.findVerifiedMember(member.getId());
@@ -49,7 +48,6 @@ public class UserBoardController
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard, member);
 
-        log.info("등록 완료");
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
 
@@ -66,7 +64,6 @@ public class UserBoardController
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard, member);
 
-        log.info("수정 완료");
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
@@ -78,7 +75,6 @@ public class UserBoardController
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard, member);
 
-        log.info("글 조회 완료 = {}", boardId);
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
@@ -92,7 +88,6 @@ public class UserBoardController
         List<UserBoard> boards = pageBoards.getContent();
         List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards, member);
 
-        log.info("글 전체 조회 완료");
         return new ResponseEntity(new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);
     }
 
@@ -104,7 +99,6 @@ public class UserBoardController
 
         boardService.deleteOne(boardId);
 
-        log.info("글 삭제 완료");
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,4 +1,6 @@
-package mainproject33.domain.matchboard.utils.validator;
+package mainproject33.global.validator.tags;
+
+import mainproject33.global.validator.tags.Tags;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

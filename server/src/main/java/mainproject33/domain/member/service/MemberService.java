@@ -94,13 +94,13 @@ public class MemberService {
         Optional<Follow> optionalFollow = followRepository.findByFollow(user.getId(), memberId);
 
         if (optionalFollow.isEmpty()) {
-            follower.getProfile().addFollowingCount();
-            followed.getProfile().addFollowerCount();
+            follower.getProfile().addFollowingCount(1);
+            followed.getProfile().addFollowerCount(1);
             followRepository.save(follow);
             return true;
         } else {
-            follower.getProfile().subtractFollowingCount();
-            followed.getProfile().subtractFollowerCount();
+            follower.getProfile().addFollowingCount(-1);
+            followed.getProfile().addFollowerCount(-1);
             followRepository.delete(optionalFollow.get());
             return false;
         }
@@ -120,11 +120,11 @@ public class MemberService {
                 memberLikesRepository.findByMemberLikes(user.getId(), memberId);
 
         if (optionalLikes.isEmpty()) {
-            liked.getProfile().addLikeCount();
+            liked.getProfile().addLikeCount(1);
             memberLikesRepository.save(likes);
             return true;
         } else {
-            liked.getProfile().subtractLikeCount();
+            liked.getProfile().addLikeCount(-1);
             memberLikesRepository.delete(optionalLikes.get());
             return false;
         }

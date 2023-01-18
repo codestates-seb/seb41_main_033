@@ -4,8 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.matchboard.dto.MatchBoardDto;
-import mainproject33.domain.member.entity.ProfileImage;
 import mainproject33.domain.userboard.dto.UserBoardResponseDto;
+import mainproject33.global.validator.identifier.Identifier;
+import mainproject33.global.validator.nickname.Nickname;
+import mainproject33.global.validator.notspace.NotSpace;
+import mainproject33.global.validator.password.Password;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -18,27 +21,23 @@ public class MemberDto {
     public static class Post {
 
         @NotBlank(message = "아이디에는 공백이 올 수 없습니다.")
-        @Pattern(regexp = "^[A-z0-9]{4,16}$",
-                message = "아이디는 한글, 특수문자가 포함될 수 없으며, 4 ~ 16자 까지만 입력이 가능합니다.")
+        @Identifier
         private String identifier;
 
         @NotBlank(message = "패스워드에는 공백이 올 수 없습니다.")
-        @Pattern(regexp = "^(?=.*[A-z])(?=.*\\d)(?=.*[~!@])[A-z\\d~!@]{8,20}$",
-                message = "패스워드는 영어, 숫자, 특수문자를 하나 씩 포함해야 하며, 8 ~ 20자 까지만 입력이 가능합니다.")
+        @Password
         private String password;
 
         @NotBlank(message = "닉네임에는 공백이 포함될 수 없습니다.")
-        @Pattern(regexp = "^[A-z0-9가-힣]{2,8}$",
-                message = "닉네임은 특수문자가 포함될 수 없으며, 2 ~ 8자 까지만 입력이 가능합니다.")
+        @Nickname
         private String nickname;
     }
 
     @Getter
     public static class Patch {
 
-        @NotBlank(message = "닉네임에는 공백이 포함될 수 없습니다.")
-        @Pattern(regexp = "^[A-z0-9가-힣]{2,8}$",
-                message = "닉네임은 특수문자가 포함될 수 없으며, 2 ~ 8자 까지만 입력이 가능합니다.")
+        @NotSpace
+        @Nickname
         private String nickname;
         private String image;
         private String introduction;

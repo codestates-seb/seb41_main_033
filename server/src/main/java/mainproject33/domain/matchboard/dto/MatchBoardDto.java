@@ -3,7 +3,7 @@ package mainproject33.domain.matchboard.dto;
 import lombok.Getter;
 import lombok.Setter;
 import mainproject33.domain.gamedb.entity.GameDB;
-import mainproject33.domain.matchboard.utils.validator.Tags;
+import mainproject33.global.validator.tags.Tags;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;

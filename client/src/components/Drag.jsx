@@ -32,6 +32,10 @@ const Title = styled.div`
   text-align: center;
   margin-top: 20px;
 `;
+const GameImg = styled.img`
+  width: 100%;
+  height: 100%;
+`;
 const Drag = () => {
   const [DnD, setDnD] = useState({ dragEnd: false, isDragging: false });
   const [isDrag, setDrag] = useState(false);
@@ -63,17 +67,25 @@ const Drag = () => {
       })
       .then((res) => {
         setGameInfo(res.data.data);
-      });
-    setPlaying(true);
-    setDrag(true);
-    setRecommend(false);
-    setPass(false);
-    setDnD({
-      isDragging: false,
-      dragEnd: true,
-    });
+        setPlaying(true);
+        setDrag(true);
+        setRecommend(false);
+        setPass(false);
+        setDnD({
+          isDragging: false,
+          dragEnd: true,
+        });
+      })
+      .then(
+        setTimeout(() => {
+          setDnD({
+            isDragging: false,
+            dragEnd: false,
+          });
+        }, 5000)
+      );
   };
-  console.log(DnD.dragEnd);
+
   return (
     <div>
       <div>{isDrag && play && <Confetti />}</div>

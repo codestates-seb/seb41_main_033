@@ -9,9 +9,7 @@ import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,6 +73,9 @@ public class UserBoardService
         return userBoardRepository.findByKeyword(keyword, pageable);
     }
 
+    public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {
+        return userBoardRepository.findByMemberId(memberId, pageable);
+    }
     public void deleteOne(Long id)
     {
         verifyExistBoard(id);

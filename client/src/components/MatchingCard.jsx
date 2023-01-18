@@ -24,6 +24,10 @@ const Space = styled.div`
     .team_count {
       display: flex;
       align-items: center;
+      color: var(--strong-color);
+      span {
+        margin-right: 8px;
+      }
     }
     div {
       margin-right: 10px;
@@ -40,9 +44,16 @@ const Space = styled.div`
     }
   }
 `;
-const Img = styled.img`
+const ImgWrap = styled.div`
   width: 80px;
   height: 80px;
+  overflow: hidden;
+  border-radius: 100%;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 const Tag = styled.div`
   display: flex;
@@ -58,11 +69,13 @@ const Tag = styled.div`
   cursor: pointer;
 `;
 const MatchingCard = ({ data }) => {
-  console.log(data);
   return (
     <Card className="card">
       <Space>
-        <Img src={matchGame(data).image} />
+        <ImgWrap>
+          <img src={matchGame(data.game).image} />
+        </ImgWrap>
+
         <Title>
           <div className="game_title">{data.title}</div>
           <div>{data.nickname}</div>
@@ -71,7 +84,7 @@ const MatchingCard = ({ data }) => {
       <Space className="game_info">
         <div className="team_count">
           <span></span>
-          {data.team} 명
+          {data.team}명
         </div>
         <div>{displayedAt(data.createdAt)}</div>
       </Space>

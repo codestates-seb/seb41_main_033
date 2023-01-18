@@ -66,7 +66,7 @@ public class UserBoardMapper
                 .memberId(entity.getMember().getId())
                 .identifier(entity.getMember().getIdentifier())
                 .nickname(entity.getMember().getNickname())
-                .image(imageService.readProfileImagePath(entity.getMember().getId()))
+                .profileImage(imageService.readProfileImagePath(entity.getMember().getId()))
 
                 //게시판 정보
                 .id(entity.getId())

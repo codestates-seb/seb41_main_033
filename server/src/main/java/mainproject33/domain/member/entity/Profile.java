@@ -27,7 +27,6 @@ public class Profile extends Auditable {
 
     private int likeCount;
 
-    private boolean block;
 
     @Column(length = 500)
     private String introduction;

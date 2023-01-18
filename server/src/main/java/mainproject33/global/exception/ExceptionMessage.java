@@ -19,6 +19,8 @@ public enum ExceptionMessage {
     SELF_LIKE_NOT_ALLOWED("자기 자신을 좋아요 할 수 없습니다."),
     LIKE_NOT_FOUND("존재하지 않는 좋아요 정보입니다."),
 
+    SELF_BLOCK_NOT_ALLOWED("자기 자신을 차단 할 수 없습니다."),
+
     //=========userBoard=========//
     USER_BOARD_NOT_FOUND("존재하지 않는 게시글입니다."),
 

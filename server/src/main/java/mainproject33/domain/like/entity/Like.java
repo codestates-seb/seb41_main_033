@@ -43,13 +43,11 @@ public class Like
     {
         this.member = member;
         this.userBoard = userBoard;
-        userBoard.addLike();
     }
 
     public Like(Member member, Comment comment)
     {
         this.member = member;
         this.comment = comment;
-        comment.addLike();
     }
 }

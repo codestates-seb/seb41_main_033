@@ -35,13 +35,14 @@ const Form = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: var(--col-6);
+  width: 100%;
 `;
 const Card = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: var(--col-6);
 `;
 const LoginInput = styled.input`
   width: 100%;
@@ -87,7 +88,7 @@ const Login = () => {
         )
         .then((res) => {
           navigate(`/`);
-          console.log(res.headers.authorization);
+          console.log(res);
           const token = res.headers.authorization;
           localStorage.setItem("key", token);
         });

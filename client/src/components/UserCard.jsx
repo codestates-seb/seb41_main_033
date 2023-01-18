@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as Heart } from "./../assets/heartIcon.svg";
-
+import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 const Card = styled.div`
   display: flex;
   justify-content: center;
@@ -15,7 +15,7 @@ const Div = styled.div`
     color: var(--white);
   }
 `;
-const Img = styled.img`
+const Img = styled.div`
   margin: auto;
   display: block;
   width: 56px;
@@ -32,10 +32,10 @@ const Like = styled.span`
   .logo_span {
     position: absolute;
     display: inline-block;
-    margin-left: 4px;
     .logo {
       position: relative;
       margin-top: 3px;
+      margin-left: 4px;
     }
   }
 `;
@@ -44,12 +44,18 @@ const UserCard = ({ data }) => {
     <Card className="card big">
       <Div>
         <Link to={`/${data.memberId}`}>
-          <Img src={data.image} alt="유저프로필" />
+          <Img>
+            {data.img ? (
+              <img src={data.image} alt="유저프로필" />
+            ) : (
+              <DefaultProfileImg />
+            )}
+          </Img>
           <Name>{data.nickname}</Name>
         </Link>
         <Like>Likes</Like>
         <Like className="number">
-          {data.likeCount}
+          {data.likeCount ? data.likeCount : 0}
           <span className="logo_span">
             <Heart className="logo" />
           </span>

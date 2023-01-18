@@ -33,7 +33,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        HeaderMapRequestWrapper wrapper = new HeaderMapRequestWrapper(request);
+        HeaderMapRequestWrapper wrapper = new HeaderMapRequestWrapper(request); // 토큰 재발급시 덮어쓰기 위한 wrapper 객체
 
         try {
             filterChain.doFilter(request, response);
@@ -52,14 +52,14 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             log.error("만료된 Access Token 입니다. 재발급을 진행합니다.");
 
-            String refreshToken = resolveRefreshToken(request);
+            String refreshToken = resolveRefreshToken(request); // request header 에서 refreshToken 추출
 
-            Authentication authentication = jwtTokenizer.getAuthentication(refreshToken);
+            Authentication authentication = jwtTokenizer.getAuthentication(refreshToken); // refreshToken으로 authentication 생성
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication); // contextHolder에 저장된 authentication을 바꿔 줌
 
-            TokenDto tokenDto = authService.reissue(request, authentication);
-            setHeaderResponse(wrapper, response, tokenDto);
+            TokenDto tokenDto = authService.reissue(request, authentication); // 토큰 재발급
+            setHeaderResponse(wrapper, response, tokenDto); // header, response 값 재설정
 
             log.error("Access Token, Refresh Token 재발급이 완료되었씁니다.");
 
@@ -79,9 +79,12 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
     private void setHeaderResponse(HeaderMapRequestWrapper wrapper,
                                    HttpServletResponse response,
                                    TokenDto tokenDto) {
+
+        // accessToken, refreshToken Header 값 새로 덮어쓰기
         wrapper.addHeader("Authorization", tokenDto.getAccessToken());
         wrapper.addHeader("RefreshToken", tokenDto.getRefreshToken());
 
+        //reissue(재발급) 후 response header 에 새로운 accessToken,refreshToken 추가
         response.addHeader("Authorization", tokenDto.getAccessToken());
         response.addHeader("RefreshToken", tokenDto.getRefreshToken());
     }

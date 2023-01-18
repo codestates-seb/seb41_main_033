@@ -40,21 +40,21 @@ public class AuthService {
         return tokenDto;
     }
 
-//    public TokenDto reissue(HttpServletRequest request, Authentication authentication) {
-//
-//        String refreshToken = request.getHeader("refreshToken").substring(7);
-//
-//        jwtTokenizer.validateToken(refreshToken);
-//
-//        TokenDto tokenDto = createToken(authentication);
-//
-//        UserDetails user =  (UserDetails) authentication.getPrincipal();
-//
-//        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
-//                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
-//
-//        return tokenDto;
-//    }
+    public TokenDto reissue(HttpServletRequest request, Authentication authentication) {
+
+        String refreshToken = request.getHeader("refreshToken").substring(7);
+
+        jwtTokenizer.validateToken(refreshToken);
+
+        TokenDto tokenDto = createToken(authentication);
+
+        UserDetails user =  (UserDetails) authentication.getPrincipal();
+
+        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
+                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
+
+        return tokenDto;
+    }
 
 //    public void logout(UserDetails user) {
 //

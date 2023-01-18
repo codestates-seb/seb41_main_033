@@ -1,8 +1,11 @@
 package mainproject33.global.security.controller;
 
 import lombok.RequiredArgsConstructor;
+import mainproject33.global.dto.SingleResponseDto;
 import mainproject33.global.security.dto.LoginDto;
+import mainproject33.global.security.dto.ResponseDto;
 import mainproject33.global.security.dto.TokenDto;
+import mainproject33.global.security.mapper.LoginMapper;
 import mainproject33.global.security.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final LoginMapper loginMapper;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
@@ -31,7 +35,10 @@ public class AuthController {
         response.addHeader("Authorization", tokenDto.getAccessToken());
         response.addHeader("refreshToken", tokenDto.getRefreshToken());
 
-        return new ResponseEntity<>("Login Successful!", HttpStatus.OK);
+        ResponseDto responseDto = loginMapper.loginDtoToResponse(loginDto);
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
 //    @PostMapping("/logout")

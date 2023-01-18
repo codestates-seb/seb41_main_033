@@ -22,6 +22,9 @@ public class UserBoardFile
     @Column
     private String storeFileName;
 
+    @Column
+    private String contentType;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_board_id")
     private UserBoard userBoard;
@@ -37,5 +40,10 @@ public class UserBoardFile
     {
         this.userBoard = userBoard;
         userBoard.addUserBoardFile(this);
+    }
+
+    public void addContentType(String contentType)
+    {
+        this.contentType = contentType;
     }
 }

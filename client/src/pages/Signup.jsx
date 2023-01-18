@@ -71,7 +71,7 @@ const Signup = () => {
 			return;
 		}
 		return axios
-			.post(`${API_URL}/members/signup`, form)
+			.post(`${API_URL}/api/members/signup`, form)
 			.then((res) => {
 				alert("가입을 환영합니다!");
 				navigate("/login");

@@ -28,6 +28,8 @@ public class UserBoardResponseDto
 
     private String uploadFileName;
 
+    private String contentType;
+
     private int commentCount;
 
     private int likeCount;

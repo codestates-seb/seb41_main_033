@@ -41,7 +41,7 @@ const RandomRolling = () => {
       <ImgBox>
         {number.map((el, idx) => (
           <ImgDiv key={idx}>
-            <Image key={idx} src={matchGame(el).image} />
+            <Image src={matchGame(el).image} />
           </ImgDiv>
         ))}
       </ImgBox>

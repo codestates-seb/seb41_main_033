@@ -54,7 +54,7 @@ public class MatchBoardService {
         if (user == null) { // 비회원
             return matchBoard;
         } else { // 회원
-            List<Long> blockedIdList = getBlockedList(user.getId());
+            List<Long> blockedIdList = blockRepository.findBlockedIdByBlockerId(user.getId());
 
             boolean checkBlock = blockedIdList.contains(matchBoard.getMember().getId()); // 유저가 해당 게시물을 작성한 회원의 block 여부
 
@@ -70,7 +70,7 @@ public class MatchBoardService {
             if (keyword == null) list = matchBoardRepository.findAll();
             else list = matchBoardRepository.findByKeyword(keyword);
         } else { // 회원
-            List<Long> blockedIdList = getBlockedList(user.getId());
+            List<Long> blockedIdList = blockRepository.findBlockedIdByBlockerId(user.getId());
 
             if (keyword == null) list = filterMatchBoards(blockedIdList, matchBoardRepository.findAll());
             else list = filterMatchBoards(blockedIdList, matchBoardRepository.findByKeyword(keyword));
@@ -99,15 +99,6 @@ public class MatchBoardService {
     private MatchBoard findVerifiedMatchBoard(long id) {
         return matchBoardRepository.findById(id).orElseThrow(() ->
                 new BusinessLogicException(ExceptionMessage.MATCH_BOARD_NOT_FOUND));
-    }
-
-    private List<Long> getBlockedList(long blockerId) {
-        List<Block> blockedList = blockRepository.findByBlockerId(blockerId);
-        List<Long> blockedIdList = blockedList.stream()
-                .mapToLong(block -> block.getBlocked().getId())
-                .boxed().collect(Collectors.toList());
-
-        return blockedIdList;
     }
 
     private List<MatchBoard> filterMatchBoards(List<Long> blockedIdList, List<MatchBoard> list) {

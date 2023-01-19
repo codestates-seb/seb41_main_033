@@ -114,7 +114,7 @@ const ProfileContentList = ({ isMatch, isStory, matchBoards, userBoards }) => {
                     ) : null}
                   </div>
                 </div>
-                {story ? (
+                {story.uploadFileName ? (
                   <div className="image_container">
                     <img src={story.uploadFileName} alt="스토리 이미지" />
                   </div>

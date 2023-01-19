@@ -40,6 +40,7 @@ const MainWrap = styled.section`
 `;
 
 const App = () => {
+
 	return (
 		<Wrap>
 			<Router basename={process.env.PUBLIC_URL}>
@@ -50,7 +51,7 @@ const App = () => {
 					<main className="container">
 						<Routes>
 							<Route path="/" element={<Matching />} />
-							<Route path="/:boardid" element={<MatchingDetail />} />
+							 <Route path="/:boardid/detail" element={<MatchingDetail />} />
 							<Route path="/matchwrite" element={<MatchingWrite />} />
 							<Route path="/:boardid/edit" element={<MatchingEdit />} />
 							<Route path="/story" element={<Story />} />

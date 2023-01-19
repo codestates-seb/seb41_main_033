@@ -3,6 +3,7 @@ import Dropdown from "../components/DropDown";
 import React, { useState } from "react";
 import InputWrap from "../components/InputWrap";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
 import PostPatch from "../components/PostPatch";
 const MatchContainer = styled.form`
@@ -106,7 +107,7 @@ const MatchingWrite = () => {
   });
   const [tags, setTags] = useState([]);
   const [game, setGame] = useState("게임을 선택하세요");
-
+  const navigate = useNavigate();
   const removeTags = (index) => {
     const newTag = tags.filter((_, idx) => idx !== index);
     setTags(newTag);
@@ -139,11 +140,13 @@ const MatchingWrite = () => {
 
     const data = { title, game, team, tags, content };
     if (!isEmpty(data) && content.length >= 5) {
-      axios.post(`${API_URL}/api/matches`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("key")}`,
-        },
-      });
+      axios
+        .post(`${API_URL}/api/matches`, data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("key")}`,
+          },
+        })
+        .then(navigate("/"));
     }
   };
   const [isOpen, setIsOpen] = useState(false);
@@ -153,7 +156,6 @@ const MatchingWrite = () => {
       image={""}
       nickname={"아직몰름"}
       identifier={"아직모름"}
-      link1="/"
       button1="작성완료"
       link2="/"
       button2="취소"
@@ -167,7 +169,8 @@ const MatchingWrite = () => {
               type="text"
               name="title"
               id="title"
-              length={"30"}
+              maxLength="30"
+              minLength="5"
               placeholder="제목을 입력하세요"
               onChange={changeValue}
             />
@@ -223,8 +226,8 @@ const MatchingWrite = () => {
               name="content"
               placeholder="상세설명을 입력하세요"
               onChange={changeValue}
-              maxlength={500}
-              minlength={5}
+              maxLength="500"
+              minLength="5"
             />
           </div>
         </MatchBox>

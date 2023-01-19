@@ -139,9 +139,8 @@ const MatchingEdit = () => {
       image={""}
       nickname={"아직몰라"}
       identifier={"아직몰라"}
-      link1="/"
       button1="작성완료"
-      link2="/"
+      link2="-1"
       button2="취소"
       handleSubmit={submitBtn}
     >
@@ -151,7 +150,8 @@ const MatchingEdit = () => {
           type="text"
           name="title"
           id="title"
-          length={"30"}
+          maxLength="30"
+          minLength="5"
           placeholder="제목을 입력하세요"
           onChange={changeValue}
           value={title}
@@ -205,8 +205,8 @@ const MatchingEdit = () => {
           placeholder="상세설명을 입력하세요"
           onChange={changeValue}
           value={content}
-          maxlength="500"
-          minlength="5"
+          maxLength="500"
+          minLength="5"
         />
       </div>
     </PostPatch>

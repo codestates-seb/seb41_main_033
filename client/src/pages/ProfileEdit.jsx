@@ -133,15 +133,22 @@ const ProfileEdit = () => {
   };
 
   const handleCheckbox = useCallback(
-    (checked, item) => {
+    (e, checked, item) => {
       if (checked) {
-        setCheckedGame((prev) => [...prev, item]);
+        if (checkedGame.length < 5) {
+          setCheckedGame((prev) => [...prev, item]);
+        } else {
+          alert('5개까지만 선택 가능합니다.');
+          e.target.checked = null;
+        }
       } else {
         setCheckedGame(checkedGame.filter((game) => game !== item));
       }
     },
     [checkedGame]
   );
+
+  console.log(checkedGame);
 
   const handleBio = (e) => {
     setUser({ ...user, introduction: e.target.value });
@@ -234,11 +241,12 @@ const ProfileEdit = () => {
                 <div className="game" key={game.id}>
                   <input
                     type="checkbox"
+                    name="game"
                     id={game.title}
-                    onChange={(e) =>
-                      handleCheckbox(e.target.checked, e.target.id)
-                    }
-                    checked={
+                    onChange={(e) => {
+                      handleCheckbox(e, e.target.checked, e.target.id);
+                    }}
+                    defaultChecked={
                       user.games.filter(
                         (games) => games.korTitle === game.title
                       ).length > 0

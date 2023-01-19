@@ -85,7 +85,7 @@ const StoryComment = () => {
 				<SinglePofileWrap className="profile_wrap" imgSize="small" name="맑게고인뜨악어" subInfo="3분전" />
 				{isEdit ? (
 					<div className="content_wrap edit">
-						<textarea placeholder="내용을 입력하세요" minlength="5"></textarea>
+						<textarea placeholder="내용을 입력하세요" minLength="5"></textarea>
 					</div>
 				) : (
 					<div className="content_wrap">안녕하세요 저는 뜨악어에요 뜨거운 관심 캄사합니다</div>

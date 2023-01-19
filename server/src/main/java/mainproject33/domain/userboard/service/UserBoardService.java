@@ -9,9 +9,7 @@ import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +31,9 @@ public class UserBoardService
 
         if(file != null)
         {
-            boardFileService.verifyContentType(file);
+            String contentType = boardFileService.verifyContentType(file);
             UserBoardFile userBoardFile = boardFileService.storeFile(file);
+            userBoardFile.addContentType(contentType);
             userBoardFile.addUserBoard(request);
         }
 
@@ -66,11 +65,17 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
-    public Page<UserBoard> findAllUserBoards(Pageable pageable)
+    public Page<UserBoard> findAllUserBoards(String keyword, Pageable pageable)
     {
-        return userBoardRepository.findAll(pageable);
+        if(keyword == null)
+            return userBoardRepository.findAll(pageable);
+
+        return userBoardRepository.findByKeyword(keyword, pageable);
     }
 
+    public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {
+        return userBoardRepository.findByMemberId(memberId, pageable);
+    }
     public void deleteOne(Long id)
     {
         verifyExistBoard(id);

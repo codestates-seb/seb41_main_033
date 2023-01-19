@@ -23,6 +23,8 @@ const ProfileWrap = styled.div`
 		}};
 		margin-right: 16px;
 		border-radius: 40px;
+		overflow: hidden;
+
 		svg,
 		img {
 			width: 100%;

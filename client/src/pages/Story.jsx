@@ -61,7 +61,7 @@ const Story = () => {
 			<SearchBar />
 			<StoryBoardWrap>
 				{storyData?.map((el) => {
-					return <StorySingle key={el.id} data={el} />;
+					return <StorySingle key={el.id} data={el}/>;
 				})}
 			</StoryBoardWrap>
 			<WriteFloatButton click={handleWriteFBtnOnClick} />

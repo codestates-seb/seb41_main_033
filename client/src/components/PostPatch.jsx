@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import SinglePofileWrap from "./SingleProfileWrap";
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import SinglePofileWrap from './SingleProfileWrap';
 
 const CardWrap = styled.div`
   width: 100%;
@@ -23,10 +23,9 @@ const PostPatch = ({
   nickname,
   identifier,
   children,
-  link1,
   button1,
-  link2,
   button2,
+  link,
   handleSubmit,
 }) => {
   const navigate = useNavigate();
@@ -41,16 +40,10 @@ const PostPatch = ({
       />
       {children}
       <ButtonWrap>
-        <button
-          className="em"
-          onClick={async () => {
-            await handleSubmit();
-            navigate(`${link1}`);
-          }}
-        >
+        <button className="em" onClick={handleSubmit}>
           {button1}
         </button>
-        <button className="normal" onClick={() => navigate(`${link2}`)}>
+        <button className="normal" onClick={() => navigate(`${link}`)}>
           {button2}
         </button>
       </ButtonWrap>

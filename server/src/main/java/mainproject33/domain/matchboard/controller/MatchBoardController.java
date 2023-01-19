@@ -59,8 +59,9 @@ public class MatchBoardController {
 
     @GetMapping("/{match-id}")
     public ResponseEntity getMatchBoard(@PathVariable("match-id")
-                                        @Positive(message = "id 값은 0보다 커야합니다.") Long id) {
-        MatchBoard matchBoard = matchBoardService.readMatchBoard(id);
+                                        @Positive(message = "id 값은 0보다 커야합니다.") Long id,
+                                        @AuthenticationPrincipal Member user) {
+        MatchBoard matchBoard = matchBoardService.readMatchBoard(id, user);
 
         return new ResponseEntity(
                 new SingleResponseDto<>(mapper.matchBoardToMatchBoardResponse(matchBoard)), HttpStatus.OK);
@@ -68,9 +69,9 @@ public class MatchBoardController {
 
     @GetMapping
     public ResponseEntity getMatchBoards(@RequestParam(value = "keyword", required = false) String keyword,
-                                         @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
-                                         Pageable pageable) {
-        Page<MatchBoard> matchBoardPage = matchBoardService.readMatchBoards(keyword, pageable.previousOrFirst());
+                                         @PageableDefault(size = 8) Pageable pageable,
+                                         @AuthenticationPrincipal Member user) {
+        Page<MatchBoard> matchBoardPage = matchBoardService.readMatchBoards(keyword, pageable.previousOrFirst(), user);
         List<MatchBoard> matchBoards = matchBoardPage.getContent();
 
         return new ResponseEntity(
@@ -82,8 +83,8 @@ public class MatchBoardController {
     @DeleteMapping("/{match-id}")
     public ResponseEntity deleteMatchBoard(@PathVariable("match-id")
                                            @Positive(message = "id 값은 0보다 커야합니다.") Long id,
-                                           @AuthenticationPrincipal Member member) {
-        matchBoardService.deleteMatchBoard(member, id);
+                                           @AuthenticationPrincipal Member user) {
+        matchBoardService.deleteMatchBoard(user, id);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

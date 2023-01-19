@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as Heart } from "./../assets/heartIcon.svg";
 import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 const Card = styled.div`
   display: flex;
@@ -54,12 +53,7 @@ const UserCard = ({ data }) => {
           <Name>{data.nickname}</Name>
         </Link>
         <Like>Likes</Like>
-        <Like className="number">
-          {data.likeCount ? data.likeCount : 0}
-          <span className="logo_span">
-            <Heart className="logo" />
-          </span>
-        </Like>
+        <Like className="number">{data.likeCount ? data.likeCount : 0}</Like>
       </Div>
     </Card>
   );

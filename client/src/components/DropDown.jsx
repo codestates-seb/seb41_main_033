@@ -29,14 +29,14 @@ const DropdownMenu = styled.ul`
   background-color: var(--darkgrey2);
   width: 100%;
   border: 1px solid var(--grey);
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
   padding: 8px;
   font-size: 14px;
   margin-bottom: 16px;
   height: 220px;
   position: absolute;
   overflow-y: scroll;
-  top: 0px;
+  top: 43px;
   ::-webkit-scrollbar {
     display: none;
   }

@@ -49,18 +49,18 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public void deleteMember(Long memberId, Member principal) {
+    public void deleteMember(Long memberId, Member user) {
 
         Member member = findVerifiedMember(memberId);
-        verifyMember(member.getId(), principal);
+        verifyMember(member.getId(), user.getId());
 
         memberRepository.delete(member);
     }
 
-    public Member updateProfile(Long memberId, Member patch, Member principal, MultipartFile file) {
+    public Member updateProfile(Long memberId, Member patch, Member user, MultipartFile file) {
 
         Member findMember = findVerifiedMember(memberId);
-        verifyMember(findMember.getId(), principal);
+        verifyMember(findMember.getId(), user.getId());
 
         if (patch != null) {
             Optional.ofNullable(patch.getNickname())
@@ -153,9 +153,16 @@ public class MemberService {
 
     }
 
-    public void verifyMember(Long memberId, Member principal) {
+    public List<Block> findBlockList(Long memberId, Member user) {
 
-        if(!Objects.equals(memberId, principal.getId())) {
+        verifyMember(memberId, user.getId());
+
+        return blockRepository.findByBlockList(memberId);
+    }
+
+    public void verifyMember(Long memberId, Long userId) {
+
+        if(!Objects.equals(memberId, userId)) {
             throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
         }
 

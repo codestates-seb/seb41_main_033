@@ -5,7 +5,9 @@ import mainproject33.domain.matchboard.dto.MatchBoardDto;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.matchboard.service.MatchBoardService;
+import mainproject33.domain.member.dto.BlockResponseDto;
 import mainproject33.domain.member.dto.MemberDto;
+import mainproject33.domain.member.entity.Block;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.mapper.MemberMapper;
 import mainproject33.domain.member.service.MemberService;
@@ -146,6 +148,17 @@ public class MemberController {
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(responses, pageMatches), HttpStatus.OK);
+    }
+
+    @GetMapping("/{member-id}/blockLists")
+    public ResponseEntity getBlockList(@PathVariable("member-id") @Positive Long memberId,
+                                        @AuthenticationPrincipal Member user) {
+
+        List<Block> blockedList = memberService.findBlockList(memberId, user);
+        List<MemberDto.BlockedMember> blockedMemberList = memberMapper.blockListToMemberList(blockedList);
+
+        return new ResponseEntity<>(
+                new BlockResponseDto<>(blockedMemberList), HttpStatus.OK);
     }
 
 }

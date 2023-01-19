@@ -16,6 +16,10 @@ const Detail = styled.div`
   .description {
     display: flex;
     flex-direction: column;
+    > ::-webkit-scrollbar {
+      display: none;
+      width: 0 !important;
+    }
   }
   button,
   a {
@@ -83,6 +87,10 @@ const Tag = styled.div`
 `;
 const Description = styled.div`
   margin-bottom: 32px;
+  margin-top: 12px;
+  color: var(--white);
+  overflow: scroll;
+  -ms-overflow-style: none;
 `;
 const MatchDetails = ({ data, boardId }) => {
   const [same, setSame] = useState(true);

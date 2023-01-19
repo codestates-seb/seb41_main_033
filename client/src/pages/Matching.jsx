@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { API_URL } from "../data/apiUrl";
 import axios from "axios";
+import { useSelector } from "react-redux";
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -20,11 +21,12 @@ const Ul = styled.ul`
 `;
 
 const Matching = () => {
-  const [isLogin, setIsLogin] = useState(false);
   const [matchinglist, setMatchinglist] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
   const navigate = useNavigate();
+  const isLogin = useSelector((state) => state.islogin);
+
   const matchingBtn = () => {
     if (isLogin) {
       navigate("/matchwrite");
@@ -32,11 +34,7 @@ const Matching = () => {
       navigate("/login");
     }
   };
-  useEffect(() => {
-    if (localStorage.getItem("key")) {
-      setIsLogin(true);
-    }
-  }, [isLogin]);
+
   useEffect(() => {
     axios
       .get(`${API_URL}/api/matches?page=${page}`, {

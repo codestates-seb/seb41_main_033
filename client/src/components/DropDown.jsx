@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { ReactComponent as Arrow } from "./../assets/arrowDown.svg";
-
 const DropdownContainer = styled.div`
   position: relative;
 `;

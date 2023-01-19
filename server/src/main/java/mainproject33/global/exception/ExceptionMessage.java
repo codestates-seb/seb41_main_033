@@ -4,8 +4,9 @@ import lombok.Getter;
 
 public enum ExceptionMessage {
     //=========matchBoard=========//
-    MATCH_BOARD_NOT_FOUND("존재하지 않는 매칭 게시글 입니다."),
-    MATCH_BOARD_ID_NOT_FOUND("존재하지 않는 매칭 게시글 식별자 입니다."),
+    MATCH_BOARD_NOT_FOUND("존재하지 않는 매칭 게시글입니다."),
+    MATCH_BOARD_ID_NOT_FOUND("존재하지 않는 매칭 게시글 식별자입니다."),
+    MATCH_BOARD_BLOCKED("차단된 회원의 매칭 게시글입니다."),
 
     //=========member=========//
 

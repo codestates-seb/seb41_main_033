@@ -3,7 +3,10 @@ package mainproject33.domain.userboard.mapper;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.boardfile.entity.UserBoardFile;
 import mainproject33.domain.boardfile.service.UserBoardFileService;
+import mainproject33.domain.comment.dto.CommentResponseDto;
+import mainproject33.domain.comment.entity.Comment;
 import mainproject33.domain.comment.mapper.CommentMapper;
+import mainproject33.domain.comment.service.CommentService;
 import mainproject33.domain.like.entity.Like;
 import mainproject33.domain.like.repository.LikeRepository;
 import mainproject33.domain.member.entity.Member;
@@ -28,6 +31,9 @@ public class UserBoardMapper
 
     private final ProfileImageService imageService;
     private final CommentMapper commentMapper;
+
+    private final CommentService commentService;
+
     public UserBoard postToUserBoard(UserBoardPostDto request)
     {
         if(request == null)
@@ -60,7 +66,6 @@ public class UserBoardMapper
 
         boolean likeStatus = checkBoardLikeStatus(member, entity);
 
-
         UserBoardResponseDto response = UserBoardResponseDto.builder()
                 //멤버 정보
                 .memberId(entity.getMember().getId())
@@ -80,11 +85,12 @@ public class UserBoardMapper
                 .modifiedAt(entity.getModifiedAt())
 
                 //댓글 정보
-                .comments(commentMapper.commentToResponses(entity.getComments(), member))
+                .comments(filteredComments(entity, member))
                 .build();
 
         return response;
     }
+
 
     public List<UserBoardResponseDto> userBoardToResponses(List<UserBoard> entities, Member member)
     {
@@ -122,5 +128,16 @@ public class UserBoardMapper
         //optionalLike 존재한다 = 좋아요를 눌렀다
         //true 리턴 => 좋아요를 이미 눌렀다
         return optionalLike.isPresent();
+    }
+
+    private List<CommentResponseDto> filteredComments(UserBoard entity, Member member)
+    {
+        if(member != null)
+        {
+            List<Comment> comments = commentService.filterComments(commentService.getBlockList(member.getId()), entity.getComments());
+            return commentMapper.commentToResponses(comments, member);
+        }
+
+        return commentMapper.commentToResponses(entity.getComments(), member);
     }
 }

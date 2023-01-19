@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { ReactComponent as EditIcon } from "./../assets/editIcon.svg";
-import { ReactComponent as CloseIcon } from "./../assets/closeIcon.svg";
-import SinglePofileWrap from "./SingleProfileWrap";
 import { useState } from "react";
+import HeartIcon from "./../assets/heart_sprite.svg";
+import SinglePofileWrap from "./SingleProfileWrap";
+import StoryBtn from "./StoryBtn";
 
 const Wrap = styled.div`
 	display: flex;
@@ -36,45 +36,70 @@ const Wrap = styled.div`
 		padding-left: 52px;
 		font-size: var(--font-body2-size);
 	}
+	.content_wrap.edit {
+		textarea {
+			background: var(--bg-color);
+			border: 0 none;
+			height: fit-content;
+		}
+	}
 `;
 
 const BtnWrap = styled.div`
-	flex: none;
+	display: flex;
+	padding-left: 52px;
+	padding: 12px 0 0 52px;
 
 	button {
-		width: 24px;
-		height: 24px;
-		padding: 0;
 		margin-right: 12px;
-
-		svg {
-			width: 24px;
-			height: 24px;
-		}
 	}
 	button:last-child {
 		margin-right: 0;
 	}
 `;
 
+const CommentLike = styled.div`
+	width: 24px;
+	height: 24px;
+	input[type="checkbox"] {
+		appearance: none;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		background-image: url(${HeartIcon});
+		background-repeat: no-repeat;
+		background-position: 0 0;
+		cursor: pointer;
+	}
+	input[type="checkbox"]:checked {
+		background-position: 0 -24px;
+	}
+`;
+
 const StoryComment = () => {
 	const [isMe, setIsMe] = useState(true);
+	const [isEdit, setIsEdit] = useState(true);
 	return (
 		<Wrap className="card sm">
 			<div className="comment_body">
 				<SinglePofileWrap className="profile_wrap" imgSize="small" name="맑게고인뜨악어" subInfo="3분전" />
-				<div className="content_wrap">안녕하세요 저는 뜨악어에요 뜨거운 관심 캄사합니다</div>
+				{isEdit ? (
+					<div className="content_wrap edit">
+						<textarea placeholder="내용을 입력하세요" minlength="5"></textarea>
+					</div>
+				) : (
+					<div className="content_wrap">안녕하세요 저는 뜨악어에요 뜨거운 관심 캄사합니다</div>
+				)}
+				{isMe ? (
+					<BtnWrap>
+						<StoryBtn type="edit" />
+						<StoryBtn type="delete" />
+					</BtnWrap>
+				) : null}
 			</div>
-			{isMe ? (
-				<BtnWrap>
-					<button title="댓글 수정">
-						<EditIcon />
-					</button>
-					<button title="댓글 삭제">
-						<CloseIcon />
-					</button>
-				</BtnWrap>
-			) : null}
+			<CommentLike>
+				<input type="checkbox" title="commentLikes" />
+			</CommentLike>
 		</Wrap>
 	);
 };

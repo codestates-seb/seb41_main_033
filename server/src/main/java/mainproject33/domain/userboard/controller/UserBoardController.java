@@ -71,7 +71,7 @@ public class UserBoardController
     public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId,
                                    @AuthenticationPrincipal Member member)
     {
-        UserBoard userBoard = boardService.findUserBoard(boardId);
+        UserBoard userBoard = boardService.getUserBoard(boardId, member);
 
         UserBoardResponseDto response = mapper.userBoardToResponse(userBoard, member);
 
@@ -84,7 +84,7 @@ public class UserBoardController
                                     Pageable pageable,
                                     @AuthenticationPrincipal Member member)
     {
-        Page<UserBoard> pageBoards = boardService.findAllUserBoards(keyword, pageable.previousOrFirst());
+        Page<UserBoard> pageBoards = boardService.findAllBoards(keyword, pageable.previousOrFirst(), member);
 
         List<UserBoard> boards = pageBoards.getContent();
         List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards, member);

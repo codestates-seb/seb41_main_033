@@ -13,8 +13,6 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const [match, setMatch] = useState(null);
   const [story, setStory] = useState(null);
-  const isMatch = false;
-  const isStory = true;
 
   useEffect(() => {
     axios
@@ -56,12 +54,7 @@ const Profile = () => {
           games={user.games}
           introduction={user.introduction}
         />
-        <ProfileContent
-          isMatch={isMatch}
-          isStory={isStory}
-          matchBoards={match}
-          userBoards={story}
-        />
+        <ProfileContent matchBoards={match} userBoards={story} />
       </ProfileWrap>
     );
   } else {

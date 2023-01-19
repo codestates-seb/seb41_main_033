@@ -3,6 +3,10 @@ import { dummyDataStory } from "./../data/dummyDataStory";
 import SearchBar from "./../components/SearchBar";
 import StorySingle from "../components/StorySingle";
 import WriteFloatButton from "../components/WriteFloatButton";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { API_URL } from "../data/apiUrl";
+import { useNavigate } from "react-router-dom";
 
 const TitleWrap = styled.div`
 	display: flex;
@@ -25,7 +29,29 @@ const StoryBoardWrap = styled.div`
 	}
 `;
 
+const ACCESS_TOKEN = localStorage.getItem("key");
+
 const Story = () => {
+	const navigate = useNavigate();
+	const [storyData, setStoryData] = useState([]);
+	useEffect(() => {
+		axios
+			.get(`${API_URL}/api/boards?page=1`, {
+				headers: {
+					"ngrok-skip-browser-warning": "69420",
+					"Authorization": `Bearer ${ACCESS_TOKEN}`,
+				},
+			})
+			.then((res) => {
+				setStoryData(res.data.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
+	const handleWriteFBtnOnClick = () => {
+		navigate(`/storywrite`);
+	};
 	return (
 		<div>
 			<TitleWrap>
@@ -34,11 +60,11 @@ const Story = () => {
 			</TitleWrap>
 			<SearchBar />
 			<StoryBoardWrap>
-				{dummyDataStory.map((el) => {
+				{storyData?.map((el) => {
 					return <StorySingle key={el.id} data={el} />;
 				})}
 			</StoryBoardWrap>
-			<WriteFloatButton />
+			<WriteFloatButton click={handleWriteFBtnOnClick} />
 		</div>
 	);
 };

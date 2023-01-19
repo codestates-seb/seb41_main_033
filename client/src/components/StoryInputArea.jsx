@@ -91,17 +91,15 @@ const BtnWrap = styled.div`
 `;
 
 const StoryInputArea = ({ page, handleSubmit }) => {
-	const [fileName, setFileName] = useState("이미지는 jpeg, jpg, png만 업로드 가능합니다");
+	const [fileName, setFileName] = useState("50MB 이하의 이미지, 영상 파일만 가능합니다");
 	const [file, setFile] = useState(null);
 	const [content, setContent] = useState("");
 	const handleContentOnChange = (e) => {
 		setContent(e.currentTarget.value);
-		//console.log(e.currentTarget.value);
 	};
 	const handleFileOnChange = (e) => {
 		setFileName(e.currentTarget.files[0].name);
 		setFile(e.currentTarget.files[0]);
-		//console.log(e.currentTarget.files[0]);
 	};
 	return (
 		<Wrap className="card big">

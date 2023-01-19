@@ -19,28 +19,27 @@ import Quit from "./pages/Quit";
 import GameRecommend from "./pages/GameRecommend";
 
 const Wrap = styled.div`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  background: var(--bg-color);
+	display: flex;
+	flex: 1;
+	width: 100%;
+	background: var(--bg-color);
 `;
 
 const MainWrap = styled.section`
-  display: flex;
-  flex: 1;
-  position: relative;
-  padding: 112px 0 0 0;
-  width: calc(100% - 200px);
-  .container {
-    width: 100%;
-    max-width: 1040px;
-    padding: 0 32px;
-    margin: 48px auto 48px auto;
-  }
+	display: flex;
+	flex: 1;
+	position: relative;
+	padding: 112px 0 0 0;
+	width: calc(100% - 200px);
+	.container {
+		width: 100%;
+		max-width: 1040px;
+		padding: 0 32px;
+		margin: 48px auto 48px auto;
+	}
 `;
 
 const App = () => {
-
 	return (
 		<Wrap>
 			<Router basename={process.env.PUBLIC_URL}>
@@ -70,7 +69,6 @@ const App = () => {
 			</Router>
 		</Wrap>
 	);
-
 };
 
 export default App;

@@ -13,6 +13,10 @@ spring:
   sql:
     init:
       mode: always
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
   servlet:
     multipart:
       max-file-size: ${MAX_FILE_SIZE}

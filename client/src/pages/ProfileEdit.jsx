@@ -4,9 +4,9 @@ import { ReactComponent as ImgUploadIcon } from './../assets/addPhoto.svg';
 import PostPatch from '../components/PostPatch';
 import InputWrap from '../components/InputWrap';
 import gameList from '../data/gameList.json';
-import dummyUser from '../data/dummyUser.json';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
+import { useNavigate } from 'react-router-dom';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -116,12 +116,12 @@ const BioWrap = styled.div`
 `;
 
 const ProfileEdit = () => {
-  const { identifier, nickname, image } = dummyUser.user[0];
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
   const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
   const ACCESS_TOKEN = localStorage.getItem('key');
+  const navigate = useNavigate();
 
   const handleNickname = (e) => {
     setUser({ ...user, nickname: e.target.value });
@@ -134,9 +134,12 @@ const ProfileEdit = () => {
 
   const handleCheckbox = useCallback(
     (checked, item) => {
-      checked
-        ? setCheckedGame((prev) => [...prev, item])
-        : setCheckedGame(checkedGame.filter((game) => game !== item));
+      if (checked) {
+        setCheckedGame((prev) => [...prev, item]);
+      } else {
+        checked = !checked;
+        setCheckedGame(checkedGame.filter((game) => game !== item));
+      }
     },
     [checkedGame]
   );
@@ -159,94 +162,113 @@ const ProfileEdit = () => {
         type: 'application/json',
       })
     );
-    if (
-      fileName !== '파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)'
-    ) {
+    if (file) {
       formData.append('image', file);
     }
 
-    axios.patch(`${API_URL}/api/members/3`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
-      },
-    });
+    axios
+      .patch(`${API_URL}/api/members/3`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+        },
+      })
+      .then(() => navigate(-1));
   };
 
   useEffect(() => {
-    setUser({ nickname });
+    axios
+      .get(`${API_URL}/api/members/3`, {
+        // ngrok get cors 해결용
+        headers: {
+          'ngrok-skip-browser-warning': '69420',
+        },
+      })
+      .then((res) => {
+        setUser(res.data.data);
+        setCheckedGame(res.data.data.games.map((game) => game.korTitle));
+      });
   }, []);
 
-  return (
-    <PostPatch
-      image={image}
-      nickname={nickname}
-      identifier={identifier}
-      link1="/userid"
-      button1="수정완료"
-      link2="/quit"
-      button2="탈퇴하기"
-      handleSubmit={handlePatch}
-    >
-      <ContentWrap>
-        <NicknameWrap>
-          <label htmlFor="nickname">닉네임 수정</label>
-          <InputWrap
-            type="text"
-            name="nickname"
-            value={user.nickname || ''}
-            onChange={handleNickname}
-          />
-        </NicknameWrap>
-        <ProfileWrap>
-          <div className="custom_label">프로필 이미지 수정</div>
-          <div className="custom_input_wrap">
-            <div className="custom_input">
-              {fileName}
-              <input
-                type="file"
-                placeholder="파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)"
-                onChange={(e) => handleOnChange(e)}
-                id="selectImg"
-              />
-            </div>
-            <label htmlFor="selectImg" className="custom_btn">
-              <ImgUploadIcon />
-              이미지 업로드
-            </label>
-          </div>
-        </ProfileWrap>
-        <GameWrap>
-          <label htmlFor="game">주로하는 게임 (중복 선택 가능)</label>
-          <div className="game_list">
-            {gameList.games.map((game) => (
-              <div className="game" key={game.id}>
+  if (user) {
+    return (
+      <PostPatch
+        image={user.profileImage}
+        nickname={user.nickname}
+        identifier={user.identifier}
+        button1="수정완료"
+        link="/quit"
+        button2="탈퇴하기"
+        handleSubmit={handlePatch}
+      >
+        <ContentWrap>
+          <NicknameWrap>
+            <label htmlFor="nickname">닉네임 수정</label>
+            <InputWrap
+              type="text"
+              name="nickname"
+              value={user.nickname || ''}
+              onChange={handleNickname}
+            />
+          </NicknameWrap>
+          <ProfileWrap>
+            <div className="custom_label">프로필 이미지 수정</div>
+            <div className="custom_input_wrap">
+              <div className="custom_input">
+                {fileName}
                 <input
-                  type="checkbox"
-                  id={game.title}
-                  onChange={(e) =>
-                    handleCheckbox(e.target.checked, e.target.id)
-                  }
+                  type="file"
+                  onChange={(e) => handleOnChange(e)}
+                  id="selectImg"
                 />
-                <label className="game_title" htmlFor={game.title}>
-                  {game.title}
-                </label>
               </div>
-            ))}
-          </div>
-        </GameWrap>
-        <BioWrap>
-          <label htmlFor="bio">자기소개 수정</label>
-          <textarea
-            id="bio"
-            value={user.introduction || ''}
-            placeholder="내용을 입력하세요"
-            onChange={handleBio}
-          />
-        </BioWrap>
-      </ContentWrap>
-    </PostPatch>
-  );
+              <label htmlFor="selectImg" className="custom_btn">
+                <ImgUploadIcon />
+                이미지 업로드
+              </label>
+            </div>
+          </ProfileWrap>
+          <GameWrap>
+            <label htmlFor="game">주로하는 게임 (최대 5개)</label>
+            <div className="game_list">
+              {gameList.games.map((game) => (
+                <div className="game" key={game.id}>
+                  <input
+                    type="checkbox"
+                    id={game.title}
+                    onChange={(e) =>
+                      handleCheckbox(e.target.checked, e.target.id)
+                    }
+                    checked={
+                      user.games.filter(
+                        (games) => games.korTitle === game.title
+                      ).length > 0
+                        ? true
+                        : null
+                    }
+                  />
+                  <label className="game_title" htmlFor={game.title}>
+                    {game.title}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </GameWrap>
+          <BioWrap>
+            <label htmlFor="bio">자기소개 수정</label>
+            <textarea
+              id="bio"
+              value={user.introduction || ''}
+              placeholder="내용을 입력하세요"
+              onChange={handleBio}
+            />
+          </BioWrap>
+        </ContentWrap>
+      </PostPatch>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default ProfileEdit;

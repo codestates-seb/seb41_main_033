@@ -73,7 +73,9 @@ const MatchingCard = ({ data }) => {
     <Card className="card">
       <Space>
         <ImgWrap>
-          <img src={matchGame(data.game).image} />
+          {data.game && (
+            <img src={matchGame(data.game).image} alt="게임아이콘" />
+          )}
         </ImgWrap>
 
         <Title>

@@ -34,38 +34,38 @@ public class AuthService {
 
         UserDetails user = (UserDetails) authentication.getPrincipal();
 
-//        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
-//                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
+        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
+                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
 
         return tokenDto;
     }
 
-//    public TokenDto reissue(HttpServletRequest request, Authentication authentication) {
-//
-//        String refreshToken = request.getHeader("refreshToken").substring(7);
-//
-//        jwtTokenizer.validateToken(refreshToken);
-//
-//        TokenDto tokenDto = createToken(authentication);
-//
-//        UserDetails user =  (UserDetails) authentication.getPrincipal();
-//
-//        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
-//                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
-//
-//        return tokenDto;
-//    }
+    public TokenDto reissue(HttpServletRequest request, Authentication authentication) {
 
-//    public void logout(UserDetails user) {
-//
-//        String refreshToken = redisDao.getValues(user.getUsername());
-//
-//        if(refreshToken == null) {
-//            log.warn("Refresh Token Not Found");
-//        }
-//
-//        redisDao.deleteValues(user.getUsername());
-//    }
+        String refreshToken = request.getHeader("refreshToken").substring(7);
+
+        jwtTokenizer.validateToken(refreshToken);
+
+        TokenDto tokenDto = createToken(authentication);
+
+        UserDetails user =  (UserDetails) authentication.getPrincipal();
+
+        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
+                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
+
+        return tokenDto;
+    }
+
+    public void logout(UserDetails user) {
+
+        String refreshToken = redisDao.getValues(user.getUsername());
+
+        if(refreshToken == null) {
+            log.warn("Refresh Token Not Found");
+        }
+
+        redisDao.deleteValues(user.getUsername());
+    }
 
     private TokenDto createToken(Authentication authentication) {
 

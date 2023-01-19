@@ -34,27 +34,15 @@ public class Profile extends Auditable {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> games = new ArrayList<>();
 
-    public void addFollowerCount() {
-        followerCount++;
+    public void addFollowerCount(int i) {
+        followerCount += i;
     }
 
-    public void subtractFollowerCount() {
-        followerCount--;
+    public void addFollowingCount(int i) {
+        followingCount += i;
     }
 
-    public void addFollowingCount() {
-        followingCount++;
-    }
-
-    public void subtractFollowingCount() {
-        followingCount--;
-    }
-
-    public void addLikeCount() {
-        likeCount++;
-    }
-
-    public void subtractLikeCount() {
-        likeCount--;
+    public void addLikeCount(int i) {
+        likeCount += i;
     }
 }

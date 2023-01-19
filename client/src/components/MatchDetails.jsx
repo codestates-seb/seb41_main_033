@@ -5,7 +5,6 @@ import { API_URL } from "../data/apiUrl";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import matchGame from "../util/matchGame";
-import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 const Detail = styled.div`
   width: var(--col-9);
   margin-right: 32px;
@@ -112,11 +111,7 @@ const MatchDetails = ({ data, boardId }) => {
           <div className="title">{data.title}</div>
           <div className="game">{data.game.korTitle}</div>
         </Info>
-        {data.image ? (
-          <img src={matchGame(data).image} alt="게임아이콘" />
-        ) : (
-          <DefaultProfileImg />
-        )}
+        <img src={matchGame(data.game).image} alt="게임아이콘" />
       </Div>
       <Div>
         <span>팀원수</span>

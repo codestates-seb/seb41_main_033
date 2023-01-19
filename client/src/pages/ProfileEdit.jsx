@@ -150,8 +150,6 @@ const ProfileEdit = () => {
     [checkedGame]
   );
 
-  console.log(checkedGame);
-
   const handleBio = (e) => {
     setUser({ ...user, introduction: e.target.value });
   };

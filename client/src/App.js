@@ -40,6 +40,7 @@ const MainWrap = styled.section`
 `;
 
 const App = () => {
+
   return (
     <Wrap>
       <Router basename={process.env.PUBLIC_URL}>
@@ -69,6 +70,7 @@ const App = () => {
       </Router>
     </Wrap>
   );
+
 };
 
 export default App;

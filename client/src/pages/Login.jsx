@@ -94,6 +94,7 @@ const Login = () => {
           const token = res.headers.authorization;
           localStorage.setItem("key", token);
           localStorage.setItem("memberId", res.data.data.id);
+
           dispatch(login());
           navigate(`/`);
         });

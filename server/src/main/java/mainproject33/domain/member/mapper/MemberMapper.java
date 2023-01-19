@@ -3,14 +3,16 @@ package mainproject33.domain.member.mapper;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.gamedb.entity.GameDB;
 import mainproject33.domain.gamedb.repository.GameDBRepository;
-import mainproject33.domain.matchboard.mapper.MatchBoardMapper;
 import mainproject33.domain.member.dto.MemberDto;
 import mainproject33.domain.member.entity.*;
 import mainproject33.domain.member.repository.BlockRepository;
 import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.MemberLikesRepository;
+import mainproject33.domain.member.repository.MemberRepository;
 import mainproject33.domain.member.service.ProfileImageService;
-import mainproject33.domain.userboard.mapper.UserBoardMapper;
+import mainproject33.global.exception.BusinessLogicException;
+import mainproject33.global.exception.ExceptionMessage;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,14 +23,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberMapper {
 
+    private final MemberRepository memberRepository;
     private final GameDBRepository gameDBRepository;
     private final ProfileImageService imageService;
     private final FollowRepository followRepository;
     private final MemberLikesRepository memberLikesRepository;
-
     private final BlockRepository blockRepository;
-    private final MatchBoardMapper matchBoardMapper;
-    private final UserBoardMapper userBoardMapper;
 
     public Member postToMember(MemberDto.Post post) {
 
@@ -88,7 +88,7 @@ public class MemberMapper {
         profileResponse.setNickname(member.getNickname());
 
         // 프로필 기본 정보
-        profileResponse.setImage(imageService.readProfileImagePath(member.getId())); // 이미지 url 반환
+        profileResponse.setProfileImage(imageService.readProfileImagePath(member.getId())); // 이미지 url 반환
 
         profileResponse.setIntroduction(member.getProfile().getIntroduction());
 
@@ -97,12 +97,6 @@ public class MemberMapper {
             games.add(gameDBRepository.findByKorTitle(game));
         }
         profileResponse.setGames(games);
-
-        profileResponse.setMatchBoards(
-                matchBoardMapper.matchBoardsToMatchBoardResponses(member.getMatchBoards()));
-
-        profileResponse.setUserBoards(
-                userBoardMapper.userBoardToResponses(member.getUserBoards(), user));
 
         // 팔로우 및 좋아요 수
         profileResponse.setFollowerCount(member.getProfile().getFollowerCount());
@@ -124,6 +118,41 @@ public class MemberMapper {
         profileResponse.setModifiedAt(member.getProfile().getModifiedAt());
 
         return profileResponse;
+    }
+
+    public MemberDto.BlockedMember blockToBlockedMember(Block block) {
+
+        if(block == null) return null;
+
+        MemberDto.BlockedMember memberInformation = new MemberDto.BlockedMember();
+
+        Optional<Member> blockedMember = memberRepository.findById(block.getBlocked().getId());
+
+        if(blockedMember.isEmpty()) {
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_NOT_FOUND);
+        } else {
+            Member member = blockedMember.get();
+
+            memberInformation.setId(member.getId());
+            memberInformation.setIdentifier(member.getIdentifier());
+            memberInformation.setNickname(member.getNickname());
+            memberInformation.setProfileImage(imageService.readProfileImagePath(member.getId()));
+
+            return memberInformation;
+        }
+    }
+
+    public List<MemberDto.BlockedMember> blockListToMemberList(List<Block> blockList) {
+
+        if(blockList == null) return null;
+
+        List<MemberDto.BlockedMember> blockedInfoList = new ArrayList<>(blockList.size());
+
+        for (Block block : blockList) {
+            blockedInfoList.add(blockToBlockedMember(block));
+        }
+
+        return blockedInfoList;
     }
 
     public boolean verifyFollow(Long userId, Long memberId) {

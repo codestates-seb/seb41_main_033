@@ -95,12 +95,14 @@ public class UserBoardFileService
         }
     }
 
-    public void verifyContentType(MultipartFile file)
+    public String verifyContentType(MultipartFile file)
     {
         String ext = file.getContentType();
 
         if (!ext.contains("image") && !ext.contains("video"))
             throw new BusinessLogicException(ExceptionMessage.EXT_NOT_ACCEPTED);
+
+        return ext;
     }
 
     public void deleteUploadFile(long boardId)

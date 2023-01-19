@@ -59,7 +59,7 @@ public class CommentMapper
                 .memberId(entity.getMember().getId())
                 .identifier(entity.getMember().getIdentifier())
                 .nickname(entity.getMember().getNickname())
-                .image(imageService.readProfileImagePath(entity.getMember().getId()))
+                .profileImage(imageService.readProfileImagePath(entity.getMember().getId()))
                 .userBoardId(entity.getUserBoard().getId())
                 .id(entity.getId())
                 .content(entity.getContent())
@@ -81,7 +81,7 @@ public class CommentMapper
         return responses;
     }
 
-    public boolean checkCommentLikeStatus(Member member, Comment comment)
+    private boolean checkCommentLikeStatus(Member member, Comment comment)
     {
         if(member == null)
             return false;

@@ -3,21 +3,26 @@ package mainproject33.domain.matchboard.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.matchboard.repository.MatchBoardRepository;
+import mainproject33.domain.member.entity.Block;
 import mainproject33.domain.member.entity.Member;
+import mainproject33.domain.member.repository.BlockRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MatchBoardService {
 
     private final MatchBoardRepository matchBoardRepository;
+    private final BlockRepository blockRepository;
 
     public MatchBoard createMatchBoard(MatchBoard matchBoard) {
         return matchBoardRepository.save(matchBoard);
@@ -43,20 +48,38 @@ public class MatchBoardService {
         }
     }
 
-    public MatchBoard readMatchBoard(long id) {
-        MatchBoard findMatchBoard = matchBoardRepository.findById(id)
-                .orElseThrow(()
-                        -> new NoSuchElementException(ExceptionMessage.MATCH_BOARD_NOT_FOUND.get()));
+    public MatchBoard readMatchBoard(long id, Member user) {
+        MatchBoard matchBoard = findVerifiedMatchBoard(id);
 
-        return findMatchBoard;
+        if (user == null) { // 비회원
+            return matchBoard;
+        } else { // 회원
+            List<Long> blockedIdList = blockRepository.findBlockedIdByBlockerId(user.getId());
+
+            boolean checkBlock = blockedIdList.contains(matchBoard.getMember().getId()); // 유저가 해당 게시물을 작성한 회원의 block 여부
+
+            if (!checkBlock) return matchBoard;
+            else throw new BusinessLogicException(ExceptionMessage.MATCH_BOARD_BLOCKED);
+        }
     }
 
-    public Page<MatchBoard> readMatchBoards(String keyword, Pageable pageable) {
-        if (keyword == null) {
-            return matchBoardRepository.findAll(pageable);
-        } else {
-            return matchBoardRepository.findByKeyword(keyword, pageable);
+    public Page<MatchBoard> readMatchBoards(String keyword, Pageable pageable, Member user) {
+        List<MatchBoard> list;
+
+        if (user == null) { // 비회원
+            if (keyword == null) list = matchBoardRepository.findAll();
+            else list = matchBoardRepository.findByKeyword(keyword);
+        } else { // 회원
+            List<Long> blockedIdList = blockRepository.findBlockedIdByBlockerId(user.getId());
+
+            if (keyword == null) list = filterMatchBoards(blockedIdList, matchBoardRepository.findAll());
+            else list = filterMatchBoards(blockedIdList, matchBoardRepository.findByKeyword(keyword));
         }
+        return toPageImpl(pageable, list);
+    }
+
+    public Page<MatchBoard> readProfileMatchBoards(Long memberId, Pageable pageable) {
+        return matchBoardRepository.findByMemberId(memberId, pageable);
     }
 
     public void deleteMatchBoard(Member member, long id) {
@@ -76,5 +99,18 @@ public class MatchBoardService {
     private MatchBoard findVerifiedMatchBoard(long id) {
         return matchBoardRepository.findById(id).orElseThrow(() ->
                 new BusinessLogicException(ExceptionMessage.MATCH_BOARD_NOT_FOUND));
+    }
+
+    private List<MatchBoard> filterMatchBoards(List<Long> blockedIdList, List<MatchBoard> list) {
+        return list.stream()
+                .filter(matchBoard -> !blockedIdList.contains(matchBoard.getMember().getId()))
+                .collect(Collectors.toList());
+    }
+
+    private PageImpl toPageImpl(Pageable pageable, List<MatchBoard> list) {
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), list.size());
+
+        return new PageImpl<>(list.subList(start, end), pageable, list.size());
     }
 }

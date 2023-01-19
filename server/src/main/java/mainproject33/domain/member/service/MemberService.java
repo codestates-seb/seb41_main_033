@@ -47,18 +47,18 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public void deleteMember(Long memberId, Member principal) {
+    public void deleteMember(Long memberId, Member user) {
 
         Member member = findVerifiedMember(memberId);
-        verifyMember(member.getId(), principal);
+        verifyMember(member.getId(), user.getId());
 
         memberRepository.delete(member);
     }
 
-    public Member updateProfile(Long memberId, Member patch, Member principal, MultipartFile file) {
+    public Member updateProfile(Long memberId, Member patch, Member user, MultipartFile file) {
 
         Member findMember = findVerifiedMember(memberId);
-        verifyMember(findMember.getId(), principal);
+        verifyMember(findMember.getId(), user.getId());
 
         if (patch != null) {
             Optional.ofNullable(patch.getNickname())
@@ -89,16 +89,21 @@ public class MemberService {
         follow.setFollower(follower);
         follow.setFollowed(followed);
 
-        Optional<Follow> optionalFollow = followRepository.findByFollow(user.getId(), memberId);
+        Optional<Follow> optionalFollow = followRepository.findByFollow(follower.getId(), followed.getId());
+        Optional<Block> optionalBlock = blockRepository.findByBlock(follower.getId(), followed.getId());
+
+        if(optionalBlock.isPresent()) {
+            throw new BusinessLogicException(ExceptionMessage.CAN_NOT_FOLLOW_BLOCK_EXISTS);
+        }
 
         if (optionalFollow.isEmpty()) {
-            follower.getProfile().addFollowingCount();
-            followed.getProfile().addFollowerCount();
+            follower.getProfile().addFollowingCount(1);
+            followed.getProfile().addFollowerCount(1);
             followRepository.save(follow);
             return true;
         } else {
-            follower.getProfile().subtractFollowingCount();
-            followed.getProfile().subtractFollowerCount();
+            follower.getProfile().addFollowingCount(-1);
+            followed.getProfile().addFollowerCount(-1);
             followRepository.delete(optionalFollow.get());
             return false;
         }
@@ -114,15 +119,20 @@ public class MemberService {
         likes.setLiker(liker);
         likes.setLiked(liked);
 
-        Optional<MemberLikes> optionalLikes =
-                memberLikesRepository.findByMemberLikes(user.getId(), memberId);
+        Optional<MemberLikes> optionalLikes = memberLikesRepository.findByMemberLikes(liker.getId(), liked.getId());
+
+        Optional<Block> optionalBlock = blockRepository.findByBlock(liker.getId(), liked.getId());
+
+        if(optionalBlock.isPresent()) {
+            throw new BusinessLogicException(ExceptionMessage.CAN_NOT_LIKE_BLOCK_EXISTS);
+        }
 
         if (optionalLikes.isEmpty()) {
-            liked.getProfile().addLikeCount();
+            liked.getProfile().addLikeCount(1);
             memberLikesRepository.save(likes);
             return true;
         } else {
-            liked.getProfile().subtractLikeCount();
+            liked.getProfile().addLikeCount(-1);
             memberLikesRepository.delete(optionalLikes.get());
             return false;
         }
@@ -138,12 +148,27 @@ public class MemberService {
         block.setBlocker(blocker);
         block.setBlocked(blocked);
 
-        Optional<Block> optionalBlock =
-                blockRepository.findByBlock(user.getId(), memberId);
+        Optional<Block> optionalBlock = blockRepository.findByBlock(blocker.getId(), blocked.getId());
+
+        Optional<Follow> optionalFollow = followRepository.findByFollow(blocker.getId(), blocked.getId());
+
+        Optional<MemberLikes> optionalLike = memberLikesRepository.findByMemberLikes(blocker.getId(), blocked.getId());
 
         if(optionalBlock.isEmpty()) {
             blockRepository.save(block);
+
+            if(optionalFollow.isPresent()) {
+                blocker.getProfile().addFollowingCount(-1);
+                blocked.getProfile().addFollowerCount(-1);
+                followRepository.delete(optionalFollow.get());
+            }
+            if(optionalLike.isPresent()) {
+                blocked.getProfile().addLikeCount(-1);
+                memberLikesRepository.delete(optionalLike.get());
+            }
+
             return true;
+
         } else {
             blockRepository.delete(optionalBlock.get());
             return false;
@@ -151,9 +176,16 @@ public class MemberService {
 
     }
 
-    public void verifyMember(Long memberId, Member principal) {
+    public List<Block> findBlockList(Long memberId, Member user) {
 
-        if(!Objects.equals(memberId, principal.getId())) {
+        verifyMember(memberId, user.getId());
+
+        return blockRepository.findByBlockList(memberId);
+    }
+
+    public void verifyMember(Long memberId, Long userId) {
+
+        if(!Objects.equals(memberId, userId)) {
             throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
         }
 

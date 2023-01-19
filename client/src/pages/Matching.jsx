@@ -26,7 +26,7 @@ const Matching = () => {
   const [total, setTotal] = useState(1);
   const navigate = useNavigate();
   const isLogin = useSelector((state) => state.islogin);
-
+  console.log(isLogin);
   const matchingBtn = () => {
     if (isLogin) {
       navigate("/matchwrite");

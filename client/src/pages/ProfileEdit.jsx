@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
-import { ReactComponent as ImgUploadIcon } from './../assets/addPhoto.svg';
-import PostPatch from '../components/PostPatch';
-import InputWrap from '../components/InputWrap';
-import gameList from '../data/gameList.json';
-import dummyUser from '../data/dummyUser.json';
-import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
+import { useState, useEffect, useCallback } from "react";
+import styled from "styled-components";
+import { ReactComponent as ImgUploadIcon } from "./../assets/addPhoto.svg";
+import PostPatch from "../components/PostPatch";
+import InputWrap from "../components/InputWrap";
+import gameList from "../data/gameList.json";
+import dummyUser from "../data/dummyUser.json";
+import axios from "axios";
+import { API_URL } from "../data/apiUrl";
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -39,7 +39,7 @@ const ProfileWrap = styled.div`
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
 
-      input[type='file'] {
+      input[type="file"] {
         position: absolute;
         left: 0;
         top: 0;
@@ -83,7 +83,7 @@ const GameWrap = styled.div`
   .game {
     margin-top: 8px;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     display: none;
   }
   .game_title {
@@ -94,7 +94,7 @@ const GameWrap = styled.div`
     font-size: var(--font-caption-size);
     cursor: pointer;
   }
-  input[type='checkbox']:checked + .game_title {
+  input[type="checkbox"]:checked + .game_title {
     background: var(--bg-color);
     color: var(--yellow);
   }
@@ -119,9 +119,9 @@ const ProfileEdit = () => {
   const { identifier, nickname, image } = dummyUser.user[0];
   const [user, setUser] = useState({});
   const [fileName, setFileName] = useState(
-    '파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)'
+    "파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)"
   );
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState("");
   const [checkedGame, setCheckedGame] = useState([]);
   const ACCESS_TOKEN = `eyJhbGciOiJIUzM4NCJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic3ViIjoiYXBlYWNoIiwiaWF0IjoxNjczOTYyNjg1LCJleHAiOjE2NzQxNzg2ODV9.G0cZ34HtacHYq5-j3FtX_3y6kvBSsjgFHczcHa1DH4QjzeE0cZ8XUqvoD7yElC61`;
 
@@ -156,20 +156,20 @@ const ProfileEdit = () => {
     };
 
     formData.append(
-      'data',
+      "data",
       new Blob([JSON.stringify(data)], {
-        type: 'application/json',
+        type: "application/json",
       })
     );
     if (
-      fileName !== '파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)'
+      fileName !== "파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)"
     ) {
-      formData.append('image', file);
+      formData.append("image", file);
     }
 
     axios.patch(`${API_URL}/api/members/3`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${ACCESS_TOKEN}`,
       },
     });
@@ -196,7 +196,7 @@ const ProfileEdit = () => {
           <InputWrap
             type="text"
             name="nickname"
-            value={user.nickname || ''}
+            value={user.nickname || ""}
             onChange={handleNickname}
           />
         </NicknameWrap>
@@ -241,7 +241,7 @@ const ProfileEdit = () => {
           <label htmlFor="bio">자기소개 수정</label>
           <textarea
             id="bio"
-            value={user.introduction || ''}
+            value={user.introduction || ""}
             placeholder="내용을 입력하세요"
             onChange={handleBio}
           />

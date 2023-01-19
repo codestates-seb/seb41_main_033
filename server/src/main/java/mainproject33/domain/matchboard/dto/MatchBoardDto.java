@@ -21,11 +21,11 @@ public class MatchBoardDto {
     public static class Post {
 
         @NotBlank(message  = "제목은 필수 입력 값입니다.")
-        @Length(max = 30, message = "제목은 최대 30자 까지 입력 가능합니다.")
+        @Length(min = 5, max = 30, message = "제목은 최소 5자, 최대 30자 까지 입력 가능합니다.")
         private String title;
 
         @NotBlank(message  = "내용은 필수 입력 값입니다.")
-        @Length(max = 500, message = "내용은  최대 500자 까지 입력 가능합니다.")
+        @Length(min = 5, max = 500, message = "내용은 최소 5자, 최대 500자 까지 입력 가능합니다.")
         private String content;
 
         @NotBlank(message  = "게임은 필수 입력 값입니다.")
@@ -45,10 +45,10 @@ public class MatchBoardDto {
     public static class Patch {
         private long id;
 
-        @Length(max = 30, message = "제목은 최대 30자 까지 입력 가능합니다.")
+        @Length(min = 5, max = 30, message = "제목은 최소 5자, 최대 30자 까지 입력 가능합니다.")
         private String title;
 
-        @Length(max = 500, message = "내용은  최대 500자 까지 입력 가능합니다.")
+        @Length(min = 5, max = 500, message = "내용은 최소 5자, 최대 500자 까지 입력 가능합니다.")
         private String content;
 
         private String game;

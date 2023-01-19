@@ -34,8 +34,8 @@ public class AuthService {
 
         UserDetails user = (UserDetails) authentication.getPrincipal();
 
-//        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
-//                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
+        redisDao.setValues(user.getUsername(), tokenDto.getRefreshToken(),
+                Duration.ofMinutes(jwtTokenizer.getRefreshTokenExpirationMinutes()));
 
         return tokenDto;
     }
@@ -56,16 +56,16 @@ public class AuthService {
         return tokenDto;
     }
 
-//    public void logout(UserDetails user) {
-//
-//        String refreshToken = redisDao.getValues(user.getUsername());
-//
-//        if(refreshToken == null) {
-//            log.warn("Refresh Token Not Found");
-//        }
-//
-//        redisDao.deleteValues(user.getUsername());
-//    }
+    public void logout(UserDetails user) {
+
+        String refreshToken = redisDao.getValues(user.getUsername());
+
+        if(refreshToken == null) {
+            log.warn("Refresh Token Not Found");
+        }
+
+        redisDao.deleteValues(user.getUsername());
+    }
 
     private TokenDto createToken(Authentication authentication) {
 

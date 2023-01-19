@@ -13,6 +13,9 @@ public class RedisDao {
 
     private final RedisTemplate<String, String> redisTemplate;
 
+    /**
+     * opsForValue() = String 을 쉽게 직렬화, 역직렬화 해주는 인터페이스
+     */
     public void setValues(String key, String data, Duration duration) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
         values.set(key, data, duration);

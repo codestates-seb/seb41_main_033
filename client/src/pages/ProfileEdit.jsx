@@ -39,7 +39,7 @@ const ProfileWrap = styled.div`
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
 
-      input[type='file'] {
+      input[type="file"] {
         position: absolute;
         left: 0;
         top: 0;
@@ -83,7 +83,7 @@ const GameWrap = styled.div`
   .game {
     margin-top: 8px;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     display: none;
   }
   .game_title {
@@ -94,7 +94,7 @@ const GameWrap = styled.div`
     font-size: var(--font-caption-size);
     cursor: pointer;
   }
-  input[type='checkbox']:checked + .game_title {
+  input[type="checkbox"]:checked + .game_title {
     background: var(--bg-color);
     color: var(--yellow);
   }
@@ -163,11 +163,11 @@ const ProfileEdit = () => {
     };
 
     formData.append(
-      'data',
+      "data",
       new Blob([JSON.stringify(data)], {
-        type: 'application/json',
+        type: "application/json",
       })
-    );
+
     if (file) {
       formData.append('image', file);
     }

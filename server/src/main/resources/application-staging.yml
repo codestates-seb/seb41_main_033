@@ -1,0 +1,49 @@
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    data: classpath*:import.sql
+  sql:
+    init:
+      mode: always
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE}
+      max-request-size: ${MAX_REQUEST_SIZE}
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: DEBUG
+server:
+  servlet:
+    encoding:
+      force-response: true
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: ${ACCESS_TOKEN_EXPIRATION_MINUTES}
+  refresh-token-expiration-minutes: ${REFRESH_TOKEN_EXPIRATION_MINUTES}
+cloud:
+  aws:
+    credentials:
+      accessKey: ${ACCESS_KEY}
+      secretKey: ${SECRET_KEY}
+    region:
+      static: ${REGION}
+    stack:
+      auto: false

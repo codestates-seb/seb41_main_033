@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface BlockRepository extends JpaRepository<Block, Long> {
 
-    @Query(value = "SELECT * FROM BLOCK WHERE BLOCKER_ID = :blockerId AND BLOCKED_ID = :blockedId", nativeQuery = true)
+    @Query(value = "select * from block where blocker_id = :blockerId and blocked_id = :blockedId", nativeQuery = true)
     Optional<Block> findByBlock(Long blockerId, Long blockedId);
 
-    @Query(value = "SELECT * FROM BLOCK WHERE BLOCKER_ID = :blockerId", nativeQuery = true)
+    @Query(value = "select * from block where blocker_id = :blockerId", nativeQuery = true)
     List<Block> findByBlockList(Long blockerId);
 
     @Query(value = "select blocked_id from block where blocker_id = :blockerId", nativeQuery = true)

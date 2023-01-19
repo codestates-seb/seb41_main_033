@@ -1,6 +1,7 @@
 package mainproject33.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,18 +19,26 @@ public class RedisConfiguration {
 
     private final RedisProperties redisProperties;
 
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+
+    @Value("${spring.redis.password}")
+    private String password;
+
     /**
      * RedisConnectionFactory = redis 에 접근하기 위한 redis 저장소와 연결할 때 필요
      * RedisStandaloneConfiguration = single node 에 redis 를 연결하기 위한 설정 정보를 가지고 있는 기본 클래스
      */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfiguration =
-                new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
-
-        redisConfiguration.setPassword(redisProperties.getPassword());
-
-        return new LettuceConnectionFactory(redisConfiguration);
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(host);
+        redisStandaloneConfiguration.setPort(port);
+        redisStandaloneConfiguration.setPassword(password);
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
 
     /**

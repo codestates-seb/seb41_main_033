@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import ProfileContentList from './ProfileContentList';
 import Pagination from './Pagination';
+import { useState } from 'react';
 
 const ContentWrap = styled.div`
   width: var(--col-8);
@@ -10,9 +11,12 @@ const ContentWrap = styled.div`
 `;
 
 const TabWrap = styled.div`
-  display: flex;
+  ul {
+    display: flex;
+  }
   .tab {
     padding: 12px 48px;
+    cursor: pointer;
   }
   .active {
     color: var(--yellow);
@@ -20,17 +24,37 @@ const TabWrap = styled.div`
   }
 `;
 
-const ProfileContent = ({ isMatch, isStory, mathchBoards, userBoards }) => {
+const ProfileContent = ({ matchBoards, userBoards }) => {
+  const [isMatch, setIsMatch] = useState(true);
+  const [isStory, setIsStory] = useState(false);
+
+  const handleTab = () => {
+    setIsMatch((prev) => !prev);
+    setIsStory((prev) => !prev);
+  };
+
   return (
     <ContentWrap className="card">
       <TabWrap>
-        <div className={'tab' + (isMatch ? ' active' : '')}>매칭글</div>
-        <div className={'tab' + (isStory ? ' active' : '')}>스토리</div>
+        <ul>
+          <li
+            className={'tab' + (isMatch ? ' active' : '')}
+            onClick={handleTab}
+          >
+            매칭글
+          </li>
+          <li
+            className={'tab' + (isStory ? ' active' : '')}
+            onClick={handleTab}
+          >
+            스토리
+          </li>
+        </ul>
       </TabWrap>
       <ProfileContentList
         isMatch={isMatch}
         isStory={isStory}
-        mathchBoards={mathchBoards}
+        matchBoards={matchBoards}
         userBoards={userBoards}
       />
       <Pagination />

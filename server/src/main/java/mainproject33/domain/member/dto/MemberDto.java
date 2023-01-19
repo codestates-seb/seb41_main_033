@@ -77,4 +77,14 @@ public class MemberDto {
         private LocalDateTime modifiedAt;
     }
 
+    @Getter
+    @Setter
+    public static class BlockedMember {
+
+        private Long id;
+        private String identifier;
+        private String nickname;
+        private String profileImage;
+    }
+
 }

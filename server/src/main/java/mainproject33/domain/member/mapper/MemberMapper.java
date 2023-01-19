@@ -8,7 +8,11 @@ import mainproject33.domain.member.entity.*;
 import mainproject33.domain.member.repository.BlockRepository;
 import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.member.repository.MemberLikesRepository;
+import mainproject33.domain.member.repository.MemberRepository;
 import mainproject33.domain.member.service.ProfileImageService;
+import mainproject33.global.exception.BusinessLogicException;
+import mainproject33.global.exception.ExceptionMessage;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberMapper {
 
+    private final MemberRepository memberRepository;
     private final GameDBRepository gameDBRepository;
     private final ProfileImageService imageService;
     private final FollowRepository followRepository;
@@ -113,6 +118,41 @@ public class MemberMapper {
         profileResponse.setModifiedAt(member.getProfile().getModifiedAt());
 
         return profileResponse;
+    }
+
+    public MemberDto.BlockedMember blockToBlockedMember(Block block) {
+
+        if(block == null) return null;
+
+        MemberDto.BlockedMember memberInformation = new MemberDto.BlockedMember();
+
+        Optional<Member> blockedMember = memberRepository.findById(block.getBlocked().getId());
+
+        if(blockedMember.isEmpty()) {
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_NOT_FOUND);
+        } else {
+            Member member = blockedMember.get();
+
+            memberInformation.setId(member.getId());
+            memberInformation.setIdentifier(member.getIdentifier());
+            memberInformation.setNickname(member.getNickname());
+            memberInformation.setProfileImage(imageService.readProfileImagePath(member.getId()));
+
+            return memberInformation;
+        }
+    }
+
+    public List<MemberDto.BlockedMember> blockListToMemberList(List<Block> blockList) {
+
+        if(blockList == null) return null;
+
+        List<MemberDto.BlockedMember> blockedInfoList = new ArrayList<>(blockList.size());
+
+        for (Block block : blockList) {
+            blockedInfoList.add(blockToBlockedMember(block));
+        }
+
+        return blockedInfoList;
     }
 
     public boolean verifyFollow(Long userId, Long memberId) {

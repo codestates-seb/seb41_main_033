@@ -78,7 +78,7 @@ public class CommentController
                                       @PathVariable("board-id") @Positive long boardId,
                                       @AuthenticationPrincipal Member member)
     {
-        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable.previousOrFirst(), boardId);
+        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable.previousOrFirst(), boardId, member);
         List<Comment> comments = pageComments.getContent();
 
         List<CommentResponseDto> responses = mapper.commentToResponses(comments, member);

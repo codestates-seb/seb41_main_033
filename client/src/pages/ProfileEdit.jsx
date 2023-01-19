@@ -137,7 +137,6 @@ const ProfileEdit = () => {
       if (checked) {
         setCheckedGame((prev) => [...prev, item]);
       } else {
-        checked = !checked;
         setCheckedGame(checkedGame.filter((game) => game !== item));
       }
     },

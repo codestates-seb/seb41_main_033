@@ -11,6 +11,8 @@ const ProfileWrap = styled.div`
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [match, setMatch] = useState(null);
+  const [story, setStory] = useState(null);
   const isMatch = false;
   const isStory = true;
 
@@ -23,9 +25,25 @@ const Profile = () => {
         },
       })
       .then((res) => setUser(res.data.data));
+    axios
+      .get(`${API_URL}/api/members/3/matches`, {
+        // ngrok get cors 해결용
+        headers: {
+          'ngrok-skip-browser-warning': '69420',
+        },
+      })
+      .then((res) => setMatch(res.data.data));
+    axios
+      .get(`${API_URL}/api/members/3/boards`, {
+        // ngrok get cors 해결용
+        headers: {
+          'ngrok-skip-browser-warning': '69420',
+        },
+      })
+      .then((res) => setStory(res.data.data));
   }, []);
 
-  if (user) {
+  if (user && match && story) {
     return (
       <ProfileWrap>
         <ProfileCard
@@ -41,8 +59,8 @@ const Profile = () => {
         <ProfileContent
           isMatch={isMatch}
           isStory={isStory}
-          matchBoards={user.matchBoards}
-          userBoards={user.userBoards}
+          matchBoards={match}
+          userBoards={story}
         />
       </ProfileWrap>
     );

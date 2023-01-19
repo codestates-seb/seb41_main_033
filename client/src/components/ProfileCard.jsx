@@ -1,8 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as ProfileImg } from '../assets/defaultImg.svg';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -104,8 +107,13 @@ const ProfileCard = ({
   introduction,
 }) => {
   /* 더미 데이터 */
-  const isMe = true;
+  const [isMe, setIsMe] = useState(false);
   const { userid } = useParams();
+  const memberId = useSelector((state) => state.islogin.memberId);
+
+  useEffect(() => {
+    userid === memberId ? setIsMe(true) : setIsMe(false);
+  }, []);
 
   return (
     <div>

@@ -6,7 +6,7 @@ import InputWrap from '../components/InputWrap';
 import gameList from '../data/gameList.json';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -116,6 +116,7 @@ const BioWrap = styled.div`
 `;
 
 const ProfileEdit = () => {
+  const { userid } = useParams();
   const [user, setUser] = useState(null);
   const [nickname, setNickname] = useState('');
   const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
@@ -174,7 +175,7 @@ const ProfileEdit = () => {
     }
 
     axios
-      .patch(`${API_URL}/api/members/3`, formData, {
+      .patch(`${API_URL}/api/members/${userid}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${ACCESS_TOKEN}`,
@@ -185,7 +186,7 @@ const ProfileEdit = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/3`, {
+      .get(`${API_URL}/api/members/${userid}`, {
         // ngrok get cors 해결용
         headers: {
           'ngrok-skip-browser-warning': '69420',

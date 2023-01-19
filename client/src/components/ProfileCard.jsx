@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as ProfileImg } from '../assets/defaultImg.svg';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
@@ -105,17 +105,14 @@ const ProfileCard = ({
 }) => {
   /* 더미 데이터 */
   const isMe = true;
+  const { userid } = useParams();
 
   return (
     <div>
       <ProfileWrap className="card sm">
         <InformWrap>
           {image ? (
-            <img
-              className="img_profile"
-              src={image}
-              alt="프로필 이미지"
-            />
+            <img className="img_profile" src={image} alt="프로필 이미지" />
           ) : (
             <ProfileImg className="img_profile" />
           )}
@@ -126,7 +123,7 @@ const ProfileCard = ({
           {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
           {isMe ? (
             <div className="icon">
-              <Link to="/userid/edit">
+              <Link to={`/profile/${userid}/edit`}>
                 <Setting className="setting" />
               </Link>
             </div>

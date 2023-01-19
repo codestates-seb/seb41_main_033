@@ -41,7 +41,7 @@ const ProfileContent = ({ matchBoards, userBoards }) => {
             className={'tab' + (isMatch ? ' active' : '')}
             onClick={handleTab}
           >
-            매칭글
+            매칭하기
           </li>
           <li
             className={'tab' + (isStory ? ' active' : '')}

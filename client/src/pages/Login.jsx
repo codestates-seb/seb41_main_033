@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/slice/loginstate";
 import axios from "axios";
 const Flex = styled.div`
   display: flex;
@@ -67,6 +69,7 @@ const Login = () => {
   const idValueCheck = idValid.test(identifier);
   const psdValueCheck = psdValid.test(password);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const submitHandle = (e) => {
     e.preventDefault();
     if (!idValueCheck) {
@@ -87,10 +90,12 @@ const Login = () => {
           }
         )
         .then((res) => {
-          navigate(`/`);
-          console.log(res);
+          localStorage.clear();
           const token = res.headers.authorization;
           localStorage.setItem("key", token);
+          localStorage.setItem("memberId", res.data.data.id);
+          dispatch(login());
+          navigate(`/`);
         });
     }
   };

@@ -3,9 +3,8 @@ import Dropdown from "../components/DropDown";
 import React, { useState } from "react";
 import InputWrap from "../components/InputWrap";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 import { API_URL } from "../data/apiUrl";
+import PostPatch from "../components/PostPatch";
 const MatchContainer = styled.form`
   .user_info {
     display: flex;
@@ -26,40 +25,9 @@ const MatchContainer = styled.form`
   }
 `;
 
-const Wrap = styled.div`
-  width: 100%;
-`;
-
 const MatchBox = styled.div`
   display: flex;
   justify-content: center;
-`;
-
-const UserImg = styled.img`
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  margin-right: 16px;
-`;
-
-const UserInfo = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-`;
-
-const UserDiv = styled.div`
-  .nickname {
-    font-weight: var(--font-weight-medium);
-    font-size: var(--font-head3-size);
-    color: var(--white);
-  }
-`;
-
-const MatchBtn = styled.button`
-  width: 280px;
-  padding: 12px 16px;
-  margin: 32px 8px;
 `;
 
 const Label = styled.label`
@@ -122,7 +90,6 @@ const TagsInput = styled.div`
     background: none;
     width: auto;
     color: var(--font-color);
-    /* height: 28px; */
     padding: 6px 0;
     &:focus {
       outline: transparent;
@@ -131,7 +98,6 @@ const TagsInput = styled.div`
 `;
 
 const MatchingWrite = () => {
-  const navigate = useNavigate();
   const [info, setInfo] = useState({
     title: "",
     game: "",
@@ -168,33 +134,32 @@ const MatchingWrite = () => {
   };
   const { title, team, content } = info;
   const submitBtn = (e) => {
-    e.preventDefault();
     const isEmpty = (object) =>
       !Object.values(object).every((el) => el !== null && el.length !== 0);
 
     const data = { title, game, team, tags, content };
-    if (!isEmpty(data)) {
-      axios
-        .post(`${API_URL}/api/matches`, data, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("key")}`,
-          },
-        })
-        .then(() => navigate("/"));
+    if (!isEmpty(data) && content.length >= 5) {
+      axios.post(`${API_URL}/api/matches`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("key")}`,
+        },
+      });
     }
   };
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <MatchContainer className="card big" onsubmit="return false">
-      <Wrap>
-        <UserInfo>
-          <UserImg src="https://cdn.pixabay.com/photo/2021/11/12/03/04/woman-6787784_1280.png" />
-          <UserDiv>
-            <div className="nickname">맑게 고인 김소라</div>
-            <div>유저아이디 </div>
-          </UserDiv>
-        </UserInfo>
+    <PostPatch
+      image={""}
+      nickname={"아직몰름"}
+      identifier={"아직모름"}
+      link1="/"
+      button1="작성완료"
+      link2="/"
+      button2="취소"
+      handleSubmit={submitBtn}
+    >
+      <MatchContainer>
         <MatchBox className="user_info">
           <div>
             <Label htmlFor="title">제목</Label>
@@ -258,19 +223,13 @@ const MatchingWrite = () => {
               name="content"
               placeholder="상세설명을 입력하세요"
               onChange={changeValue}
+              maxlength={500}
+              minlength={5}
             />
           </div>
         </MatchBox>
-        <MatchBox>
-          <MatchBtn type="submit" onClick={submitBtn} className="em">
-            작성완료
-          </MatchBtn>
-          <MatchBtn className="normal" onClick={() => navigate("/")}>
-            취소
-          </MatchBtn>
-        </MatchBox>
-      </Wrap>
-    </MatchContainer>
+      </MatchContainer>
+    </PostPatch>
   );
 };
 export default MatchingWrite;

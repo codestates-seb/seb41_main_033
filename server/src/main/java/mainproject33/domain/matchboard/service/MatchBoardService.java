@@ -59,6 +59,10 @@ public class MatchBoardService {
         }
     }
 
+    public Page<MatchBoard> readProfileMatchBoards(Long memberId, Pageable pageable) {
+        return matchBoardRepository.findByMemberId(memberId, pageable);
+    }
+
     public void deleteMatchBoard(Member member, long id) {
         MatchBoard findMatchBoard = findVerifiedMatchBoard(id);
 

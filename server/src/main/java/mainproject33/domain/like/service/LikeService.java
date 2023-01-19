@@ -25,6 +25,7 @@ public class LikeService
 
     private final CommentService commentService;
 
+
     public boolean changeBoardLike(Member member, long boardId)
     {
         UserBoard userBoard = boardService.findUserBoard(boardId);
@@ -34,11 +35,12 @@ public class LikeService
         if(findLike)
         {
             boardLikeRepository.save(new Like(member, userBoard));
+            userBoard.changeLikeCount(1);
             return true;
         }
         else
         {
-            userBoard.unLike();
+            userBoard.changeLikeCount(-1);
             boardLikeRepository.deleteByMemberAndUserBoard(member, userBoard);
             return false;
         }
@@ -52,12 +54,13 @@ public class LikeService
         if(findLike)
         {
             boardLikeRepository.save(new Like(member, comment));
+            comment.changeLikeCount(1);
             return true;
         }
 
         else
         {
-            comment.unlike();
+            comment.changeLikeCount(-1);
             boardLikeRepository.deleteByMemberAndComment(member, comment);
             return false;
         }

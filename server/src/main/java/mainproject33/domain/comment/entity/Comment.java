@@ -55,7 +55,6 @@ public class Comment extends Auditable
             member.getComments().add(this);
     }
 
-
     public void addUserBoard(UserBoard userBoard)
     {
         this.userBoard = userBoard;
@@ -63,13 +62,8 @@ public class Comment extends Auditable
             userBoard.getComments().add(this);
     }
 
-    public void addLike()
+    public void changeLikeCount(int num)
     {
-        ++this.likeCount;
-    }
-
-    public void unlike()
-    {
-        --this.likeCount;
+        this.likeCount += num;
     }
 }

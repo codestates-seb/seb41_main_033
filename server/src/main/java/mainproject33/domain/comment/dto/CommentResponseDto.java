@@ -16,7 +16,7 @@ public class CommentResponseDto
     private String identifier;
     private String nickname;
 
-    private String image;
+    private String profileImage;
     private Long userBoardId;
 
     private Long id;

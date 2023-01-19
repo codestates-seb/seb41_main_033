@@ -1,4 +1,4 @@
-package mainproject33.domain.matchboard.utils.validator;
+package mainproject33.global.validator.tags;
 
 import javax.validation.Constraint;
 import java.lang.annotation.ElementType;

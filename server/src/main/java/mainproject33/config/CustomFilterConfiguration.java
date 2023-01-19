@@ -2,7 +2,7 @@ package mainproject33.config;
 
 import lombok.RequiredArgsConstructor;
 import mainproject33.global.security.filter.JwtAuthenticationFilter;
-import mainproject33.global.security.filter.JwtVerificationFilter;
+import mainproject33.global.security.filter.JwtExceptionHandlerFilter;
 import mainproject33.global.security.jwt.JwtTokenizer;
 import mainproject33.global.security.service.AuthService;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,9 +19,9 @@ public class CustomFilterConfiguration extends AbstractHttpConfigurer<CustomFilt
     public void configure(HttpSecurity http) {
 
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenizer);
-        JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authService);
+        JwtExceptionHandlerFilter jwtExceptionHandlerFilter = new JwtExceptionHandlerFilter(jwtTokenizer, authService);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtVerificationFilter, JwtAuthenticationFilter.class);
+                .addFilterBefore(jwtExceptionHandlerFilter, JwtAuthenticationFilter.class);
     }
 }

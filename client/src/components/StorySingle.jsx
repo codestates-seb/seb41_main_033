@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 import { ReactComponent as BoardLikeIcon } from "./../assets/heartIcon.svg";
 import { ReactComponent as BoardCommentIcon } from "./../assets/sms.svg";
+import displayedAt from "../util/displayedAt";
 import SinglePofileWrap from "./SingleProfileWrap";
 
 const StoryWrap = styled.div`
@@ -65,6 +66,20 @@ const ImgArea = styled.div`
 	}
 `;
 
+const VideoArea = styled.div`
+	width: var(--col-3);
+	height: var(--col-3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+
+	video {
+		width: 100%;
+		height: 100%;
+	}
+`;
+
 const InfoWrap = styled.ul`
 	display: flex;
 	align-items: center;
@@ -93,26 +108,37 @@ const InfoWrap = styled.ul`
 `;
 
 const StorySingle = ({ data }) => {
+	//파일 type 판별
+	let type = "";
+	if (data.contentType) type = data.contentType.split("/")[0];
+
 	return (
 		<StoryWrap className="card md">
 			<div className="storyMain">
 				<TextArea>
 					<a href="" title="유저 프로필로 이동">
-						<SinglePofileWrap name={data.nickname} subInfo={data.createdAt} />
+						<SinglePofileWrap imgSrc={data.profileImage} name={data.nickname} subInfo={displayedAt(data.createdAt)} />
 					</a>
 					<div className="content">{data.content}</div>
 				</TextArea>
-				{data.image ? (
+				{data.uploadFileName && type === "image" ? (
 					<ImgArea>
-						<img src={data.image} />
+						<img src={data.uploadFileName} />
 					</ImgArea>
+				) : null}
+				{data.uploadFileName && type === "video" ? (
+					<VideoArea>
+						<video controls>
+							<source src={data.uploadFileName} type={data.contentType} />
+						</video>
+					</VideoArea>
 				) : null}
 			</div>
 			<InfoWrap>
-				{data.contentLikes ? (
+				{data.likeCount ? (
 					<li>
 						<BoardLikeIcon />
-						<span>{data.contentLikes}</span>
+						<span>{data.likeCount}</span>
 					</li>
 				) : null}
 				{data.commentCount ? (

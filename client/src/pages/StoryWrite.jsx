@@ -1,11 +1,12 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import StoryInputArea from "../components/StoryInputArea";
 import { API_URL } from "../data/apiUrl";
 
-// 이 부분은 수정되겠죠?!
-const ACCESS_TOKEN = `eyJhbGciOiJIUzM4NCJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic3ViIjoiZmlyZTkiLCJpYXQiOjE2NzM5NjY0NTAsImV4cCI6MTY3NDE4MjQ1MH0.l2L_WfBhXBBQqeQgquM74_WkdB3aAPcwc7wftO2XnmZYNQK2s6gUNoe576nJq3ME`;
+const ACCESS_TOKEN = localStorage.getItem("key");
 
 const StoryWrite = () => {
+	const navigate = useNavigate();
 	const handleWriteSubmit = (content, file) => {
 		const data = { content };
 		const formData = new FormData();
@@ -15,7 +16,7 @@ const StoryWrite = () => {
 				type: "application/json",
 			})
 		);
-		if (file) formData.append("image", file);
+		if (file) formData.append("file", file);
 
 		axios
 			.post(`${API_URL}/api/boards`, formData, {
@@ -25,7 +26,7 @@ const StoryWrite = () => {
 				},
 			})
 			.then((res) => {
-				console.log(res.data);
+				navigate("/story");
 			})
 			.catch((err) => {
 				console.log(err);

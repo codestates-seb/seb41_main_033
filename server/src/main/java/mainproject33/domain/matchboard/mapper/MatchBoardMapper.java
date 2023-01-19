@@ -15,7 +15,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class MatchBoardMapper {
-
     private final GameDBRepository gameDBRepository;
     private final ProfileImageService imageService;
 
@@ -64,7 +63,8 @@ public class MatchBoardMapper {
         response.setMemberId(getMemberId(matchBoard));
         response.setIdentifier(getIdentifier(matchBoard));
         response.setNickname(getNickname(matchBoard));
-        response.setImage(imageService.readProfileImagePath(matchBoard.getMember().getId()));
+        response.setProfileImage(imageService.readProfileImagePath(matchBoard.getMember().getId()));
+        response.setMemberLikeCount(getMemberLikeCount(matchBoard));
         response.setId(matchBoard.getId());
         response.setTitle(matchBoard.getTitle());
         response.setContent(matchBoard.getContent());
@@ -106,9 +106,7 @@ public class MatchBoardMapper {
         Member member = matchBoard.getMember();
         if (member == null) return null;
 
-        String identifier = member.getIdentifier();
-
-        return identifier;
+        return member.getIdentifier();
     }
 
     private String getNickname(MatchBoard matchBoard) {
@@ -117,8 +115,15 @@ public class MatchBoardMapper {
         Member member = matchBoard.getMember();
         if (member == null) return null;
 
-        String nickname = member.getNickname();
+        return member.getNickname();
+    }
 
-        return nickname;
+    private int getMemberLikeCount(MatchBoard matchBoard) {
+        if (matchBoard == null) return 0;
+
+        Member member = matchBoard.getMember();
+        if (member == null) return 0;
+
+        return member.getProfile().getLikeCount();
     }
 }

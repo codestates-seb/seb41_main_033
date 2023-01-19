@@ -117,7 +117,7 @@ public class MemberController {
                                 @AuthenticationPrincipal Member user) {
 
         if(memberService.block(memberId, user)) {
-            return new ResponseEntity<>("해당 유저를 차단하셨습니다.", HttpStatus.OK);
+            return new ResponseEntity<>("해당 유저를 차단하셨습니다. 팔로우와 좋아요도 취소됩니다.", HttpStatus.OK);
         }
 
         return new ResponseEntity<>("해당 유저 차단을 취소하셨습니다.", HttpStatus.OK);
@@ -150,7 +150,7 @@ public class MemberController {
                 new MultiResponseDto<>(responses, pageMatches), HttpStatus.OK);
     }
 
-    @GetMapping("/{member-id}/blockLists")
+    @GetMapping("/{member-id}/blocks")
     public ResponseEntity getBlockList(@PathVariable("member-id") @Positive Long memberId,
                                         @AuthenticationPrincipal Member user) {
 

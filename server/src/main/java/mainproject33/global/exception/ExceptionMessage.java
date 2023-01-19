@@ -20,11 +20,11 @@ public enum ExceptionMessage {
     LIKE_NOT_FOUND("존재하지 않는 좋아요 정보입니다."),
 
     SELF_BLOCK_NOT_ALLOWED("자기 자신을 차단 할 수 없습니다."),
+    CAN_NOT_FOLLOW_BLOCK_EXISTS("차단이 되어 있으면 팔로우를 할 수 없습니다."),
+    CAN_NOT_LIKE_BLOCK_EXISTS("차단이 되어 있으면 좋아요를 할 수 없습니다."),
 
     //=========userBoard=========//
     USER_BOARD_NOT_FOUND("존재하지 않는 게시글입니다."),
-
-
 
     //=========comment=========//
     COMMENT_NOT_FOUND("존재하지 않는 답글입니다."),

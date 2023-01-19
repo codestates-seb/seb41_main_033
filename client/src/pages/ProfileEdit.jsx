@@ -118,12 +118,10 @@ const BioWrap = styled.div`
 const ProfileEdit = () => {
   const { identifier, nickname, image } = dummyUser.user[0];
   const [user, setUser] = useState({});
-  const [fileName, setFileName] = useState(
-    '파일을 선택하세요 (* jpeg, jpg, png 확장자만 가능합니다)'
-  );
+  const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
   const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
-  const ACCESS_TOKEN = `eyJhbGciOiJIUzM4NCJ9.eyJhdXRoIjoiUk9MRV9VU0VSIiwic3ViIjoiYXBlYWNoIiwiaWF0IjoxNjczOTYyNjg1LCJleHAiOjE2NzQxNzg2ODV9.G0cZ34HtacHYq5-j3FtX_3y6kvBSsjgFHczcHa1DH4QjzeE0cZ8XUqvoD7yElC61`;
+  const ACCESS_TOKEN = localStorage.getItem('key');
 
   const handleNickname = (e) => {
     setUser({ ...user, nickname: e.target.value });

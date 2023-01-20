@@ -2,7 +2,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import SinglePofileWrap from './SingleProfileWrap';
-import { ReactComponent as ProfileImg } from '../assets/defaultImg.svg';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { useState, useEffect } from 'react';
@@ -97,17 +96,22 @@ const ProfileCard = ({
   /* 더미 데이터 */
   const [isMe, setIsMe] = useState(false);
   const { userid } = useParams();
-  const memberId = useSelector((state) => state.islogin.memberId);
+  const memberId = useSelector((state) => state.islogin.login.memberId);
 
   useEffect(() => {
-    userid === memberId ? setIsMe(true) : setIsMe(false);
-  }, []);
+    Number(userid) === memberId ? setIsMe(true) : setIsMe(false);
+  }, [userid, memberId]);
 
   return (
     <div>
       <ProfileWrap className="card sm">
         <InformWrap>
-          <SinglePofileWrap imgSize="big" imgSrc={image} name={nickname} subInfo={identifier} />
+          <SinglePofileWrap
+            imgSize="big"
+            imgSrc={image}
+            name={nickname}
+            subInfo={identifier}
+          />
           {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
           {isMe ? (
             <div className="icon">

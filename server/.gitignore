@@ -30,6 +30,7 @@ out/
 application.yml
 application-local.yml
 application-server.yml
+application-staging.yml
 
 ### NetBeans ###
 /nbproject/private/

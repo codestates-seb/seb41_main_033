@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as BoardLikeIcon } from "./../assets/heartIcon.svg";
 import { ReactComponent as BoardCommentIcon } from "./../assets/sms.svg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import displayedAt from "../util/displayedAt";
 import SinglePofileWrap from "./SingleProfileWrap";
 import StoryFileView from "./StoryFileView";
@@ -87,17 +87,23 @@ const StorySingle = ({ data }) => {
 	const navigate = useNavigate();
 
 	const handleNaviOnClick = (e, memberId, boardId) => {
-		// if (e.target === e.currentTarget)
 		navigate(`/story/${memberId}/${boardId}`);
+	};
+
+	const handleProfileClick = (e, memberId) => {
+		console.log();
+		if (e.target === e.currentTartget) navigate(`/profile/${memberId}`);
 	};
 
 	return (
 		<StoryWrap className="card md" onClick={(e) => handleNaviOnClick(e, data.memberId, data.id)}>
 			<div className="storyMain">
 				<TextArea>
-					<a href="" title="유저 프로필로 이동">
+					<div onClick={(e) => handleProfileClick(e, data.memberId)}>
+						{/* <Link to={`/profile/${data.memberId}`}> */}
 						<SinglePofileWrap imgSrc={data.profileImage} name={data.nickname} subInfo={displayedAt(data.createdAt)} />
-					</a>
+						{/* </Link> */}
+					</div>
 					<div className="content">{data.content}</div>
 				</TextArea>
 				<StoryFileView fileName={data.uploadFileName} contentType={data.contentType} />

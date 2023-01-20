@@ -82,24 +82,28 @@ const ProfileContentList = ({ isMatch, isStory }) => {
   const { userid } = useParams();
   const [match, setMatch] = useState(null);
   const [story, setStory] = useState(null);
-  const [page, setPage] = useState(1);
+  const [matchPage, setMatchPage] = useState(1);
+  const [storyPage, setStoryPage] = useState(1);
   const [matchPageInfo, setMatchPageInfo] = useState(null);
   const [storyPageInfo, setStoryPageInfo] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}/matches?page=${page}`)
+      .get(`${API_URL}/api/members/${userid}/matches?page=${matchPage}`)
       .then((res) => {
         setMatch(res.data.data);
         setMatchPageInfo(res.data.pageInfo);
       });
+  }, [matchPage]);
+
+  useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}/boards?page=${page}`)
+      .get(`${API_URL}/api/members/${userid}/boards?page=${storyPage}`)
       .then((res) => {
         setStory(res.data.data);
         setStoryPageInfo(res.data.pageInfo);
       });
-  }, []);
+  }, [storyPage]);
 
   if (match && story) {
     return (
@@ -164,9 +168,11 @@ const ProfileContentList = ({ isMatch, isStory }) => {
         </ListWrap>
         <Pagination
           isMatch={isMatch}
-          page={page}
-          setPage={setPage}
+          matchPage={matchPage}
+          setMatchPage={setMatchPage}
           matchPageInfo={matchPageInfo}
+          storyPage={storyPage}
+          setStoryPage={setStoryPage}
           storyPageInfo={storyPageInfo}
         />
       </>

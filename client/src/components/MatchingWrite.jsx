@@ -140,11 +140,13 @@ const MatchingWrite = () => {
 
     const data = { title, game, team, tags, content };
     if (!isEmpty(data) && content.length >= 5) {
-      axios.post(`${API_URL}/api/matches`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("key")}`,
-        },
-      });
+      axios
+        .post(`${API_URL}/api/matches`, data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("key")}`,
+          },
+        })
+        .then(navigate("/"));
     }
   };
   const [isOpen, setIsOpen] = useState(false);

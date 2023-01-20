@@ -3,8 +3,10 @@ import displayedAt from "../util/displayedAt";
 import { useState, useEffect } from "react";
 import { API_URL } from "../data/apiUrl";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import matchGame from "../util/matchGame";
+
 const Detail = styled.div`
   width: var(--col-9);
   margin-right: 32px;
@@ -93,14 +95,16 @@ const Description = styled.div`
   -ms-overflow-style: none;
 `;
 const MatchDetails = ({ data, boardId }) => {
-  const [same, setSame] = useState(true);
-
-  const usenavigate = useNavigate();
+  const [same, setSame] = useState(false);
+  const memberId = Number(useSelector((state) => state.islogin.memberId));
+  const boardid = useParams();
+  const navigate = useNavigate();
   useEffect(() => {
-    if (data.memberId === "로그인한유저아이디") {
+    if (data.memberId === memberId) {
       setSame(true);
     }
-  }, [data.memberId]);
+  }, []);
+
   const deleteBtn = () => {
     axios
       .delete(`${API_URL}/api/matches/${boardId}`, {
@@ -109,7 +113,7 @@ const MatchDetails = ({ data, boardId }) => {
           Authorization: `Bearer ${localStorage.getItem("key")}`,
         },
       })
-      .then((res) => usenavigate("/"));
+      .then((res) => navigate("/"));
   };
 
   return (
@@ -138,7 +142,10 @@ const MatchDetails = ({ data, boardId }) => {
       </Div>
       {same && (
         <Div>
-          <EmLink to={"/matchwrite"}>수정하기</EmLink>
+          <EmLink className="em" to={`/${boardId}/edit`}>
+            수정하기
+          </EmLink>
+
           <button className="normal" onClick={deleteBtn}>
             삭제하기
           </button>

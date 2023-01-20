@@ -46,7 +46,7 @@ const Story = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [accessToken]);
   const handleWriteFBtnOnClick = () => {
     navigate(`/storywrite`);
   };

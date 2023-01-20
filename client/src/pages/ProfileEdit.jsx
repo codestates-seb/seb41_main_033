@@ -6,7 +6,7 @@ import InputWrap from '../components/InputWrap';
 import gameList from '../data/gameList.json';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const ContentWrap = styled.div`

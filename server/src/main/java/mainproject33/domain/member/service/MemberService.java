@@ -52,6 +52,30 @@ public class MemberService {
         Member member = findVerifiedMember(memberId);
         verifyMember(member.getId(), user.getId());
 
+        List<Follow> followerList = followRepository.findByFollowList(member.getId());
+        List<MemberLikes> likerList = memberLikesRepository.findByMemberLikeList(member.getId());
+        List<Block> blockerList = blockRepository.findByBlockList(member.getId());
+
+        if(!followerList.isEmpty()) {
+            for(Follow follow : followerList) {
+                follow.getFollowed().getProfile().addFollowerCount(-1);
+                followRepository.delete(follow);
+            }
+        }
+
+        if(!likerList.isEmpty()) {
+            for(MemberLikes memberLikes : likerList) {
+                memberLikes.getLiked().getProfile().addLikeCount(-1);
+                memberLikesRepository.delete(memberLikes);
+            }
+        }
+
+        if(!blockerList.isEmpty()) {
+            for(Block block : blockerList) {
+                blockRepository.delete(block);
+            }
+        }
+
         memberRepository.delete(member);
     }
 

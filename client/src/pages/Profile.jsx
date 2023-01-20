@@ -4,32 +4,50 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ProfileCard from '../components/ProfileCard';
 import ProfileContent from '../components/ProfileContent';
+import { useParams } from 'react-router-dom';
 
 const ProfileWrap = styled.div`
   display: flex;
 `;
 
 const Profile = () => {
+  const { userid } = useParams();
   const [user, setUser] = useState(null);
-  const isMatch = false;
-  const isStory = true;
+  const [match, setMatch] = useState(null);
+  const [story, setStory] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/3`, {
+      .get(`${API_URL}/api/members/${userid}`, {
         // ngrok get cors 해결용
         headers: {
           'ngrok-skip-browser-warning': '69420',
         },
       })
       .then((res) => setUser(res.data.data));
+    axios
+      .get(`${API_URL}/api/members/${userid}/matches`, {
+        // ngrok get cors 해결용
+        headers: {
+          'ngrok-skip-browser-warning': '69420',
+        },
+      })
+      .then((res) => setMatch(res.data.data));
+    axios
+      .get(`${API_URL}/api/members/${userid}/boards`, {
+        // ngrok get cors 해결용
+        headers: {
+          'ngrok-skip-browser-warning': '69420',
+        },
+      })
+      .then((res) => setStory(res.data.data));
   }, []);
 
-  if (user) {
+  if (user && match && story) {
     return (
       <ProfileWrap>
         <ProfileCard
-          image={user.image}
+          image={user.profileImage}
           nickname={user.nickname}
           identifier={user.identifier}
           following={user.followingCount}
@@ -38,12 +56,7 @@ const Profile = () => {
           games={user.games}
           introduction={user.introduction}
         />
-        <ProfileContent
-          isMatch={isMatch}
-          isStory={isStory}
-          matchBoards={user.matchBoards}
-          userBoards={user.userBoards}
-        />
+        <ProfileContent matchBoards={match} userBoards={story} />
       </ProfileWrap>
     );
   } else {

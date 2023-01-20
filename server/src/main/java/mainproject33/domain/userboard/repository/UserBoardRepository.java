@@ -21,6 +21,6 @@ public interface UserBoardRepository extends JpaRepository<UserBoard, Long>
     @Query(value = "select * from user_board order by id desc", nativeQuery = true)
     List<UserBoard> findAll();
 
-    @Query(value = "SELECT * FROM USER_BOARD WHERE MEMBER_ID = :memberId", nativeQuery = true)
+    @Query(value = "select * from user_board where member_id = :memberId", nativeQuery = true)
     Page<UserBoard> findByMemberId(@Param("memberId")Long memberId, Pageable pageable);
 }

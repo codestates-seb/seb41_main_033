@@ -1,23 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const token = localStorage.getItem("key");
-
-const id = localStorage.getItem("memberId");
-const initialState = {
-  isLogin: !!token,
-  accessToken: token,
-  memberId: id,
-};
+const initialState = {};
 
 const Logined = createSlice({
   name: "logined",
   initialState,
   reducers: {
-    login: (state) => {
-      state.isLogin = true;
+    login: (state, action) => {
+      state.login = action.payload;
     },
-    logout: (state) => {
-      state.isLogin = false;
+    logout: (state, action) => {
+      state.logout = action.payload;
     },
   },
 });

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import HeartIcon from "./../assets/heart_sprite.svg";
 import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
-import { redirect, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../data/apiUrl";
 import axios from "axios";
@@ -126,6 +126,7 @@ const CommentWriteWrap = styled.div`
 `;
 
 const StoryDetail = () => {
+	const navigate = useNavigate();
 	let params = useParams();
 	//console.log(params);//{userid: '3', boardid: '197'}
 	const isLogin = useSelector((state) => state.islogin);
@@ -147,7 +148,7 @@ const StoryDetail = () => {
 			.catch((err) => {
 				console.log(err);
 			});
-	}, []);
+	});
 	let type = "";
 	if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
@@ -163,11 +164,17 @@ const StoryDetail = () => {
 				}
 			)
 			.then((res) => {
-				console.log(res);
+				setIsBoardLike(res);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+	};
+
+	const handleProfileClick = (e, memberId) => {
+		console.log(memberId);
+		//if (e.target === e.currentTartget)
+		navigate(`/profile/${memberId}`);
 	};
 
 	return (
@@ -175,9 +182,16 @@ const StoryDetail = () => {
 			<Title>스토리</Title>
 			<div className="card big">
 				<StoryHead>
-					<SinglePofileWrap className="profile_wrap" imgSize="big" imgSrc={storyData.profileImage} name={storyData.nickname} subInfo={displayedAt(storyData.createdAt)} />
+					<SinglePofileWrap
+						className="profile_wrap"
+						imgSize="big"
+						imgSrc={storyData.profileImage}
+						name={storyData.nickname}
+						subInfo={displayedAt(storyData.createdAt)}
+						onClick={(e) => handleProfileClick(e, params.memberId)}
+					/>
 					<StoryLike onClick={handleStoryLikeClick}>
-						<input type="checkbox" id="storyLikes" name="storyLikes" />
+						<input type="checkbox" id="storyLikes" name="storyLikes" checked={storyData.likeStatus ? true : false} />
 						<label htmlFor="storyLikes">{storyData.likeCount}</label>
 					</StoryLike>
 				</StoryHead>

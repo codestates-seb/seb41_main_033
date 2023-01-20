@@ -21,28 +21,10 @@ public class Profile extends Auditable {
     @JoinColumn(name = "image_id")
     private ProfileImage image;
 
-    private int followerCount;
-
-    private int followingCount;
-
-    private int likeCount;
-
-
     @Column(length = 500)
     private String introduction;
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> games = new ArrayList<>();
 
-    public void addFollowerCount(int i) {
-        followerCount += i;
-    }
-
-    public void addFollowingCount(int i) {
-        followingCount += i;
-    }
-
-    public void addLikeCount(int i) {
-        likeCount += i;
-    }
 }

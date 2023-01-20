@@ -79,7 +79,7 @@ public class UserBoardMapper
                 .uploadFileName(fileService.readUserBoardFilePath(entity.getId()))
                 .contentType(getContentType(entity))
                 .commentCount(entity.getComments().size())
-                .likeCount(entity.getLikeCount())
+                .likeCount(entity.getLikes().size())
                 .likeStatus(likeStatus)
                 .createdAt(entity.getCreatedAt())
                 .modifiedAt(entity.getModifiedAt())

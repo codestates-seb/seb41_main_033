@@ -235,6 +235,10 @@ textarea {
 	border: 1px solid var(--border-color);
 	border-radius: var(--border-radius-sm);
 }
+input:-webkit-autofill {
+	box-shadow: 0 0 0 1000px var(--input-color) inset;
+	-webkit-text-fill-color: var(--strong-color);
+}
 input[type="text"],
 input[type="number"],
 input[type="password"] {
@@ -245,8 +249,6 @@ input[type="password"] {
 	color: var(--strong-color);
 	box-sizing: border-box;
 	outline: none;
-	box-shadow: 0 0 0 1000px var(--input-color) inset;
-	-webkit-text-fill-color: var(--font-color);
 }
 input[type="text"].error,
 input[type="number"].error,

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import ProfileContentList from './ProfileContentList';
-import Pagination from './Pagination';
 import { useState } from 'react';
 
 const ContentWrap = styled.div`
@@ -24,7 +23,7 @@ const TabWrap = styled.div`
   }
 `;
 
-const ProfileContent = ({ matchBoards, userBoards }) => {
+const ProfileContent = () => {
   const [isMatch, setIsMatch] = useState(true);
   const [isStory, setIsStory] = useState(false);
 
@@ -51,13 +50,7 @@ const ProfileContent = ({ matchBoards, userBoards }) => {
           </li>
         </ul>
       </TabWrap>
-      <ProfileContentList
-        isMatch={isMatch}
-        isStory={isStory}
-        matchBoards={matchBoards}
-        userBoards={userBoards}
-      />
-      <Pagination />
+      <ProfileContentList isMatch={isMatch} isStory={isStory} />
     </ContentWrap>
   );
 };

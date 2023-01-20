@@ -90,7 +90,7 @@ const BtnWrap = styled.div`
 	}
 `;
 
-const StoryInputArea = ({ page, handleSubmit }) => {
+const StoryInputArea = ({ page, handleSubmit, data }) => {
 	const [fileName, setFileName] = useState("50MB 이하의 이미지, 영상 파일만 가능합니다");
 	const [file, setFile] = useState(null);
 	const [content, setContent] = useState("");
@@ -101,9 +101,10 @@ const StoryInputArea = ({ page, handleSubmit }) => {
 		setFileName(e.currentTarget.files[0].name);
 		setFile(e.currentTarget.files[0]);
 	};
+
 	return (
 		<Wrap className="card big">
-			<SinglePofileWrap imgSize="big" name="맑게고인신나현" subInfo="nahyeon123" />
+			<SinglePofileWrap imgSize="big" name={data.nickname} subInfo={data.identifier} />
 			<TextArea>
 				<label>내용</label>
 				<textarea placeholder="내용을 입력하세요" onChange={(e) => handleContentOnChange(e)}></textarea>

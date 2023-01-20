@@ -63,7 +63,7 @@ public class CommentMapper
                 .userBoardId(entity.getUserBoard().getId())
                 .id(entity.getId())
                 .content(entity.getContent())
-                .likeCount(entity.getLikeCount())
+                .likeCount(entity.getLikes().size())
                 .likeStatus(likeStatus)
                 .createdAt(entity.getCreatedAt())
                 .modifiedAt(entity.getModifiedAt())

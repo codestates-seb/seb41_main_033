@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
-import styled from "styled-components";
-import { ReactComponent as ImgUploadIcon } from "./../assets/addPhoto.svg";
-import PostPatch from "../components/PostPatch";
-import InputWrap from "../components/InputWrap";
-import gameList from "../data/gameList.json";
-import axios from "axios";
-import { API_URL } from "../data/apiUrl";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useCallback } from 'react';
+import styled from 'styled-components';
+import { ReactComponent as ImgUploadIcon } from './../assets/addPhoto.svg';
+import PostPatch from '../components/PostPatch';
+import InputWrap from '../components/InputWrap';
+import gameList from '../data/gameList.json';
+import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
+import { useNavigate, useParams } from 'react-router-dom';
+
+
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -29,7 +31,6 @@ const ProfileWrap = styled.div`
     align-items: center;
     margin-bottom: 16px;
     font-size: var(--font-body2-size);
-
     .custom_input {
       flex: 1;
       position: relative;
@@ -38,6 +39,7 @@ const ProfileWrap = styled.div`
       background: var(--input-color);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
+
 
       input[type="file"] {
         position: absolute;
@@ -58,7 +60,6 @@ const ProfileWrap = styled.div`
       border: 1px solid var(--white);
       border-radius: var(--border-radius-sm);
       color: var(--primary-color);
-
       svg {
         width: 24px;
         height: 24px;

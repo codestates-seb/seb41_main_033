@@ -24,7 +24,7 @@ const TabWrap = styled.div`
   }
 `;
 
-const ProfileContent = ({ matchBoards, userBoards }) => {
+const ProfileContent = () => {
   const [isMatch, setIsMatch] = useState(true);
   const [isStory, setIsStory] = useState(false);
 
@@ -51,12 +51,7 @@ const ProfileContent = ({ matchBoards, userBoards }) => {
           </li>
         </ul>
       </TabWrap>
-      <ProfileContentList
-        isMatch={isMatch}
-        isStory={isStory}
-        matchBoards={matchBoards}
-        userBoards={userBoards}
-      />
+      <ProfileContentList isMatch={isMatch} isStory={isStory} />
       <Pagination />
     </ContentWrap>
   );

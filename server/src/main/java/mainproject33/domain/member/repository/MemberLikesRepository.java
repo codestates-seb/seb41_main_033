@@ -11,4 +11,6 @@ public interface MemberLikesRepository extends JpaRepository<MemberLikes, Long> 
     @Query(value = "select * from member_likes where liker_id = :likerId and liked_id = :likedId", nativeQuery = true)
     Optional<MemberLikes> findByMemberLikes(Long likerId, Long likedId);
 
+    @Query(value = "select * from member_likes where liker_id = :likerId", nativeQuery = true)
+    List<MemberLikes> findByMemberLikeList(Long likerId);
 }

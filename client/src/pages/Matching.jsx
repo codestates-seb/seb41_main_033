@@ -24,6 +24,7 @@ const Matching = () => {
   const [matchinglist, setMatchinglist] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
+  const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
   const matchingBtn = () => {
@@ -36,17 +37,18 @@ const Matching = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/matches?page=${page}`, {
+      .get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {
         headers: { "ngrok-skip-browser-warning": "69420" },
       })
       .then((res) => {
         setMatchinglist(res.data.data);
         setTotal(res.data.pageInfo.totalPages);
       });
-  }, [page]);
+  }, [page, keyword]);
+
   return (
     <Wrap>
-      <SearchBar />
+      <SearchBar setKeyword={setKeyword} />
       <Ul>
         {matchinglist?.map((el) => (
           <li key={el.id}>

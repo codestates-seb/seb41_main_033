@@ -10,7 +10,7 @@ const Logined = createSlice({
       state.login = action.payload;
     },
     logout: (state, action) => {
-      state.logout = action.payload;
+      state.login = action.payload;
     },
   },
 });

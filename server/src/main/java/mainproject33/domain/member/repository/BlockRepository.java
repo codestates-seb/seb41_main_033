@@ -14,6 +14,8 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
 
     @Query(value = "select * from block where blocker_id = :blockerId", nativeQuery = true)
     List<Block> findByBlockList(Long blockerId);
+    @Query(value = "select * from block where blocker_id = :memberId or blocked_id = :memberId", nativeQuery = true)
+    List<Block> findByAllBlockList(Long memberId);
 
     @Query(value = "select blocked_id from block where blocker_id = :blockerId", nativeQuery = true)
     List<Long> findBlockedIdByBlockerId(Long blockerId);

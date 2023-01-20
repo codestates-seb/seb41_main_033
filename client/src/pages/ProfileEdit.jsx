@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
-import styled from "styled-components";
-import { ReactComponent as ImgUploadIcon } from "./../assets/addPhoto.svg";
-import PostPatch from "../components/PostPatch";
-import InputWrap from "../components/InputWrap";
-import gameList from "../data/gameList.json";
-import axios from "axios";
-import { API_URL } from "../data/apiUrl";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useCallback } from 'react';
+import styled from 'styled-components';
+import { ReactComponent as ImgUploadIcon } from './../assets/addPhoto.svg';
+import PostPatch from '../components/PostPatch';
+import InputWrap from '../components/InputWrap';
+import gameList from '../data/gameList.json';
+import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
+import { useNavigate, useParams } from 'react-router-dom';
+
 
 const ContentWrap = styled.div`
   margin: 24px 0;

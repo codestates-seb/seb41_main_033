@@ -99,9 +99,9 @@ public class MemberMapper {
         profileResponse.setGames(games);
 
         // 팔로우 및 좋아요 수
-        profileResponse.setFollowerCount(member.getProfile().getFollowerCount());
-        profileResponse.setFollowingCount(member.getProfile().getFollowingCount());
-        profileResponse.setLikeCount(member.getProfile().getLikeCount());
+        profileResponse.setFollowerCount(followRepository.findByFollowerList(member.getId()).size());
+        profileResponse.setFollowingCount(followRepository.findByFollowingList(member.getId()).size());
+        profileResponse.setLikeCount(memberLikesRepository.findByLikedList(member.getId()).size());
 
         // 팔로우, 좋아요, 차단 상태
         if (user != null) {

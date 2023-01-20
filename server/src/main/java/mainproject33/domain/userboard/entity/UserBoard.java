@@ -26,9 +26,6 @@ public class UserBoard extends Auditable
     @Column(nullable = false)
     private String content;
 
-    @Column(columnDefinition = "integer default 0", nullable = false)
-    private int likeCount;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -65,9 +62,5 @@ public class UserBoard extends Auditable
         this.content = content;
     }
 
-    public void changeLikeCount(int num)
-    {
-        this.likeCount += num;
-    }
 
 }

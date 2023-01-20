@@ -1,8 +1,10 @@
 import styled from "styled-components";
+import { useState } from "react";
 import HeartIcon from "./../assets/heart_sprite.svg";
 import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
 import SinglePofileWrap from "../components/SingleProfileWrap";
 import StoryComment from "../components/StoryComment";
+import StoryBtn from "../components/StoryBtn";
 
 const Title = styled.h4`
 	margin-top: 24px;
@@ -71,6 +73,16 @@ const StoryBody = styled.div`
 	}
 `;
 
+const BtnWrap = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 24px;
+	button {
+		margin-right: 12px;
+	}
+`;
+
 const CommentsCountTag = styled.div`
 	display: flex;
 	align-items: center;
@@ -89,8 +101,27 @@ const CommentsCountTag = styled.div`
 	}
 `;
 
+const CommentWriteWrap = styled.div`
+	margin-bottom: 24px;
+	text-align: right;
+	.title {
+		width: 100%;
+		margin-bottom: 16px;
+		text-align: left;
+		font-size: var(--font-body1-size);
+		color: var(--strong-color);
+	}
+	textarea {
+		margin-bottom: 16px;
+	}
+	button.normal {
+		border-radius: var(--border-radius-sm);
+	}
+`;
+
 const StoryDetail = () => {
 	let isComment = true;
+	const [isMe, setIsMe] = useState(true);
 
 	return (
 		<>
@@ -118,8 +149,19 @@ const StoryDetail = () => {
 						<CommentIcon />1
 					</CommentsCountTag>
 				) : null}
+				{isMe ? (
+					<BtnWrap>
+						<StoryBtn size="big" type="edit" />
+						<StoryBtn size="big" type="delete" />
+					</BtnWrap>
+				) : null}
 			</div>
 			<Title>댓글</Title>
+			<CommentWriteWrap className="card sm">
+				<div className="title">댓글 작성</div>
+				<textarea placeholder="댓글을 입력하세요"></textarea>
+				<button className="normal">댓글 입력</button>
+			</CommentWriteWrap>
 			<StoryComment />
 		</>
 	);

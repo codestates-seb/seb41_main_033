@@ -25,9 +25,9 @@ const Matching = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
   const navigate = useNavigate();
-  const isLogin = useSelector((state) => state.islogin);
+  const loginInfo = useSelector((state) => state.islogin.login);
   const matchingBtn = () => {
-    if (isLogin) {
+    if (loginInfo) {
       navigate("/matchwrite");
     } else {
       navigate("/login");

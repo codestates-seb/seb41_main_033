@@ -3,7 +3,7 @@ import displayedAt from "../util/displayedAt";
 import { useState, useEffect } from "react";
 import { API_URL } from "../data/apiUrl";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import matchGame from "../util/matchGame";
 
@@ -96,11 +96,11 @@ const Description = styled.div`
 `;
 const MatchDetails = ({ data, boardId }) => {
   const [same, setSame] = useState(false);
-  const memberId = Number(useSelector((state) => state.islogin.memberId));
-  const boardid = useParams();
   const navigate = useNavigate();
+  const loginInfo = useSelector((state) => state.islogin.login);
+
   useEffect(() => {
-    if (data.memberId === memberId) {
+    if (data.memberId === loginInfo?.memberId) {
       setSame(true);
     }
   }, []);

@@ -91,10 +91,9 @@ const Login = () => {
         )
         .then((res) => {
           localStorage.clear();
-          const token = res.headers.authorization;
-          localStorage.setItem("key", token);
-          localStorage.setItem("memberId", res.data.data.id);
-          dispatch(login());
+          const accessToken = res.headers.authorization;
+          const memberId = res.data.data.id;
+          dispatch(login({ accessToken, memberId, isLogin: true }));
           navigate(`/`);
         });
     }

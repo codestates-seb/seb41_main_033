@@ -76,7 +76,7 @@ const TagsInput = styled.div`
 
 const MatchingEdit = () => {
   const { gameInfo } = useSelector((state) => state.games);
-  console.log(gameInfo);
+  const loginInfo = useSelector((state) => state.islogin.login);
   const navigate = useNavigate();
   const [info, setInfo] = useState({
     title: gameInfo?.title,
@@ -121,7 +121,7 @@ const MatchingEdit = () => {
       axios
         .patch(`${API_URL}/api/matches/${gameInfo.id}`, data, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("key")}`,
+            Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
         .then(() => navigate("/"));

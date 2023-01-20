@@ -1,10 +1,16 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeartIcon from "./../assets/heart_sprite.svg";
 import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { API_URL } from "../data/apiUrl";
+import axios from "axios";
+import displayedAt from "../util/displayedAt";
 import SinglePofileWrap from "../components/SingleProfileWrap";
 import StoryComment from "../components/StoryComment";
 import StoryBtn from "../components/StoryBtn";
+import StoryFileView from "./../components/StoryFileView";
 
 const Title = styled.h4`
 	margin-top: 24px;
@@ -24,6 +30,7 @@ const StoryHead = styled.div`
 
 	.profile_wrap {
 		flex: 1;
+		display: block;
 	}
 `;
 
@@ -77,7 +84,7 @@ const BtnWrap = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-top: 24px;
+	margin-top: 48px;
 	button {
 		margin-right: 12px;
 	}
@@ -120,33 +127,75 @@ const CommentWriteWrap = styled.div`
 `;
 
 const StoryDetail = () => {
-	let isComment = true;
-	const [isMe, setIsMe] = useState(true);
+	const navigate = useNavigate();
+	let params = useParams();
+	const isLogin = useSelector((state) => state.islogin);
+	const [isMe, setIsMe] = useState(false);
+	const [storyData, setStoryData] = useState({});
+	//const [isBoardLike, setIsBoardLike] = useState(storyData.likeStatus);
+	useEffect(() => {
+		axios
+			.get(`${API_URL}/api/boards/${params.boardid}`, {
+				headers: {
+					//"ngrok-skip-browser-warning": "69420",
+					Authorization: `Bearer ${isLogin.accessToken}`,
+				},
+			})
+			.then((res) => {
+				setStoryData(res.data.data);
+				if (res.data.data.memberId === Number(isLogin.memberId)) setIsMe(true);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	});
+	let type = "";
+	if (storyData.contentType) type = storyData.contentType.split("/")[0];
+
+	const handleStoryLikeClick = () => {
+		//23.1.21. 좋아요 기능 중단
+		// axios
+		// 	.post(
+		// 		`${API_URL}/api/boards/${params.boardid}/likes`,
+		// 		{},
+		// 		{
+		// 			headers: {
+		// 				Authorization: `Bearer ${isLogin.accessToken}`,
+		// 			},
+		// 		}
+		// 	)
+		// 	.then((res) => {
+		// 		//setIsBoardLike(res);
+		// 		console.log(res);
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err);
+		// 	});
+	};
 
 	return (
 		<>
 			<Title>스토리</Title>
 			<div className="card big">
 				<StoryHead>
-					<SinglePofileWrap className="profile_wrap" imgSize="big" name={`맑게고인신나현`} subInfo={`2분전`} />
-					<StoryLike>
-						<input type="checkbox" id="storyLikes" name="storyLikes" />
-						<label htmlFor="storyLikes">0</label>
-					</StoryLike>
+					<a href={`/profile/${params.userid}`} title="유저 프로필로 이동" className="profile_wrap">
+						<SinglePofileWrap imgSize="big" imgSrc={storyData.profileImage} name={storyData.nickname} subInfo={displayedAt(storyData.createdAt)} />
+					</a>
+					{storyData.likeStatus !== undefined ? (
+						<StoryLike onClick={handleStoryLikeClick}>
+							<input type="checkbox" id="storyLikes" name="storyLikes" defaultChecked={storyData.likeStatus ? true : null} />
+							<label htmlFor="storyLikes">{storyData.likeCount}</label>
+						</StoryLike>
+					) : null}
 				</StoryHead>
 				<StoryBody>
-					<div className="img_wrap">
-						<img src="https://blog.kakaocdn.net/dn/sqJj4/btrRAEdJj37/KoHvQKIfa2bUIJvKv0wELK/img.png" />
-					</div>
-					<div className="content_wrap">
-						뜨악어!뜨아거!뜨악어!뜨아거!뜨악어!뜨악어!뜨악어!뜨악어!
-						<br />
-						진화하면 악뜨거!악뜨거!
-					</div>
+					<StoryFileView size="big" fileName={storyData.uploadFileName} contentType={storyData.contentType} />
+					<div className="content_wrap">{storyData.content}</div>
 				</StoryBody>
-				{isComment ? (
+				{storyData.commentCount ? (
 					<CommentsCountTag>
-						<CommentIcon />1
+						<CommentIcon />
+						{storyData.commentCount}
 					</CommentsCountTag>
 				) : null}
 				{isMe ? (

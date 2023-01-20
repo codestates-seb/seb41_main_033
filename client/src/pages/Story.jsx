@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../data/apiUrl";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const TitleWrap = styled.div`
 	display: flex;
@@ -29,17 +30,17 @@ const StoryBoardWrap = styled.div`
 	}
 `;
 
-const ACCESS_TOKEN = localStorage.getItem("key");
-
 const Story = () => {
+	const isLogin = useSelector((state) => state.islogin);
+	const ACCESS_TOKEN = isLogin.accessToken;
 	const navigate = useNavigate();
 	const [storyData, setStoryData] = useState([]);
 	useEffect(() => {
 		axios
 			.get(`${API_URL}/api/boards?page=1`, {
 				headers: {
-					"ngrok-skip-browser-warning": "69420",
-					"Authorization": `Bearer ${ACCESS_TOKEN}`,
+					// "ngrok-skip-browser-warning": "69420",
+					Authorization: `Bearer ${ACCESS_TOKEN}`,
 				},
 			})
 			.then((res) => {

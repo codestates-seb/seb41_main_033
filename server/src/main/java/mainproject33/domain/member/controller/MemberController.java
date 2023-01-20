@@ -141,7 +141,7 @@ public class MemberController {
                                            @PageableDefault(size = 8, sort = "id",
                                                    direction = Sort.Direction.DESC)Pageable pageable) {
 
-        Page<MatchBoard> pageMatches = matchBoardService.readProfileMatchBoards(memberId, pageable);
+        Page<MatchBoard> pageMatches = matchBoardService.readProfileMatchBoards(memberId, pageable.previousOrFirst());
 
         List<MatchBoard> matchBoards = pageMatches.getContent();
         List<MatchBoardDto.Response> responses = matchBoardMapper.matchBoardsToMatchBoardResponses(matchBoards);

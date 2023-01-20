@@ -22,8 +22,6 @@ public class Comment extends Auditable
 
     private String content;
 
-    private int likeCount = 0;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -62,8 +60,4 @@ public class Comment extends Auditable
             userBoard.getComments().add(this);
     }
 
-    public void changeLikeCount(int num)
-    {
-        this.likeCount += num;
-    }
 }

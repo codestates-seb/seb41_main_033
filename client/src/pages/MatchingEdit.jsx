@@ -6,7 +6,7 @@ import PostPatch from "../components/PostPatch";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
-
+import { useSelector } from "react-redux";
 const Label = styled.label`
   font-style: normal;
   font-weight: 500;
@@ -75,21 +75,16 @@ const TagsInput = styled.div`
 `;
 
 const MatchingEdit = () => {
-  const matchInfo = {
-    title: "자유랭크 탑 놀아요",
-    content: "골드 오른 장인 대기중",
-    game: "리그 오브 레전드",
-    team: "1",
-    tags: ["#즐겜환영", "#욕은싫어요", "#든든한국밥챔"],
-  };
+  const { gameInfo } = useSelector((state) => state.games);
+  const loginInfo = useSelector((state) => state.islogin.login);
   const navigate = useNavigate();
   const [info, setInfo] = useState({
-    title: matchInfo.title,
-    team: matchInfo.team,
-    content: matchInfo.content,
+    title: gameInfo?.title,
+    team: gameInfo?.team,
+    content: gameInfo?.content,
   });
-  const [tags, setTags] = useState(matchInfo.tags);
-  const [game, setGame] = useState(matchInfo.game);
+  const [tags, setTags] = useState(gameInfo?.tags);
+  const [game, setGame] = useState(gameInfo?.game.korTitle);
 
   const removeTags = (index) => {
     const newTag = tags.filter((_, idx) => idx !== index);
@@ -124,9 +119,9 @@ const MatchingEdit = () => {
     const data = { title, game, team, tags, content };
     if (!isEmpty(data)) {
       axios
-        .patch(`${API_URL}/api/matches/${"boardId"}`, {
+        .patch(`${API_URL}/api/matches/${gameInfo.id}`, data, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("key")}`,
+            Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
         .then(() => navigate("/"));
@@ -136,12 +131,11 @@ const MatchingEdit = () => {
 
   return (
     <PostPatch
-      image={""}
-      nickname={"아직몰라"}
-      identifier={"아직몰라"}
-      link1="/"
+      image={gameInfo?.profileImage}
+      nickname={gameInfo?.nickname}
+      identifier={gameInfo?.identifier}
       button1="작성완료"
-      link2="/"
+      link2="-1"
       button2="취소"
       handleSubmit={submitBtn}
     >
@@ -151,10 +145,11 @@ const MatchingEdit = () => {
           type="text"
           name="title"
           id="title"
-          length={"30"}
+          maxLength="30"
+          minLength="5"
           placeholder="제목을 입력하세요"
           onChange={changeValue}
-          value={title}
+          value={title || ""}
         />
       </div>
       <div>
@@ -163,7 +158,7 @@ const MatchingEdit = () => {
           id="game"
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          game={game}
+          game={game || ""}
           setGame={setGame}
         />
       </div>
@@ -173,15 +168,16 @@ const MatchingEdit = () => {
           type="text"
           name="team"
           id="team"
-          value={team}
+          value={team || ""}
           placeholder="팀원수를 입력하세요"
           onChange={changeValue}
         />
       </div>
+
       <Label htmlFor="tag">태그</Label>
       <TagsInput>
         <ul id="tags">
-          {tags.map((tag, index) => (
+          {tags?.map((tag, index) => (
             <li key={index} className="tag" onClick={() => removeTags(index)}>
               <span className="tag_title">{tag}</span>
               <span>×</span>
@@ -204,9 +200,9 @@ const MatchingEdit = () => {
           name="content"
           placeholder="상세설명을 입력하세요"
           onChange={changeValue}
-          value={content}
-          maxlength="500"
-          minlength="5"
+          value={content || ""}
+          maxLength="500"
+          minLength="5"
         />
       </div>
     </PostPatch>

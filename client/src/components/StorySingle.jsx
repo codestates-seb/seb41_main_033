@@ -88,7 +88,7 @@ const StorySingle = ({ data }) => {
 
 	const handleNaviOnClick = (e, memberId, boardId) => {
 		// if (e.target === e.currentTarget)
-		navigate(`/${memberId}/${boardId}`);
+		navigate(`/story/${memberId}/${boardId}`);
 	};
 
 	return (

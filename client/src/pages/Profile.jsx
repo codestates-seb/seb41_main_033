@@ -16,12 +16,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}`, {
-        // ngrok get cors 해결용
-        headers: {
-          'ngrok-skip-browser-warning': '69420',
-        },
-      })
+      .get(`${API_URL}/api/members/${userid}`)
       .then((res) => setUser(res.data.data));
   }, []);
 

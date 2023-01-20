@@ -82,24 +82,23 @@ const ProfileContentList = ({ isMatch, isStory }) => {
   const { userid } = useParams();
   const [match, setMatch] = useState(null);
   const [story, setStory] = useState(null);
+  const [page, setPage] = useState(1);
+  const [matchPageInfo, setMatchPageInfo] = useState(null);
+  const [storyPageInfo, setStoryPageInfo] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}/matches`, {
-        // ngrok get cors 해결용
-        headers: {
-          'ngrok-skip-browser-warning': '69420',
-        },
-      })
-      .then((res) => setMatch(res.data.data));
+      .get(`${API_URL}/api/members/${userid}/matches?page=${page}`)
+      .then((res) => {
+        setMatch(res.data.data);
+        setMatchPageInfo(res.data.pageInfo);
+      });
     axios
-      .get(`${API_URL}/api/members/${userid}/boards`, {
-        // ngrok get cors 해결용
-        headers: {
-          'ngrok-skip-browser-warning': '69420',
-        },
-      })
-      .then((res) => setStory(res.data.data));
+      .get(`${API_URL}/api/members/${userid}/boards?page=${page}`)
+      .then((res) => {
+        setStory(res.data.data);
+        setStoryPageInfo(res.data.pageInfo);
+      });
   }, []);
 
   if (match && story) {
@@ -163,7 +162,13 @@ const ProfileContentList = ({ isMatch, isStory }) => {
               : null}
           </ul>
         </ListWrap>
-        <Pagination />
+        <Pagination
+          isMatch={isMatch}
+          page={page}
+          setPage={setPage}
+          matchPageInfo={matchPageInfo}
+          storyPageInfo={storyPageInfo}
+        />
       </>
     );
   } else return null;

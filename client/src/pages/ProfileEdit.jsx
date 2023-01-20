@@ -30,7 +30,6 @@ const ProfileWrap = styled.div`
     align-items: center;
     margin-bottom: 16px;
     font-size: var(--font-body2-size);
-
     .custom_input {
       flex: 1;
       position: relative;
@@ -40,7 +39,9 @@ const ProfileWrap = styled.div`
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
 
+
       input[type="file"] {
+
         position: absolute;
         left: 0;
         top: 0;
@@ -59,7 +60,6 @@ const ProfileWrap = styled.div`
       border: 1px solid var(--white);
       border-radius: var(--border-radius-sm);
       color: var(--primary-color);
-
       svg {
         width: 24px;
         height: 24px;

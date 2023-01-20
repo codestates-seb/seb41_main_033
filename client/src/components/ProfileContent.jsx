@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import ProfileContentList from './ProfileContentList';
-import Pagination from './Pagination';
 import { useState } from 'react';
 
 const ContentWrap = styled.div`
@@ -52,7 +51,6 @@ const ProfileContent = () => {
         </ul>
       </TabWrap>
       <ProfileContentList isMatch={isMatch} isStory={isStory} />
-      <Pagination />
     </ContentWrap>
   );
 };

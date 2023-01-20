@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { ReactComponent as Comment } from '../assets/sms.svg';
+import Pagination from './Pagination';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import matchGame from '../util/matchGame';
@@ -99,68 +100,71 @@ const ProfileContentList = ({ isMatch, isStory }) => {
         },
       })
       .then((res) => setStory(res.data.data));
-  });
+  }, []);
 
   if (match && story) {
     return (
-      <ListWrap>
-        <ul>
-          {isMatch
-            ? match.map((match) => (
-                <li key={match.id}>
-                  <div className="game_container">
-                    <img
-                      className="game_icon"
-                      src={matchGame(match.game).image}
-                      alt="게임 아이콘"
-                    />
-                  </div>
-                  <div className="content_container match">
-                    <a href={`/${match.id}/detail`}>
-                      <div className="content_title">{match.title}</div>
-                    </a>
-                    <div className="content_date">
-                      {new Date(match.createdAt).toLocaleString()}
+      <>
+        <ListWrap>
+          <ul>
+            {isMatch
+              ? match.map((match) => (
+                  <li key={match.id}>
+                    <div className="game_container">
+                      <img
+                        className="game_icon"
+                        src={matchGame(match.game).image}
+                        alt="게임 아이콘"
+                      />
                     </div>
-                  </div>
-                </li>
-              ))
-            : null}
-          {isStory
-            ? story.map((story) => (
-                <li key={story.id}>
-                  <div className="content_container story">
-                    <a href={`/story/${userid}/${story.id}`}>
-                      <div className="content_title">{story.content}</div>
-                    </a>
-                    <div className="content_date">
-                      {new Date(story.createdAt).toLocaleString()}
+                    <div className="content_container match">
+                      <a href={`/${match.id}/detail`}>
+                        <div className="content_title">{match.title}</div>
+                      </a>
+                      <div className="content_date">
+                        {new Date(match.createdAt).toLocaleString()}
+                      </div>
                     </div>
-                    <div className="content_count">
-                      {story.likeCount ? (
-                        <div className="content_like">
-                          <Heart width="10px" />
-                          <span>{story.likeCount}</span>
-                        </div>
-                      ) : null}
-                      {story.commentCount ? (
-                        <div className="content_comment">
-                          <Comment width="10px" />
-                          <span>{story.commentCount}</span>
-                        </div>
-                      ) : null}
+                  </li>
+                ))
+              : null}
+            {isStory
+              ? story.map((story) => (
+                  <li key={story.id}>
+                    <div className="content_container story">
+                      <a href={`/story/${userid}/${story.id}`}>
+                        <div className="content_title">{story.content}</div>
+                      </a>
+                      <div className="content_date">
+                        {new Date(story.createdAt).toLocaleString()}
+                      </div>
+                      <div className="content_count">
+                        {story.likeCount ? (
+                          <div className="content_like">
+                            <Heart width="10px" />
+                            <span>{story.likeCount}</span>
+                          </div>
+                        ) : null}
+                        {story.commentCount ? (
+                          <div className="content_comment">
+                            <Comment width="10px" />
+                            <span>{story.commentCount}</span>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                  {story.uploadFileName ? (
-                    <div className="image_container">
-                      <img src={story.uploadFileName} alt="스토리 이미지" />
-                    </div>
-                  ) : null}
-                </li>
-              ))
-            : null}
-        </ul>
-      </ListWrap>
+                    {story.uploadFileName ? (
+                      <div className="image_container">
+                        <img src={story.uploadFileName} alt="스토리 이미지" />
+                      </div>
+                    ) : null}
+                  </li>
+                ))
+              : null}
+          </ul>
+        </ListWrap>
+        <Pagination />
+      </>
     );
   } else return null;
 };

@@ -8,6 +8,7 @@ import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { useNavigate, useParams } from 'react-router-dom';
 
+
 const ContentWrap = styled.div`
   margin: 24px 0;
   label {
@@ -37,7 +38,10 @@ const ProfileWrap = styled.div`
       background: var(--input-color);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
-      input[type='file'] {
+
+
+      input[type="file"] {
+
         position: absolute;
         left: 0;
         top: 0;
@@ -80,7 +84,7 @@ const GameWrap = styled.div`
   .game {
     margin-top: 8px;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     display: none;
   }
   .game_title {
@@ -91,7 +95,7 @@ const GameWrap = styled.div`
     font-size: var(--font-caption-size);
     cursor: pointer;
   }
-  input[type='checkbox']:checked + .game_title {
+  input[type="checkbox"]:checked + .game_title {
     background: var(--bg-color);
     color: var(--yellow);
   }
@@ -115,11 +119,11 @@ const BioWrap = styled.div`
 const ProfileEdit = () => {
   const { userid } = useParams();
   const [user, setUser] = useState(null);
-  const [nickname, setNickname] = useState('');
-  const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
-  const [file, setFile] = useState('');
+  const [nickname, setNickname] = useState("");
+  const [fileName, setFileName] = useState("이미지 파일을 선택하세요");
+  const [file, setFile] = useState("");
   const [checkedGame, setCheckedGame] = useState([]);
-  const ACCESS_TOKEN = localStorage.getItem('key');
+  const ACCESS_TOKEN = localStorage.getItem("key");
   const navigate = useNavigate();
 
   const handleNickname = (e) => {
@@ -137,7 +141,7 @@ const ProfileEdit = () => {
         if (checkedGame.length < 5) {
           setCheckedGame((prev) => [...prev, item]);
         } else {
-          alert('5개까지만 선택 가능합니다.');
+          alert("5개까지만 선택 가능합니다.");
           e.target.checked = null;
         }
       } else {
@@ -160,19 +164,19 @@ const ProfileEdit = () => {
     };
 
     formData.append(
-      'data',
+      "data",
       new Blob([JSON.stringify(data)], {
-        type: 'application/json',
+        type: "application/json",
       })
     );
     if (file) {
-      formData.append('image', file);
+      formData.append("image", file);
     }
 
     axios
       .patch(`${API_URL}/api/members/${userid}`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${ACCESS_TOKEN}`,
         },
       })
@@ -184,7 +188,7 @@ const ProfileEdit = () => {
       .get(`${API_URL}/api/members/${userid}`, {
         // ngrok get cors 해결용
         headers: {
-          'ngrok-skip-browser-warning': '69420',
+          "ngrok-skip-browser-warning": "69420",
         },
       })
       .then((res) => {
@@ -211,7 +215,7 @@ const ProfileEdit = () => {
             <InputWrap
               type="text"
               name="nickname"
-              value={user.nickname || ''}
+              value={user.nickname || ""}
               onChange={handleNickname}
             />
           </NicknameWrap>
@@ -263,7 +267,7 @@ const ProfileEdit = () => {
             <label htmlFor="bio">자기소개 수정</label>
             <textarea
               id="bio"
-              value={user.introduction || ''}
+              value={user.introduction || ""}
               placeholder="내용을 입력하세요"
               onChange={handleBio}
             />

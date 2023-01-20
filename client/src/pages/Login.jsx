@@ -60,46 +60,45 @@ const Label = styled.label`
 `;
 
 const Login = () => {
-	const [identifier, setIdentifier] = useState("");
-	const [password, setPassword] = useState("");
-	const [idError, setIdError] = useState(false);
-	const [psdError, setPsdError] = useState(false);
-	const idValid = /^[A-z0-9]{4,16}$/;
-	const psdValid = /^(?=.*[A-z])(?=.*\d)(?=.*[~!@])[A-z\d~!@]{8,20}$/;
-	const idValueCheck = idValid.test(identifier);
-	const psdValueCheck = psdValid.test(password);
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	const submitHandle = (e) => {
-		e.preventDefault();
-		if (!idValueCheck) {
-			setIdError(true);
-		} else if (!psdValueCheck) {
-			setIdError(false);
-			setPsdError(true);
-		} else if (idValueCheck && psdValueCheck) {
-			axios
-				.post(
-					`${API_URL}/api/members/login`,
-					{
-						identifier,
-						password,
-					},
-					{
-						withCredentials: true,
-					}
-				)
-				.then((res) => {
-					localStorage.clear();
-					const token = res.headers.authorization;
-					localStorage.setItem("key", token);
-					localStorage.setItem("memberId", res.data.id);
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [idError, setIdError] = useState(false);
+  const [psdError, setPsdError] = useState(false);
+  const idValid = /^[A-z0-9]{4,16}$/;
+  const psdValid = /^(?=.*[A-z])(?=.*\d)(?=.*[~!@])[A-z\d~!@]{8,20}$/;
+  const idValueCheck = idValid.test(identifier);
+  const psdValueCheck = psdValid.test(password);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const submitHandle = (e) => {
+    e.preventDefault();
+    if (!idValueCheck) {
+      setIdError(true);
+    } else if (!psdValueCheck) {
+      setIdError(false);
+      setPsdError(true);
+    } else if (idValueCheck && psdValueCheck) {
+      axios
+        .post(
+          `${API_URL}/api/members/login`,
+          {
+            identifier,
+            password,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          localStorage.clear();
+          const accessToken = res.headers.authorization;
+          const memberId = res.data.data.id;
+          dispatch(login({ accessToken, memberId, isLogin: true }));
+          navigate(`/`);
+        });
+    }
+  };
 
-					dispatch(login());
-					navigate(`/`);
-				});
-		}
-	};
 
 	return (
 		<Flex>

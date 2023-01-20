@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import SinglePofileWrap from './SingleProfileWrap';
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import SinglePofileWrap from "./SingleProfileWrap";
 
 const CardWrap = styled.div`
   width: 100%;

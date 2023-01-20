@@ -4,6 +4,8 @@ import UserCard from "../components/UserCard";
 import { API_URL } from "../data/apiUrl";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { gameInfo } from "../redux/slice/matchInfo";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 const Wrap = styled.div`
   display: flex;
@@ -12,7 +14,7 @@ const Wrap = styled.div`
 const MatchingDetail = () => {
   const [info, setInfo] = useState("");
   const { boardid } = useParams();
-
+  const dispatch = useDispatch();
   useEffect(() => {
     axios
       .get(`${API_URL}/api/matches/${boardid}`, {
@@ -20,6 +22,7 @@ const MatchingDetail = () => {
       })
       .then((res) => {
         setInfo(res.data.data);
+        dispatch(gameInfo(res.data.data));
       });
   }, []);
 

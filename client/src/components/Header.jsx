@@ -75,7 +75,7 @@ const BtnWrap = styled.div`
 
 const Header = () => {
   const { accessToken, isLogin, memberId } = useSelector(
-    (state) => state.islogin
+    (state) => state.islogin.login
   );
   const [user, setUser] = useState({});
 

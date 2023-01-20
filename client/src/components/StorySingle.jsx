@@ -17,40 +17,6 @@ const TextArea = styled.div`
 	flex: 1;
 	margin-right: 32px;
 
-	a {
-		display: block;
-	}
-
-	.profile {
-		display: flex;
-		align-items: center;
-		margin-bottom: 16px;
-
-		.profile_img_wrap {
-			width: 40px;
-			height: 40px;
-			margin-right: 16px;
-			border-radius: 40px;
-			svg,
-			img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-		}
-		.profile_info_wrap {
-			.username {
-				line-height: var(--line-height-lg);
-				font-size: var(--font-body1-size);
-				font-weight: var(--font-weight-medium);
-				color: var(--strong-color);
-			}
-			.time {
-				font-size: var(--font-body2-size);
-			}
-		}
-	}
-
 	.content {
 		font-size: var(--font-body2-size);
 	}
@@ -91,18 +57,16 @@ const StorySingle = ({ data }) => {
 	};
 
 	const handleProfileClick = (e, memberId) => {
-		console.log();
-		if (e.target === e.currentTartget) navigate(`/profile/${memberId}`);
+		e.stopPropagation();
+		navigate(`/profile/${memberId}`);
 	};
 
 	return (
 		<StoryWrap className="card md" onClick={(e) => handleNaviOnClick(e, data.memberId, data.id)}>
 			<div className="storyMain">
 				<TextArea>
-					<div onClick={(e) => handleProfileClick(e, data.memberId)}>
-						{/* <Link to={`/profile/${data.memberId}`}> */}
+					<div onClick={(e) => handleProfileClick(e, data.memberId)} title="">
 						<SinglePofileWrap imgSrc={data.profileImage} name={data.nickname} subInfo={displayedAt(data.createdAt)} />
-						{/* </Link> */}
 					</div>
 					<div className="content">{data.content}</div>
 				</TextArea>

@@ -52,6 +52,7 @@ public class MemberService {
         Member member = findVerifiedMember(memberId);
         verifyMember(member.getId(), user.getId());
 
+
         List<Follow> followList = followRepository.findByAllFollowList(member.getId());
         List<MemberLikes> likeList = memberLikesRepository.findByAllMemberLikeList(member.getId());
         List<Block> blockList = blockRepository.findByAllBlockList(member.getId());

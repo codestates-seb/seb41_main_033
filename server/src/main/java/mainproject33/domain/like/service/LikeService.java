@@ -35,12 +35,10 @@ public class LikeService
         if(findLike)
         {
             boardLikeRepository.save(new Like(member, userBoard));
-            userBoard.changeLikeCount(1);
             return true;
         }
         else
         {
-            userBoard.changeLikeCount(-1);
             boardLikeRepository.deleteByMemberAndUserBoard(member, userBoard);
             return false;
         }
@@ -54,13 +52,11 @@ public class LikeService
         if(findLike)
         {
             boardLikeRepository.save(new Like(member, comment));
-            comment.changeLikeCount(1);
             return true;
         }
 
         else
         {
-            comment.changeLikeCount(-1);
             boardLikeRepository.deleteByMemberAndComment(member, comment);
             return false;
         }

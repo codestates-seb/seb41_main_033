@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import HeartIcon from "./../assets/heart_sprite.svg";
 import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
-import { useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../data/apiUrl";
 import axios from "axios";
@@ -129,8 +129,9 @@ const StoryDetail = () => {
 	let params = useParams();
 	//console.log(params);//{userid: '3', boardid: '197'}
 	const isLogin = useSelector((state) => state.islogin);
-	const [isMe, setIsMe] = useState(true);
+	const [isMe, setIsMe] = useState(false);
 	const [storyData, setStoryData] = useState({});
+	const [isBoardLike, setIsBoardLike] = useState(false);
 	useEffect(() => {
 		axios
 			.get(`${API_URL}/api/boards/${params.boardid}`, {
@@ -141,6 +142,7 @@ const StoryDetail = () => {
 			})
 			.then((res) => {
 				setStoryData(res.data.data);
+				if (res.data.data.memberId === Number(isLogin.memberId)) setIsMe(true);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -149,13 +151,32 @@ const StoryDetail = () => {
 	let type = "";
 	if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
+	const handleStoryLikeClick = () => {
+		axios
+			.post(
+				`${API_URL}/api/boards/${params.boardid}/likes`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${isLogin.accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	return (
 		<>
 			<Title>스토리</Title>
 			<div className="card big">
 				<StoryHead>
 					<SinglePofileWrap className="profile_wrap" imgSize="big" imgSrc={storyData.profileImage} name={storyData.nickname} subInfo={displayedAt(storyData.createdAt)} />
-					<StoryLike>
+					<StoryLike onClick={handleStoryLikeClick}>
 						<input type="checkbox" id="storyLikes" name="storyLikes" />
 						<label htmlFor="storyLikes">{storyData.likeCount}</label>
 					</StoryLike>

@@ -3,6 +3,7 @@ import Dropdown from "../components/DropDown";
 import React, { useState } from "react";
 import InputWrap from "../components/InputWrap";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
 import PostPatch from "../components/PostPatch";
@@ -112,7 +113,8 @@ const MatchingWrite = () => {
     const newTag = tags.filter((_, idx) => idx !== index);
     setTags(newTag);
   };
-
+  const loginInfo = useSelector((state) => state.islogin.login);
+  console.log(loginInfo);
   const addTags = (event) => {
     const newTag = event.target.value.replace(/ /g, "").substring(0, 6);
     if (
@@ -143,7 +145,7 @@ const MatchingWrite = () => {
       axios
         .post(`${API_URL}/api/matches`, data, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("key")}`,
+            Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
         .then(navigate("/"))

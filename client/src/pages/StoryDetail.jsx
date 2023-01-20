@@ -30,6 +30,7 @@ const StoryHead = styled.div`
 
 	.profile_wrap {
 		flex: 1;
+		display: block;
 	}
 `;
 
@@ -128,17 +129,16 @@ const CommentWriteWrap = styled.div`
 const StoryDetail = () => {
 	const navigate = useNavigate();
 	let params = useParams();
-	//console.log(params);//{userid: '3', boardid: '197'}
 	const isLogin = useSelector((state) => state.islogin);
 	const [isMe, setIsMe] = useState(false);
 	const [storyData, setStoryData] = useState({});
-	const [isBoardLike, setIsBoardLike] = useState(false);
+	//const [isBoardLike, setIsBoardLike] = useState(storyData.likeStatus);
 	useEffect(() => {
 		axios
 			.get(`${API_URL}/api/boards/${params.boardid}`, {
 				headers: {
-					"ngrok-skip-browser-warning": "69420",
-					"Authorization": `Bearer ${isLogin.accessToken}`,
+					//"ngrok-skip-browser-warning": "69420",
+					Authorization: `Bearer ${isLogin.accessToken}`,
 				},
 			})
 			.then((res) => {
@@ -153,28 +153,23 @@ const StoryDetail = () => {
 	if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
 	const handleStoryLikeClick = () => {
-		axios
-			.post(
-				`${API_URL}/api/boards/${params.boardid}/likes`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${isLogin.accessToken}`,
-					},
-				}
-			)
-			.then((res) => {
-				setIsBoardLike(res);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
-
-	const handleProfileClick = (e, memberId) => {
-		console.log(memberId);
-		//if (e.target === e.currentTartget)
-		navigate(`/profile/${memberId}`);
+		// axios
+		// 	.post(
+		// 		`${API_URL}/api/boards/${params.boardid}/likes`,
+		// 		{},
+		// 		{
+		// 			headers: {
+		// 				Authorization: `Bearer ${isLogin.accessToken}`,
+		// 			},
+		// 		}
+		// 	)
+		// 	.then((res) => {
+		// 		//setIsBoardLike(res);
+		// 		console.log(res);
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err);
+		// 	});
 	};
 
 	return (
@@ -182,18 +177,15 @@ const StoryDetail = () => {
 			<Title>스토리</Title>
 			<div className="card big">
 				<StoryHead>
-					<SinglePofileWrap
-						className="profile_wrap"
-						imgSize="big"
-						imgSrc={storyData.profileImage}
-						name={storyData.nickname}
-						subInfo={displayedAt(storyData.createdAt)}
-						onClick={(e) => handleProfileClick(e, params.memberId)}
-					/>
-					<StoryLike onClick={handleStoryLikeClick}>
-						<input type="checkbox" id="storyLikes" name="storyLikes" checked={storyData.likeStatus ? true : false} />
-						<label htmlFor="storyLikes">{storyData.likeCount}</label>
-					</StoryLike>
+					<a href={`/profile/${params.userid}`} title="유저 프로필로 이동" className="profile_wrap">
+						<SinglePofileWrap imgSize="big" imgSrc={storyData.profileImage} name={storyData.nickname} subInfo={displayedAt(storyData.createdAt)} />
+					</a>
+					{storyData.likeStatus !== undefined ? (
+						<StoryLike onClick={handleStoryLikeClick}>
+							<input type="checkbox" id="storyLikes" name="storyLikes" defaultChecked={storyData.likeStatus ? true : null} />
+							<label htmlFor="storyLikes">{storyData.likeCount}</label>
+						</StoryLike>
+					) : null}
 				</StoryHead>
 				<StoryBody>
 					<StoryFileView size="big" fileName={storyData.uploadFileName} contentType={storyData.contentType} />

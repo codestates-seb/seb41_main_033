@@ -54,8 +54,8 @@ const App = () => {
 							<Route path="/matchwrite" element={<MatchingWrite />} />
 							<Route path="/:boardid/edit" element={<MatchingEdit />} />
 							<Route path="/story" element={<Story />} />
-							<Route path="/:userid/:boardid" element={<StoryDetail />} />
-							<Route path="/:userid/:boardid/edit" element={<StoryEdit />} />
+							<Route path="/story/:userid/:boardid" element={<StoryDetail />} />
+							<Route path="/story/:userid/:boardid/edit" element={<StoryEdit />} />
 							<Route path="/storywrite" element={<StoryWrite />} />
 							<Route path="/profile/:userid" element={<Profile />} />
 							<Route path="/profile/:userid/edit" element={<ProfileEdit />} />

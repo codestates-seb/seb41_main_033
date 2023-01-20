@@ -4,19 +4,21 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ProfileCard from '../components/ProfileCard';
 import ProfileContent from '../components/ProfileContent';
+import { useParams } from 'react-router-dom';
 
 const ProfileWrap = styled.div`
   display: flex;
 `;
 
 const Profile = () => {
+  const { userid } = useParams();
   const [user, setUser] = useState(null);
   const [match, setMatch] = useState(null);
   const [story, setStory] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/3`, {
+      .get(`${API_URL}/api/members/${userid}`, {
         // ngrok get cors 해결용
         headers: {
           'ngrok-skip-browser-warning': '69420',
@@ -24,7 +26,7 @@ const Profile = () => {
       })
       .then((res) => setUser(res.data.data));
     axios
-      .get(`${API_URL}/api/members/3/matches`, {
+      .get(`${API_URL}/api/members/${userid}/matches`, {
         // ngrok get cors 해결용
         headers: {
           'ngrok-skip-browser-warning': '69420',
@@ -32,7 +34,7 @@ const Profile = () => {
       })
       .then((res) => setMatch(res.data.data));
     axios
-      .get(`${API_URL}/api/members/3/boards`, {
+      .get(`${API_URL}/api/members/${userid}/boards`, {
         // ngrok get cors 해결용
         headers: {
           'ngrok-skip-browser-warning': '69420',

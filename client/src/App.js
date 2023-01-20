@@ -40,36 +40,35 @@ const MainWrap = styled.section`
 `;
 
 const App = () => {
-
-	return (
-		<Wrap>
-			<Router basename={process.env.PUBLIC_URL}>
-				<Nav />
-				<MainWrap>
-					<Header />
-					{/* 아래 main 안에 각 페이지가 들어갑니다. */}
-					<main className="container">
-						<Routes>
-							<Route path="/" element={<Matching />} />
-							<Route path="/:boardid/detail" element={<MatchingDetail />} />
-							<Route path="/matchwrite" element={<MatchingWrite />} />
-							<Route path="/:boardid/edit" element={<MatchingEdit />} />
-							<Route path="/story" element={<Story />} />
-							<Route path="/story/:userid/:boardid" element={<StoryDetail />} />
-							<Route path="/story/:userid/:boardid/edit" element={<StoryEdit />} />
-							<Route path="/storywrite" element={<StoryWrite />} />
-							<Route path="/profile/:userid" element={<Profile />} />
-							<Route path="/profile/:userid/edit" element={<ProfileEdit />} />
-							<Route path="/login" element={<Login />} />
-							<Route path="/signup" element={<Signup />} />
-							<Route path="/quit" element={<Quit />} />
-							<Route path="/game" element={<GameRecommend />} />
-						</Routes>
-					</main>
-				</MainWrap>
-			</Router>
-		</Wrap>
-	);
+  return (
+    <Wrap>
+      <Router basename={process.env.PUBLIC_URL}>
+        <Nav />
+        <MainWrap>
+          <Header />
+          {/* 아래 main 안에 각 페이지가 들어갑니다. */}
+          <main className="container">
+            <Routes>
+              <Route path="/" element={<Matching />} />
+              <Route path="/:boardid/detail" element={<MatchingDetail />} />
+              <Route path="/matchwrite" element={<MatchingWrite />} />
+              <Route path="/:boardid/edit" element={<MatchingEdit />} />
+              <Route path="/story" element={<Story />} />
+              <Route path="/:userid/:boardid" element={<StoryDetail />} />
+              <Route path="/:userid/:boardid/edit" element={<StoryEdit />} />
+              <Route path="/storywrite" element={<StoryWrite />} />
+              <Route path="/:userid" element={<Profile />} />
+              <Route path="/:userid/edit" element={<ProfileEdit />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/quit" element={<Quit />} />
+              <Route path="/game" element={<GameRecommend />} />
+            </Routes>
+          </main>
+        </MainWrap>
+      </Router>
+    </Wrap>
+  );
 
 };
 

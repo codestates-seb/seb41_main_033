@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "./../assets/search.svg";
 
@@ -23,11 +24,26 @@ const SearchWrap = styled.div`
   }
 `;
 
-const SearchBar = () => {
+const SearchBar = ({ setKeyword }) => {
+  const [searchData, setSearchData] = useState("");
+  const handleKeydown = (e) => {
+    if (e.target.value.length === 0) {
+      setKeyword("");
+    }
+    if (e.key === "Enter") {
+      setKeyword(searchData);
+    }
+  };
+
   return (
     <SearchWrap>
       <SearchIcon />
-      <input type="text" />
+      <input
+        type="text"
+        onChange={(e) => setSearchData(e.target.value)}
+        onKeyDown={handleKeydown}
+        value={searchData}
+      />
     </SearchWrap>
   );
 };

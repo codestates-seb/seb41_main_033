@@ -9,6 +9,7 @@ import { API_URL } from '../data/apiUrl';
 import { useNavigate, useParams } from 'react-router-dom';
 
 
+
 const ContentWrap = styled.div`
   margin: 24px 0;
   label {
@@ -41,7 +42,6 @@ const ProfileWrap = styled.div`
 
 
       input[type="file"] {
-
         position: absolute;
         left: 0;
         top: 0;

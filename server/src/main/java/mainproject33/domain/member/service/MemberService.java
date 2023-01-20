@@ -52,26 +52,24 @@ public class MemberService {
         Member member = findVerifiedMember(memberId);
         verifyMember(member.getId(), user.getId());
 
-        List<Follow> followerList = followRepository.findByFollowList(member.getId());
-        List<MemberLikes> likerList = memberLikesRepository.findByMemberLikeList(member.getId());
-        List<Block> blockerList = blockRepository.findByBlockList(member.getId());
+        List<Follow> followList = followRepository.findByAllFollowList(member.getId());
+        List<MemberLikes> likeList = memberLikesRepository.findByAllMemberLikeList(member.getId());
+        List<Block> blockList = blockRepository.findByAllBlockList(member.getId());
 
-        if(!followerList.isEmpty()) {
-            for(Follow follow : followerList) {
-                follow.getFollowed().getProfile().addFollowerCount(-1);
+        if(!followList.isEmpty()) {
+            for(Follow follow : followList) {
                 followRepository.delete(follow);
             }
         }
 
-        if(!likerList.isEmpty()) {
-            for(MemberLikes memberLikes : likerList) {
-                memberLikes.getLiked().getProfile().addLikeCount(-1);
+        if(!likeList.isEmpty()) {
+            for(MemberLikes memberLikes : likeList) {
                 memberLikesRepository.delete(memberLikes);
             }
         }
 
-        if(!blockerList.isEmpty()) {
-            for(Block block : blockerList) {
+        if(!blockList.isEmpty()) {
+            for(Block block : blockList) {
                 blockRepository.delete(block);
             }
         }
@@ -121,13 +119,9 @@ public class MemberService {
         }
 
         if (optionalFollow.isEmpty()) {
-            follower.getProfile().addFollowingCount(1);
-            followed.getProfile().addFollowerCount(1);
             followRepository.save(follow);
             return true;
         } else {
-            follower.getProfile().addFollowingCount(-1);
-            followed.getProfile().addFollowerCount(-1);
             followRepository.delete(optionalFollow.get());
             return false;
         }
@@ -152,11 +146,9 @@ public class MemberService {
         }
 
         if (optionalLikes.isEmpty()) {
-            liked.getProfile().addLikeCount(1);
             memberLikesRepository.save(likes);
             return true;
         } else {
-            liked.getProfile().addLikeCount(-1);
             memberLikesRepository.delete(optionalLikes.get());
             return false;
         }
@@ -181,15 +173,8 @@ public class MemberService {
         if(optionalBlock.isEmpty()) {
             blockRepository.save(block);
 
-            if(optionalFollow.isPresent()) {
-                blocker.getProfile().addFollowingCount(-1);
-                blocked.getProfile().addFollowerCount(-1);
-                followRepository.delete(optionalFollow.get());
-            }
-            if(optionalLike.isPresent()) {
-                blocked.getProfile().addLikeCount(-1);
-                memberLikesRepository.delete(optionalLike.get());
-            }
+            optionalFollow.ifPresent(followRepository::delete);
+            optionalLike.ifPresent(memberLikesRepository::delete);
 
             return true;
 
@@ -251,9 +236,6 @@ public class MemberService {
 
         Profile profile = new Profile();
         imageService.createDefaultProfileImage(profile);
-        profile.setFollowerCount(0);
-        profile.setFollowingCount(0);
-        profile.setLikeCount(0);
         profile.setIntroduction("소개문을 작성해주세요");
 
         return profileRepository.save(profile);

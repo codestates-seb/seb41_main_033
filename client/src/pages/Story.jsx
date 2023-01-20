@@ -30,19 +30,17 @@ const StoryBoardWrap = styled.div`
 	}
 `;
 
-const ACCESS_TOKEN = localStorage.getItem("key");
-
 const Story = () => {
 	const isLogin = useSelector((state) => state.islogin);
-	const ACCESS_TOKEN = localStorage.getItem("key");
+	const ACCESS_TOKEN = isLogin.accessToken;
 	const navigate = useNavigate();
 	const [storyData, setStoryData] = useState([]);
 	useEffect(() => {
 		axios
 			.get(`${API_URL}/api/boards?page=1`, {
 				headers: {
-					"ngrok-skip-browser-warning": "69420",
-					"Authorization": `Bearer ${ACCESS_TOKEN}`,
+					// "ngrok-skip-browser-warning": "69420",
+					Authorization: `Bearer ${ACCESS_TOKEN}`,
 				},
 			})
 			.then((res) => {

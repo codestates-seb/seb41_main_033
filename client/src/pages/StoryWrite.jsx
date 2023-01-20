@@ -13,7 +13,6 @@ const StoryWrite = () => {
 		axios
 			.get(`${API_URL}/api/members/${isLogin.memberId}`)
 			.then((res) => {
-				console.log(res.data.data);
 				setUserData(res.data.data);
 			})
 			.catch((err) => {

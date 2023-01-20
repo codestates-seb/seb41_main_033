@@ -153,6 +153,7 @@ const StoryDetail = () => {
 	if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
 	const handleStoryLikeClick = () => {
+		//23.1.21. 좋아요 기능 중단
 		// axios
 		// 	.post(
 		// 		`${API_URL}/api/boards/${params.boardid}/likes`,

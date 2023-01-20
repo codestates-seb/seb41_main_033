@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { ReactComponent as ProfileImg } from './../assets/defaultImg.svg';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
+import { logout } from '../redux/slice/loginstate';
 
 const HeaderWrap = styled.header`
   position: absolute;
@@ -78,16 +79,34 @@ const Header = () => {
     (state) => state.islogin.login
   );
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    if (isLogin) {
+      axios
+        .get(`${API_URL}/api/members/${memberId}`)
+        .then((res) => setUser(res.data.data));
+    }
+  }, [isLogin, memberId]);
+
+  const handleLogout = () => {
     axios
-      .get(`${API_URL}/api/members/${memberId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((res) => setUser(res.data.data));
-  }, []);
+      .post(
+        `${API_URL}/api/members/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then(() => {
+        localStorage.clear();
+        dispatch(logout({ accessToken: null, memberId: null, isLogin: false }));
+        navigate('/');
+      });
+  };
 
   return (
     <HeaderWrap>
@@ -107,7 +126,7 @@ const Header = () => {
             </a>
           </ProfileWrap>
           <BtnWrap>
-            <button>로그아웃</button>
+            <button onClick={handleLogout}>로그아웃</button>
           </BtnWrap>
         </>
       ) : (

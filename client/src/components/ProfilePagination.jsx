@@ -22,7 +22,7 @@ const PageWrap = styled.div`
   }
 `;
 
-const Pagination = ({
+const ProfilePagination = ({
   isMatch,
   matchPage,
   setMatchPage,
@@ -278,4 +278,4 @@ const Pagination = ({
   );
 };
 
-export default Pagination;
+export default ProfilePagination;

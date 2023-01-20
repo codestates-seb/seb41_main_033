@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { ReactComponent as Comment } from '../assets/sms.svg';
-import Pagination from './Pagination';
+import ProfilePagination from './ProfilePagination';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import matchGame from '../util/matchGame';
@@ -75,6 +75,10 @@ const ListWrap = styled.div`
         object-fit: cover;
       }
     }
+    .content_none {
+      width: 100%;
+      text-align: center;
+    }
   }
 `;
 
@@ -110,8 +114,9 @@ const ProfileContentList = ({ isMatch, isStory }) => {
       <>
         <ListWrap>
           <ul>
-            {isMatch
-              ? match.map((match) => (
+            {isMatch ? (
+              match.length > 0 ? (
+                match.map((match) => (
                   <li key={match.id}>
                     <div className="game_container">
                       <img
@@ -130,9 +135,17 @@ const ProfileContentList = ({ isMatch, isStory }) => {
                     </div>
                   </li>
                 ))
-              : null}
-            {isStory
-              ? story.map((story) => (
+              ) : (
+                <li>
+                  <div className="content_none">
+                    작성된 매칭하기가 없습니다.
+                  </div>
+                </li>
+              )
+            ) : null}
+            {isStory ? (
+              story.length > 0 ? (
+                story.map((story) => (
                   <li key={story.id}>
                     <div className="content_container story">
                       <a href={`/story/${userid}/${story.id}`}>
@@ -163,10 +176,15 @@ const ProfileContentList = ({ isMatch, isStory }) => {
                     ) : null}
                   </li>
                 ))
-              : null}
+              ) : (
+                <li>
+                  <div className="content_none">작성된 스토리가 없습니다.</div>
+                </li>
+              )
+            ) : null}
           </ul>
         </ListWrap>
-        <Pagination
+        <ProfilePagination
           isMatch={isMatch}
           matchPage={matchPage}
           setMatchPage={setMatchPage}

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { ReactComponent as Comment } from '../assets/sms.svg';
+import matchGame from '../util/matchGame';
 
 const ListWrap = styled.div`
   li {
@@ -80,7 +81,11 @@ const ProfileContentList = ({ isMatch, isStory, matchBoards, userBoards }) => {
           ? matchBoards.map((match) => (
               <li key={match.id}>
                 <div className="game_container">
-                  <img className="game_icon" src={''} alt="게임 아이콘" />
+                  <img
+                    className="game_icon"
+                    src={matchGame(match.game).image}
+                    alt="게임 아이콘"
+                  />
                 </div>
                 <div className="content_container match">
                   <div className="content_title">{match.title}</div>

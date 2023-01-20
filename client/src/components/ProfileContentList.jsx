@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { ReactComponent as Comment } from '../assets/sms.svg';
@@ -74,6 +75,7 @@ const ListWrap = styled.div`
 `;
 
 const ProfileContentList = ({ isMatch, isStory, matchBoards, userBoards }) => {
+  const { userid } = useParams();
   return (
     <ListWrap>
       <ul>
@@ -88,7 +90,9 @@ const ProfileContentList = ({ isMatch, isStory, matchBoards, userBoards }) => {
                   />
                 </div>
                 <div className="content_container match">
-                  <div className="content_title">{match.title}</div>
+                  <a href={`/${match.id}/detail`}>
+                    <div className="content_title">{match.title}</div>
+                  </a>
                   <div className="content_date">
                     {new Date(match.createdAt).toLocaleString()}
                   </div>
@@ -100,7 +104,9 @@ const ProfileContentList = ({ isMatch, isStory, matchBoards, userBoards }) => {
           ? userBoards.map((story) => (
               <li key={story.id}>
                 <div className="content_container story">
-                  <div className="content_title">{story.content}</div>
+                  <a href={`/story/${userid}/${story.id}`}>
+                    <div className="content_title">{story.content}</div>
+                  </a>
                   <div className="content_date">
                     {new Date(story.createdAt).toLocaleString()}
                   </div>

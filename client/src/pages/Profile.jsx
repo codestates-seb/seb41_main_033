@@ -13,37 +13,14 @@ const ProfileWrap = styled.div`
 const Profile = () => {
   const { userid } = useParams();
   const [user, setUser] = useState(null);
-  const [match, setMatch] = useState(null);
-  const [story, setStory] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}`, {
-        // ngrok get cors 해결용
-        headers: {
-          'ngrok-skip-browser-warning': '69420',
-        },
-      })
+      .get(`${API_URL}/api/members/${userid}`)
       .then((res) => setUser(res.data.data));
-    axios
-      .get(`${API_URL}/api/members/${userid}/matches`, {
-        // ngrok get cors 해결용
-        headers: {
-          'ngrok-skip-browser-warning': '69420',
-        },
-      })
-      .then((res) => setMatch(res.data.data));
-    axios
-      .get(`${API_URL}/api/members/${userid}/boards`, {
-        // ngrok get cors 해결용
-        headers: {
-          'ngrok-skip-browser-warning': '69420',
-        },
-      })
-      .then((res) => setStory(res.data.data));
   }, []);
 
-  if (user && match && story) {
+  if (user) {
     return (
       <ProfileWrap>
         <ProfileCard
@@ -56,7 +33,7 @@ const Profile = () => {
           games={user.games}
           introduction={user.introduction}
         />
-        <ProfileContent matchBoards={match} userBoards={story} />
+        <ProfileContent />
       </ProfileWrap>
     );
   } else {

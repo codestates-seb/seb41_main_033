@@ -1,11 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import SinglePofileWrap from './SingleProfileWrap';
 import { ReactComponent as ProfileImg } from '../assets/defaultImg.svg';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -24,6 +24,7 @@ const ProfileWrap = styled.div`
 
 const InformWrap = styled.div`
   display: flex;
+  justify-content: space-between;
   margin-bottom: 16px;
   .img_profile {
     width: 56px;
@@ -31,20 +32,7 @@ const InformWrap = styled.div`
     border-radius: 50%;
     margin-right: 16px;
   }
-  .name_content {
-    width: 100%;
-    margin: auto;
-  }
-  .nickname {
-    color: var(--white);
-    font-size: 18px;
-    font-weight: var(--font-weight-medium);
-  }
-  .identifier {
-    font-size: var(--font-body2-size);
-  }
   .icon {
-    margin-left: 16px;
     margin: auto 0;
   }
   .setting,
@@ -119,15 +107,7 @@ const ProfileCard = ({
     <div>
       <ProfileWrap className="card sm">
         <InformWrap>
-          {image ? (
-            <img className="img_profile" src={image} alt="프로필 이미지" />
-          ) : (
-            <ProfileImg className="img_profile" />
-          )}
-          <div className="name_content">
-            <div className="nickname">{nickname}</div>
-            <div className="identifier">{identifier}</div>
-          </div>
+          <SinglePofileWrap imgSize="big" imgSrc={image} name={nickname} subInfo={identifier} />
           {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
           {isMe ? (
             <div className="icon">

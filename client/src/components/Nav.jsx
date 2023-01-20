@@ -92,7 +92,7 @@ const Menu = styled.ul`
 `;
 
 const Nav = () => {
-  const userid = useSelector((state) => state.islogin.memberId);
+  const userid = useSelector((state) => state.islogin.login.memberId);
 
   return (
     <NavWrap>

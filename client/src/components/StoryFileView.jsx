@@ -9,9 +9,10 @@ const ImgArea = styled.div`
 	overflow: hidden;
 
 	img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		${(props) => (props.size === "big" ? "" : "width: 100%;")}
+		${(props) => (props.size === "big" ? "" : "height: 100%;")}
+		${(props) => (props.size === "big" ? "" : "object-fit: cover;")}
+		${(props) => (props.size === "big" ? "max-width:100%;" : "")}
 	}
 `;
 

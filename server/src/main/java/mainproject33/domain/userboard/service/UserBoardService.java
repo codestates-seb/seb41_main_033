@@ -121,6 +121,7 @@ public class UserBoardService
         return pagedBoard;
     }
 
+    @Transactional(readOnly = true)
     public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {
         return userBoardRepository.findByMemberId(memberId, pageable);
     }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class MatchBoardService {
         }
     }
 
+    @Transactional(readOnly = true)
     public MatchBoard readMatchBoard(long id, Member user) {
         MatchBoard matchBoard = findMatchBoard(id);
 
@@ -64,6 +66,7 @@ public class MatchBoardService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Page<MatchBoard> readMatchBoards(String keyword, Pageable pageable, Member user) {
         List<MatchBoard> list;
 
@@ -79,6 +82,7 @@ public class MatchBoardService {
         return toPageImpl(pageable, list);
     }
 
+    @Transactional(readOnly = true)
     public Page<MatchBoard> readProfileMatchBoards(Long memberId, Pageable pageable) {
         return matchBoardRepository.findByMemberId(memberId, pageable);
     }

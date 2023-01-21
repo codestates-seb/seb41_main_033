@@ -11,6 +11,7 @@ import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class ProfileImageService {
         return imageRepository.save(profileImage);
     }
 
+    @Transactional(readOnly = true)
     public String readProfileImagePath(Long id) { // 프로필 이미지 가져오기
         ProfileImage findImage = findVerifiedImage(id);
         String storeFileName = findImage.getStoreFileName();

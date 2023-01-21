@@ -107,11 +107,11 @@ public class UserBoardFileService
 
     public void deleteUploadFile(long boardId)
     {
-        UserBoardFile userBoardFile = verifyFile(boardId);
+        UserBoardFile userBoardFile = findFile(boardId);
         amazonS3.deleteObject(bucket, "StoryFiles/" + userBoardFile.getStoreFileName());
     }
 
-    private UserBoardFile verifyFile(long boardId)
+    private UserBoardFile findFile(long boardId)
     {
         return fileRepository.findByUserBoardId(boardId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionMessage.FILE_NOT_FOUND));

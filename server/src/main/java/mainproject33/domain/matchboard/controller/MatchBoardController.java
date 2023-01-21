@@ -11,7 +11,6 @@ import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +27,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class MatchBoardController {
-    // TODO : member entity 연계 시, memberId, memberNickname 정상적으로 받아올 수 있어야 함
-
     private final MatchBoardService matchBoardService;
     private final MemberService memberService;
     private final MatchBoardMapper mapper;
 
     @PostMapping
     public ResponseEntity postMatchBoard(@RequestBody @Valid MatchBoardDto.Post post,
-                                         @AuthenticationPrincipal Member member) {
+                                         @AuthenticationPrincipal Member user) {
 
-        Member findMember = memberService.findVerifiedMember(member.getId());
+        Member findMember = memberService.findMember(user.getId());
 
         MatchBoard matchBoard = matchBoardService.createMatchBoard(mapper.postMatchBoardToMatchBoard(post, findMember));
 
@@ -49,9 +46,9 @@ public class MatchBoardController {
     @PatchMapping("/{match-id}")
     public ResponseEntity patchMatchBoard(@PathVariable("match-id") @Positive(message = "id 값은 0보다 커야합니다.") Long id,
                                           @RequestBody @Valid MatchBoardDto.Patch patch,
-                                          @AuthenticationPrincipal Member member) {
+                                          @AuthenticationPrincipal Member user) {
         patch.setId(id);
-        MatchBoard matchBoard = matchBoardService.updateMatchBoard(member, mapper.patchMatchBoardToMatchBoard(patch));
+        MatchBoard matchBoard = matchBoardService.updateMatchBoard(user, mapper.patchMatchBoardToMatchBoard(patch));
 
         return new ResponseEntity(
                 new SingleResponseDto<>(mapper.matchBoardToMatchBoardResponse(matchBoard)), HttpStatus.OK);

@@ -20,6 +20,10 @@ spring:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
+  data:
+    redis:
+      repositories:
+        enabled: false
   servlet:
     multipart:
       max-file-size: ${MAX_FILE_SIZE}

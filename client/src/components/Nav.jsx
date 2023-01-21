@@ -131,7 +131,7 @@ const Nav = () => {
         </li>
         <li>
           <NavLink
-            to={`/profile/${loginInfo?.userid}`}
+            to={`/profile/${loginInfo?.memberId}`}
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
             <MenuIconProfile />

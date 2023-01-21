@@ -16,3 +16,5 @@ INSERT INTO game_db VALUES (15, 'Eternal Return', '이터널 리턴');
 INSERT INTO game_db VALUES (16, 'Steam Game', '스팀 게임');
 INSERT INTO game_db VALUES (17, 'Nintendo Game', '닌텐도 게임');
 INSERT INTO game_db VALUES (18, 'ETC', '기타');
+ALTER TABLE LIKES ADD UNIQUE INDEX (USER_BOARD_ID, MEMBER_ID);
+ALTER TABLE LIKES ADD UNIQUE INDEX (COMMENT_ID, MEMBER_ID)

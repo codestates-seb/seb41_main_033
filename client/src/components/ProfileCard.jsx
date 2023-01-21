@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import SinglePofileWrap from './SingleProfileWrap';
@@ -86,38 +86,45 @@ const ProfileCard = () => {
   const [isMe, setIsMe] = useState(false);
   const { userid } = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
+  const navigate = useNavigate();
 
   const handleFollow = () => {
-    axios.post(
-      `${API_URL}/api/members/${userid}/follows`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      }
-    );
-    window.location.reload();
+    if (loginInfo?.isLogin) {
+      axios.post(
+        `${API_URL}/api/members/${userid}/follows`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+        }
+      );
+      window.location.reload();
+    } else return navigate(`/login`);
   };
 
   const handleLike = () => {
-    axios.post(
-      `${API_URL}/api/members/${userid}/likes`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      }
-    );
-    window.location.reload();
+    if (loginInfo?.isLogin) {
+      axios.post(
+        `${API_URL}/api/members/${userid}/likes`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+        }
+      );
+      window.location.reload();
+    } else return navigate(`/login`);
   };
 
   const handleBlock = () => {
-    axios.post(
-      `${API_URL}/api/members/${userid}/blocks`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      }
-    );
-    window.location.reload();
+    if (loginInfo?.isLogin) {
+      axios.post(
+        `${API_URL}/api/members/${userid}/blocks`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+        }
+      );
+      window.location.reload();
+    } else return navigate(`/login`);
   };
 
   useEffect(() => {
@@ -143,7 +150,7 @@ const ProfileCard = () => {
               subInfo={user.identifier}
             />
             {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
-            {loginInfo?.isLogin && isMe ? (
+            {isMe ? (
               <div className="icon">
                 <Link to={`/profile/${userid}/edit`}>
                   <Setting className="setting" />
@@ -177,7 +184,7 @@ const ProfileCard = () => {
               <div className="number">{user.likeCount}</div>
             </Follow>
           </FollowWrap>
-          {loginInfo?.isLogin && !isMe ? (
+          {!isMe ? (
             <ButtonWrap>
               {user.blockStatus ? null : (
                 <>

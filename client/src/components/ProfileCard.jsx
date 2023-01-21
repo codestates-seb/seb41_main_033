@@ -1,10 +1,10 @@
-import { Link, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
-import SinglePofileWrap from './SingleProfileWrap';
-import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
-import { ReactComponent as Heart } from '../assets/heartIcon.svg';
-import { useState, useEffect } from 'react';
+import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
+import SinglePofileWrap from "./SingleProfileWrap";
+import { ReactComponent as Setting } from "../assets/settingsIcon.svg";
+import { ReactComponent as Heart } from "../assets/heartIcon.svg";
+import { useState, useEffect } from "react";
 
 const ProfileWrap = styled.div`
   width: var(--col-4);

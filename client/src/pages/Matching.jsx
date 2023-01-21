@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../data/apiUrl";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import NoSearch from "../components/NoSearch";
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,21 +44,26 @@ const Matching = () => {
       .then((res) => {
         setMatchinglist(res.data.data);
         setTotal(res.data.pageInfo.totalPages);
-      });
+      })
+      .catch((err) => console.log(err));
   }, [page, keyword]);
 
   return (
     <Wrap>
       <SearchBar setKeyword={setKeyword} />
-      <Ul>
-        {matchinglist?.map((el) => (
-          <li key={el.id}>
-            <Link to={`/${el.id}/detail`}>
-              <MatchingCard data={el} />
-            </Link>
-          </li>
-        ))}
-      </Ul>
+      {matchinglist.length === 0 ? (
+        <NoSearch />
+      ) : (
+        <Ul>
+          {matchinglist?.map((el) => (
+            <li key={el.id}>
+              <Link to={`/${el.id}/detail`}>
+                <MatchingCard data={el} />
+              </Link>
+            </li>
+          ))}
+        </Ul>
+      )}
       <WriteFloatButton click={matchingBtn} />
       <MatchPagination setPage={setPage} page={page} total={total} />
     </Wrap>

@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { ReactComponent as DefaultProfileImg } from './../assets/defaultImg.svg';
 const Card = styled.div`
   display: flex;
   justify-content: center;
@@ -42,7 +42,7 @@ const UserCard = ({ data }) => {
   return (
     <Card className="card big">
       <Div>
-        <Link to={`/${data.memberId}`}>
+        <Link to={`/profile/${data.memberId}`}>
           <Img>
             {data.img ? (
               <img src={data.image} alt="유저프로필" />

@@ -198,22 +198,26 @@ const ProfileCard = () => {
             </ButtonWrap>
           ) : null}
         </ProfileWrap>
-        <ProfileWrap className="card sm">
-          <div className="inform_title">주로하는 게임</div>
-          <GameWrap>
-            <ul>
-              {user.games.map((game) => (
-                <li key={game.id} className="normal game_title">
-                  {game.korTitle}
-                </li>
-              ))}
-            </ul>
-          </GameWrap>
-        </ProfileWrap>
-        <ProfileWrap className="card sm">
-          <div className="inform_title">자기 소개</div>
-          <div className="inform_content">{user.introduction}</div>
-        </ProfileWrap>
+        {user.blockStatus ? null : (
+          <>
+            <ProfileWrap className="card sm">
+              <div className="inform_title">주로하는 게임</div>
+              <GameWrap>
+                <ul>
+                  {user.games.map((game) => (
+                    <li key={game.id} className="normal game_title">
+                      {game.korTitle}
+                    </li>
+                  ))}
+                </ul>
+              </GameWrap>
+            </ProfileWrap>
+            <ProfileWrap className="card sm">
+              <div className="inform_title">자기 소개</div>
+              <div className="inform_content">{user.introduction}</div>
+            </ProfileWrap>
+          </>
+        )}
       </div>
     );
   } else return null;

@@ -30,7 +30,8 @@ const StoryBoardWrap = styled.div`
 `;
 
 const Story = () => {
-	const { accessToken } = useSelector((state) => state.islogin.login);
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const accessToken = loginInfo.accessToken;
 	const navigate = useNavigate();
 	const [storyData, setStoryData] = useState([]);
 	useEffect(() => {
@@ -38,7 +39,7 @@ const Story = () => {
 			.get(`${API_URL}/api/boards?page=1`, {
 				// headers: {
 				// 	// "ngrok-skip-browser-warning": "69420",
-				// 	Authorization: `Bearer ${ACCESS_TOKEN}`,
+				// 	Authorization: `Bearer ${accessToken}`,
 				// },
 			})
 			.then((res) => {

@@ -9,6 +9,7 @@ import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
+import mainproject33.global.service.VerificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +31,9 @@ public class UserBoardService
 
     private final BlockRepository blockRepository;
     private final UserBoardFileService boardFileService;
+    private final VerificationService verify;
 
-    public UserBoard postUserBoard(UserBoard request, Member member, MultipartFile file) throws IOException
+    public UserBoard postUserBoard(UserBoard request, Member user, MultipartFile file) throws IOException
     {
 
         if(file != null)
@@ -44,7 +46,7 @@ public class UserBoardService
 
         UserBoard userBoard = userBoardRepository.save(request);
 
-        userBoard.addMember(member);
+        userBoard.addMember(user);
 
         return userBoard;
     }
@@ -60,17 +62,17 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
-    public UserBoard getUserBoard(Long id, Member member)
+    public UserBoard getUserBoard(Long id, Member user)
     {
         Optional<UserBoard> optionalBoard = userBoardRepository.findById(id);
 
         UserBoard findBoard = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND));
 
-        if(member == null)
+        if(user == null)
             return findBoard;
 
         //멤버가 있을 경우 들
-        List<Long> blackList = getBlackList(member.getId());
+        List<Long> blackList = getBlackList(user.getId());
 
         if(blackList.contains(findBoard.getMember().getId()))
             throw new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND);
@@ -89,9 +91,9 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
-    public Page<UserBoard> findAllBoards(String keyword, Pageable pageable, Member member)
+    public Page<UserBoard> findAllBoards(String keyword, Pageable pageable, Member user)
     {
-        if(member == null) //비 로그인일 경우
+        if(user == null) //비 로그인일 경우
         {
             if(keyword == null) return userBoardRepository.findAll(pageable);
 
@@ -100,7 +102,7 @@ public class UserBoardService
 
         //로그인 한 유저 일 경우
 
-        List<Long> blockList = getBlackList(member.getId());
+        List<Long> blockList = getBlackList(user.getId());
 
         if(keyword == null)
         {
@@ -119,13 +121,13 @@ public class UserBoardService
         return pagedBoard;
     }
 
-
+    @Transactional(readOnly = true)
     public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {
         return userBoardRepository.findByMemberId(memberId, pageable);
     }
     public void deleteOne(Long id)
     {
-        verifyExistBoard(id);
+        verify.existBoard(id);
 
         UserBoard userBoard = findUserBoard(id);
 
@@ -135,27 +137,6 @@ public class UserBoardService
         }
 
         userBoardRepository.deleteById(id);
-    }
-
-    private void verifyExistBoard(Long id)
-    {
-        Optional<UserBoard> findBoard = userBoardRepository.findById(id);
-
-        if(findBoard.isEmpty())
-        {
-            throw new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND);
-        }
-    }
-
-    //로그인한 멤버 정보
-    public void verifyMember(Member member, long id)
-    {
-        UserBoard userBoard = findUserBoard(id);
-
-        if(userBoard.getMember().getId() != member.getId())
-        {
-            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
-        }
     }
 
     //========블랙 리스트 관련 기능들========//

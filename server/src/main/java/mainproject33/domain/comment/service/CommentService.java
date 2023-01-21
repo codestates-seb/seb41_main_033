@@ -9,6 +9,7 @@ import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.service.UserBoardService;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
+import mainproject33.global.service.VerificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,8 @@ public class CommentService
     private final UserBoardService userBoardService;
 
     private final BlockRepository blockRepository;
+
+    private final VerificationService verify;
 
     public Comment postComment(long userBoardId, Comment request, Member member)
     {
@@ -62,12 +65,12 @@ public class CommentService
     }
 
     @Transactional(readOnly = true)
-    public Page<Comment> findAllCommentsByBoardId(Pageable pageable, long userBoardId, Member member)
+    public Page<Comment> findAllCommentsByBoardId(Pageable pageable, long userBoardId, Member user)
     {
-        if(member == null)
+        if(user == null)
             return getPagedComments(commentRepository.findAllByUserBoardId(userBoardId), pageable);
 
-        List<Long> blockList = getBlockList(member.getId());
+        List<Long> blockList = getBlockList(user.getId());
         List<Comment> comments = commentRepository.findAllByUserBoardId(userBoardId);
         List<Comment> filteredComments = filterComments(blockList, comments);
 
@@ -76,24 +79,9 @@ public class CommentService
 
     public void deleteComment(long id)
     {
-        verifyExistComment(id);
+        verify.existComment(id);
 
         commentRepository.deleteById(id);
-    }
-
-    public void verifyExistComment(long id)
-    {
-        Optional<Comment> findComment = commentRepository.findById(id);
-        if (findComment.isEmpty())
-            throw new BusinessLogicException(ExceptionMessage.COMMENT_NOT_FOUND);
-    }
-
-    public void verifyMember(Member member, long id)
-    {
-        Comment comment = findComment(id);
-
-        if(comment.getMember().getId() != member.getId())
-            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
     }
 
     //========블랙 리스트 관련 기능========//

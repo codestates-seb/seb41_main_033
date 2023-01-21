@@ -33,9 +33,6 @@ public class MemberService {
 
     private final VerificationService verify;
 
-    private final RedisDao redisDao;
-
-
     public Member createMember(Member member) {
         verify.existIdentifier(member.getIdentifier());
 

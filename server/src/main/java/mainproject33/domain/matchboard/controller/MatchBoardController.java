@@ -27,8 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class MatchBoardController {
-    // TODO : member entity 연계 시, memberId, memberNickname 정상적으로 받아올 수 있어야 함
-
     private final MatchBoardService matchBoardService;
     private final MemberService memberService;
     private final MatchBoardMapper mapper;

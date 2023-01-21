@@ -75,20 +75,18 @@ const BtnWrap = styled.div`
 `;
 
 const Header = () => {
-  const { accessToken, isLogin, memberId } = useSelector(
-    (state) => state.islogin.login
-  );
+  const loginInfo = useSelector((state) => state.islogin.login);
   const [user, setUser] = useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLogin) {
+    if (loginInfo?.isLogin) {
       axios
-        .get(`${API_URL}/api/members/${memberId}`)
+        .get(`${API_URL}/api/members/${loginInfo?.memberId}`)
         .then((res) => setUser(res.data.data));
     }
-  }, [isLogin, memberId]);
+  }, [loginInfo?.isLogin, loginInfo?.memberId]);
 
   const handleLogout = () => {
     axios
@@ -97,7 +95,7 @@ const Header = () => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         }
       )
@@ -110,10 +108,10 @@ const Header = () => {
 
   return (
     <HeaderWrap>
-      {user && isLogin ? (
+      {user && loginInfo?.isLogin ? (
         <>
           <ProfileWrap>
-            <a href={`/profile/${memberId}`}>
+            <a href={`/profile/`}>
               <span className="alert">알림</span>
               <span className="user_nickname">{user.nickname}</span>
               <div className="user_img">

@@ -129,7 +129,9 @@ const CommentWriteWrap = styled.div`
 const StoryDetail = () => {
 	const navigate = useNavigate();
 	let params = useParams();
-	const { accessToken, memberId } = useSelector((state) => state.islogin.login);
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const accessToken = loginInfo.accessToken;
+	const memberId = loginInfo.memberId;
 	const [isMe, setIsMe] = useState(false);
 	const [storyData, setStoryData] = useState({});
 	//const [isBoardLike, setIsBoardLike] = useState(storyData.likeStatus);
@@ -138,13 +140,12 @@ const StoryDetail = () => {
 			.get(`${API_URL}/api/boards/${params.boardid}`, {
 				// headers: {
 				// 	//"ngrok-skip-browser-warning": "69420",
-				// 	Authorization: `Bearer ${isLogin.accessToken}`,
+				// 	Authorization: `Bearer ${accessToken}`,
 				// },
 			})
 			.then((res) => {
 				setStoryData(res.data.data);
-				if (res.data.data.memberId === Number(localStorage.getItem("memberId")))
-					setIsMe(true); //임시 로컬스토리지 대체
+				if (res.data.data.memberId === Number(memberId)) setIsMe(true);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -176,12 +177,27 @@ const StoryDetail = () => {
 
 	//수정
 	const handleStoryEditClick = () => {
-		//console.log("sdf");
 		navigate(`/story/${params.userid}/${params.boardid}/edit`);
 	};
 
 	//삭제
-	const handleStoryDeleteClick = () => {};
+	const handleStoryDeleteClick = () => {
+		axios
+			.delete(`${API_URL}/api/boards/${params.boardid}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			})
+			.then((res) => {
+				//삭세하시겠습니까? 팝업 호출 필요
+				alert("게시물이 삭제됩니다.");
+				navigate("/story");
+			})
+			.catch((err) => {
+				console.log(err);
+				alert("게시물 삭제에 실패하였습니다.");
+			});
+	};
 
 	return (
 		<>
@@ -233,7 +249,11 @@ const StoryDetail = () => {
 							type="edit"
 							clickHandler={handleStoryEditClick}
 						/>
-						<StoryBtn size="big" type="delete" />
+						<StoryBtn
+							size="big"
+							type="delete"
+							clickHandler={handleStoryDeleteClick}
+						/>
 					</BtnWrap>
 				) : null}
 			</div>

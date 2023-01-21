@@ -92,7 +92,7 @@ const Menu = styled.ul`
 `;
 
 const Nav = () => {
-  const userid = useSelector((state) => state.islogin.login.memberId);
+  const loginInfo = useSelector((state) => state.islogin.login);
 
   return (
     <NavWrap>
@@ -131,7 +131,7 @@ const Nav = () => {
         </li>
         <li>
           <NavLink
-            to={`/profile/${userid}`}
+            to={`/profile/${loginInfo?.userid}`}
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
             <MenuIconProfile />

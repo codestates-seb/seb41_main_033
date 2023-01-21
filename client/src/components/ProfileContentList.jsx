@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { ReactComponent as Comment } from '../assets/sms.svg';
+import { ReactComponent as Video } from '../assets/videoIcon.svg';
 import ProfilePagination from './ProfilePagination';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
@@ -69,7 +70,7 @@ const ListWrap = styled.div`
       overflow: hidden;
       margin: auto 0;
       margin-left: 16px;
-      img {
+      .image_preview {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -98,7 +99,7 @@ const ProfileContentList = ({ isMatch, isStory }) => {
         setMatch(res.data.data);
         setMatchPageInfo(res.data.pageInfo);
       });
-  }, [matchPage]);
+  }, [matchPage, userid]);
 
   useEffect(() => {
     axios
@@ -107,7 +108,7 @@ const ProfileContentList = ({ isMatch, isStory }) => {
         setStory(res.data.data);
         setStoryPageInfo(res.data.pageInfo);
       });
-  }, [storyPage]);
+  }, [storyPage, userid]);
 
   if (match && story) {
     return (
@@ -171,7 +172,15 @@ const ProfileContentList = ({ isMatch, isStory }) => {
                     </div>
                     {story.uploadFileName ? (
                       <div className="image_container">
-                        <img src={story.uploadFileName} alt="스토리 이미지" />
+                        {story.contentType.split('/')[0] === 'image' ? (
+                          <img
+                            className="image_preview"
+                            src={story.uploadFileName}
+                            alt="스토리 이미지"
+                          />
+                        ) : (
+                          <Video className="image_preview" />
+                        )}
                       </div>
                     ) : null}
                   </li>

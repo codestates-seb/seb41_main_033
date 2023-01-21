@@ -61,7 +61,9 @@ const InputFile = styled.div`
 
 const StoryWrite = () => {
 	const navigate = useNavigate();
-	//const { accessToken, memberId } = useSelector((state) => state.islogin.login);
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const accessToken = loginInfo.accessToken;
+	const memberId = loginInfo.memberId;
 	const [userData, setUserData] = useState({});
 	const [fileName, setFileName] = useState(
 		"50MB 이하의 이미지, 영상 파일만 가능합니다"
@@ -70,7 +72,7 @@ const StoryWrite = () => {
 	const [content, setContent] = useState("");
 	useEffect(() => {
 		axios
-			.get(`${API_URL}/api/members/${localStorage.getItem("memberId")}`)
+			.get(`${API_URL}/api/members/${memberId}`)
 			.then((res) => {
 				setUserData(res.data.data);
 			})
@@ -102,7 +104,7 @@ const StoryWrite = () => {
 			.post(`${API_URL}/api/boards`, formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
-					"Authorization": `Bearer ${localStorage.getItem("key")}`, //로컬스토리지로 임시 대체
+					"Authorization": `Bearer ${accessToken}`,
 				},
 			})
 			.then((res) => {

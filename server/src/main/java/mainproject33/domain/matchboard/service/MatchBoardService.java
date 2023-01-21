@@ -3,11 +3,11 @@ package mainproject33.domain.matchboard.service;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.matchboard.entity.MatchBoard;
 import mainproject33.domain.matchboard.repository.MatchBoardRepository;
-import mainproject33.domain.member.entity.Block;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.repository.BlockRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
+import mainproject33.global.service.VerificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,15 +23,16 @@ public class MatchBoardService {
 
     private final MatchBoardRepository matchBoardRepository;
     private final BlockRepository blockRepository;
+    private final VerificationService verify;
 
     public MatchBoard createMatchBoard(MatchBoard matchBoard) {
         return matchBoardRepository.save(matchBoard);
     }
 
-    public MatchBoard updateMatchBoard(Member member, MatchBoard matchBoard) {
-        MatchBoard findMatchBoard = findVerifiedMatchBoard(matchBoard.getId());
+    public MatchBoard updateMatchBoard(Member user, MatchBoard matchBoard) {
+        MatchBoard findMatchBoard = findMatchBoard(matchBoard.getId());
 
-        if (verifyMember(member, findMatchBoard)) {
+        if (verify.userIsMatchBoardWriter(user, findMatchBoard)) {
             Optional.ofNullable(matchBoard.getTitle())
                     .ifPresent(title -> findMatchBoard.setTitle(title));
             Optional.ofNullable(matchBoard.getContent())
@@ -49,7 +50,7 @@ public class MatchBoardService {
     }
 
     public MatchBoard readMatchBoard(long id, Member user) {
-        MatchBoard matchBoard = findVerifiedMatchBoard(id);
+        MatchBoard matchBoard = findMatchBoard(id);
 
         if (user == null) { // 비회원
             return matchBoard;
@@ -82,21 +83,17 @@ public class MatchBoardService {
         return matchBoardRepository.findByMemberId(memberId, pageable);
     }
 
-    public void deleteMatchBoard(Member member, long id) {
-        MatchBoard findMatchBoard = findVerifiedMatchBoard(id);
+    public void deleteMatchBoard(Member user, long id) {
+        MatchBoard findMatchBoard = findMatchBoard(id);
 
-        if (verifyMember(member, findMatchBoard)) {
+        if (verify.userIsMatchBoardWriter(user, findMatchBoard)) {
             matchBoardRepository.delete(findMatchBoard);
         } else {
             throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
         }
     }
 
-    public boolean verifyMember(Member principal, MatchBoard matchBoard) {
-        return matchBoard.getMember().getId() == principal.getId();
-    }
-
-    private MatchBoard findVerifiedMatchBoard(long id) {
+    private MatchBoard findMatchBoard(long id) {
         return matchBoardRepository.findById(id).orElseThrow(() ->
                 new BusinessLogicException(ExceptionMessage.MATCH_BOARD_NOT_FOUND));
     }

@@ -15,7 +15,7 @@ import java.util.Random;
 public class GameDBService {
     private final GameDBRepository gameDBRepository;
 
-    public List<GameDB> readGameDB(String keyword) { // TODO : 페이지네이션 필요?
+    public List<GameDB> readGameDB(String keyword) {
         if (keyword == null) {
             return gameDBRepository.findAll();
         } else {

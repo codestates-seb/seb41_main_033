@@ -130,13 +130,15 @@ const Nav = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink
-            to={`/profile/${loginInfo?.memberId}`}
-            className={({ isActive }) => (isActive ? 'active' : '')}
-          >
-            <MenuIconProfile />
-            <span>마이프로필</span>
-          </NavLink>
+          {loginInfo?.isLogin ? (
+            <NavLink
+              to={`/profile/${loginInfo?.memberId}`}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+              <MenuIconProfile />
+              <span>마이프로필</span>
+            </NavLink>
+          ) : null}
         </li>
       </Menu>
       <p className="copy">© 맑게고인물 team33 2023</p>

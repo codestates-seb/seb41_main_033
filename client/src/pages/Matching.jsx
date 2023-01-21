@@ -50,7 +50,7 @@ const Matching = () => {
 
   return (
     <Wrap>
-      <SearchBar setKeyword={setKeyword} />
+      <SearchBar setKeyword={setKeyword} setPage={setPage} />
       {matchinglist.length === 0 ? (
         <NoSearch />
       ) : (

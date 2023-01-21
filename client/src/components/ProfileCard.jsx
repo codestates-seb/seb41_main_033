@@ -151,10 +151,14 @@ const ProfileCard = () => {
               </div>
             ) : (
               <div className="icon">
-                {user.likeStatus ? (
-                  <Heart className="likes" onClick={handleLike} />
-                ) : (
-                  <EmptyHeart className="likes" onClick={handleLike} />
+                {user.blockStatus ? null : (
+                  <>
+                    {user.likeStatus ? (
+                      <Heart className="likes" onClick={handleLike} />
+                    ) : (
+                      <EmptyHeart className="likes" onClick={handleLike} />
+                    )}
+                  </>
                 )}
               </div>
             )}

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { API_URL } from "../data/apiUrl";
 import axios from "axios";
 import PostPatch from "../components/PostPatch";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TextArea = styled.div`
 	margin: 24px 0 16px 0;
@@ -11,9 +13,14 @@ const TextArea = styled.div`
 const StoryEdit = () => {
 	const [userData, setUserData] = useState({});
 	const [content, setContent] = useState("");
+	const navigate = useNavigate();
+	const params = useParams();
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const memberId = loginInfo.memberId;
+	const accessToken = loginInfo.accessToken;
 	useEffect(() => {
 		axios
-			.get(`${API_URL}/api/members/${localStorage.getItem("memberId")}`)
+			.get(`${API_URL}/api/members/${memberId}`)
 			.then((res) => {
 				setUserData(res.data.data);
 			})
@@ -28,7 +35,23 @@ const StoryEdit = () => {
 	};
 	//제출
 	const handleStoryEditSubmit = () => {
-		console.log("스토리 수정 버튼 클릭");
+		axios
+			.patch(
+				`${API_URL}/api/boards/${params.boardid}`,
+				{ content: content },
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				alert("수정이 완료되었습니다.");
+				navigate("/story");
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	return (

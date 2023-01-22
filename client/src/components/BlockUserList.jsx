@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import SingleProfileWrap from './SingleProfileWrap';
 
@@ -26,6 +27,9 @@ const ButtonWrap = styled.div`
 `;
 
 const BlockUserList = () => {
+  const { userid } = useParams();
+  const navigate = useNavigate();
+
   return (
     <>
       <ListWrap>
@@ -42,7 +46,12 @@ const BlockUserList = () => {
         </ul>
       </ListWrap>
       <ButtonWrap>
-        <button className="em">편집 완료</button>
+        <button
+          className="em"
+          onClick={() => navigate(`/profile/${userid}/edit`)}
+        >
+          편집 완료
+        </button>
       </ButtonWrap>
     </>
   );

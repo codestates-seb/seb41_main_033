@@ -63,11 +63,14 @@ const Matching = () => {
         })
         .catch((err) => console.log(err));
     }
+
   }, [page, keyword]);
 
   return (
     <Wrap>
+
       <SearchBar setKeyword={setKeyword} setPage={setPage} />
+v
       {matchinglist.length === 0 ? (
         <NoSearch />
       ) : (

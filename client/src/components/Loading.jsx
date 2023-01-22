@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import React from "react";
+import { forwardRef } from "react";
 
 const Wrap = styled.div`
 	padding: 48px 0;
@@ -7,7 +9,7 @@ const Wrap = styled.div`
 const Spinner = styled.div`
 	width: 60px;
 	height: 60px;
-	margin: 24px auto;
+	margin: 60px auto;
 	border: 3px solid var(--input-color);
 	border-radius: 50%;
 	border-top-color: var(--primary-color);
@@ -23,11 +25,16 @@ const Spinner = styled.div`
 	}
 `;
 
-const Loading = () => {
+// const Loading = forwardRef((props, ref) => {
+// 	return <Spinner ref={ref} />;
+// });
+
+const Loading = forwardRef((props, ref) => {
 	return (
-		<Wrap>
-			<Spinner />
-		</Wrap>
+		<>
+			<Spinner ref={ref} />
+		</>
 	);
-};
+});
+
 export default Loading;

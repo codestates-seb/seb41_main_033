@@ -4,10 +4,11 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
 import GameInfo from "./slice/matchInfo";
-
+import UserInfo from "./slice/userInfo";
 const reducer = combineReducers({
   islogin: Logined.reducer,
   games: GameInfo.reducer,
+  userInfo: UserInfo.reducer,
 });
 const persistConfig = {
   key: "persist",

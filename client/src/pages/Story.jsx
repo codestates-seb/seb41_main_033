@@ -68,12 +68,10 @@ const Story = () => {
 	//페이지 로딩 state
 	const [page, setPage] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
-	//const pageEndPoint = createRef(); //에러...
 	const pageEndPoint = useRef();
 	//페이지 증가 함수
 	const addPage = () => {
 		setPage((prevPage) => {
-			//console.log(prevPage);
 			return prevPage + 1;
 		});
 	};
@@ -116,23 +114,6 @@ const Story = () => {
 			observer.observe(pageEndPoint.current);
 		}
 	}, [isLoading]);
-
-	//이전 버전
-	// useEffect(() => {
-	// 	axios
-	// 		.get(`${API_URL}/api/boards?page=1`, {
-	// 			// headers: {
-	// 			// 	// "ngrok-skip-browser-warning": "69420",
-	// 			// 	Authorization: `Bearer ${accessToken}`,
-	// 			// },
-	// 		})
-	// 		.then((res) => {
-	// 			setStoryData([...storyData, ...res.data.data]);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 		});
-	// }, []);
 
 	const handleWriteFBtnOnClick = () => {
 		navigate(`/storywrite`);

@@ -27,8 +27,12 @@ const ProfileWrap = styled.div`
 const InformWrap = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 16px;
+  .profile_container {
+    margin-bottom: 0px;
+  }
   .icon {
-    padding-top: 16px;
+    margin: auto 0;
   }
   .setting,
   .likes {
@@ -144,6 +148,7 @@ const ProfileCard = () => {
         <ProfileWrap className="card sm">
           <InformWrap>
             <SinglePofileWrap
+              className="profile_container"
               imgSize="big"
               imgSrc={user.profileImage}
               name={user.nickname}

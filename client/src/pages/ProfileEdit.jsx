@@ -6,7 +6,7 @@ import InputWrap from '../components/InputWrap';
 import gameList from '../data/gameList.json';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const ContentWrap = styled.div`
@@ -99,7 +99,7 @@ const GameWrap = styled.div`
 `;
 
 const BioWrap = styled.div`
-  margin: 24px 0 16px 0;
+  margin: 16px 0;
   textarea {
     resize: none;
     width: 100%;
@@ -113,6 +113,12 @@ const BioWrap = styled.div`
   }
 `;
 
+const BlockWrap = styled.div`
+  .block_button {
+    border-radius: 8px;
+  }
+`;
+
 const ProfileEdit = () => {
   const { userid } = useParams();
   const [user, setUser] = useState(null);
@@ -121,6 +127,7 @@ const ProfileEdit = () => {
   const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
   const { accessToken } = useSelector((state) => state.islogin.login);
+  const navigate = useNavigate();
 
   const handleNickname = (e) => {
     setUser({ ...user, nickname: e.target.value });
@@ -261,6 +268,15 @@ const ProfileEdit = () => {
               onChange={handleBio}
             />
           </BioWrap>
+          <BlockWrap>
+            <label>차단한 유저 편집</label>
+            <button
+              className="normal block_button"
+              onClick={() => navigate(`/profile/${userid}/block`)}
+            >
+              차단한 유저 목록 보기
+            </button>
+          </BlockWrap>
         </ContentWrap>
       </PostPatch>
     );

@@ -34,6 +34,12 @@ const StoryBtn = ({ size, type, clickHandler }) => {
 					<EditIcon />
 				</>
 			) : null}
+			{type === "editComplete" ? (
+				<>
+					수정완료
+					<EditIcon />
+				</>
+			) : null}
 			{type === "delete" ? (
 				<>
 					삭제

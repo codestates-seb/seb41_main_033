@@ -7,7 +7,7 @@ const CardWrap = styled.div`
 `;
 
 const ButtonWrap = styled.div`
-  padding-top: 56px;
+  padding-top: 32px;
   text-align: center;
   button {
     width: 280px;

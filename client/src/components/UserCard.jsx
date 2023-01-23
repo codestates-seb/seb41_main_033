@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { ReactComponent as DefaultProfileImg } from './../assets/defaultImg.svg';
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { ReactComponent as DefaultProfileImg } from "./../assets/defaultImg.svg";
 const Card = styled.div`
   display: flex;
   justify-content: center;
@@ -19,23 +19,23 @@ const Img = styled.div`
   display: block;
   width: 56px;
   height: 56px;
-  border-radius: 50%;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    object-fit: cover;
+  }
 `;
 const Name = styled.div`
   margin: 10px 0;
   text-align: center;
 `;
-const Like = styled.span`
-  display: inline-block;
-  margin: 0 6px;
-  .logo_span {
-    position: absolute;
-    display: inline-block;
-    .logo {
-      position: relative;
-      margin-top: 3px;
-      margin-left: 4px;
-    }
+const Like = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > div {
+    margin: 0 6px;
   }
 `;
 const UserCard = ({ data }) => {
@@ -44,16 +44,18 @@ const UserCard = ({ data }) => {
       <Div>
         <Link to={`/profile/${data.memberId}`}>
           <Img>
-            {data.img ? (
-              <img src={data.image} alt="유저프로필" />
+            {data.profileImage ? (
+              <img src={data.profileImage} alt="유저프로필" />
             ) : (
               <DefaultProfileImg />
             )}
           </Img>
           <Name>{data.nickname}</Name>
         </Link>
-        <Like>Likes</Like>
-        <Like className="number">{data.likeCount ? data.likeCount : 0}</Like>
+        <Like>
+          <div>Likes</div>
+          <div className="number">{data.likeCount ? data.likeCount : 0}</div>
+        </Like>
       </Div>
     </Card>
   );

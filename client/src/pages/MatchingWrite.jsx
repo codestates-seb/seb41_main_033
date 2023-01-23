@@ -24,6 +24,10 @@ const MatchContainer = styled.form`
     padding: 16px;
     color: var(--strong-color);
     resize: none;
+    white-space: pre-wrap;
+    ::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -114,7 +118,7 @@ const MatchingWrite = () => {
     setTags(newTag);
   };
   const loginInfo = useSelector((state) => state.islogin.login);
-  console.log(loginInfo);
+  const userInfo = useSelector((state) => state.userInfo.userInfo);
   const addTags = (event) => {
     const newTag = event.target.value.replace(/ /g, "").substring(0, 6);
     if (
@@ -141,7 +145,7 @@ const MatchingWrite = () => {
       !Object.values(object).every((el) => el !== null && el.length !== 0);
 
     const data = { title, game, team, tags, content };
-    if (!isEmpty(data) && content.length >= 5) {
+    if (!isEmpty(data) && content.length >= 5 && game !== "게임을 선택하세요") {
       axios
         .post(`${API_URL}/api/matches`, data, {
           headers: {
@@ -157,9 +161,9 @@ const MatchingWrite = () => {
   return (
     <PostPatch
       onsubmit="return false"
-      image={""}
-      nickname={"아직몰름"}
-      identifier={"아직모름"}
+      image={userInfo?.profileImage}
+      nickname={userInfo?.nickname}
+      identifier={userInfo?.identifier}
       button1="작성완료"
       link2="/"
       button2="취소"
@@ -175,7 +179,7 @@ const MatchingWrite = () => {
               id="title"
               maxLength="30"
               minLength="5"
-              placeholder="제목을 입력하세요"
+              placeholder="제목을 입력하세요(최소 5자)"
               onChange={changeValue}
             />
           </div>
@@ -228,7 +232,7 @@ const MatchingWrite = () => {
             <Label htmlFor="content">상세 설명</Label>
             <textarea
               name="content"
-              placeholder="상세설명을 입력하세요"
+              placeholder="상세설명을 입력하세요(최소 5자)"
               onChange={changeValue}
               maxLength="500"
               minLength="5"

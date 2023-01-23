@@ -9,8 +9,7 @@ const Wrap = styled.div`
 `;
 
 const Btn = styled.button`
-  &:hover,
-  :active {
+  &[aria-current="page"] {
     color: var(--primary-color);
   }
 `;
@@ -25,21 +24,23 @@ const MatchPagination = ({ setPage, page, total }) => {
   return (
     <Wrap>
       <Btn
+        className="icon"
         onClick={() => {
-          if (currPage < 1) {
+          if (page <= 1) {
             return;
           }
           setPage(page - 1);
           setCurrPage(page - 2);
         }}
       >
-        <ArrowBack />
+        {total > 5 && <ArrowBack />}
       </Btn>
       {Array(pageCount)
         .fill()
         .map((_, i) => (
           <Btn
             key={i + 1}
+            aria-current={page === firstNum + i && "page"}
             onClick={() => {
               setPage(firstNum + i);
             }}
@@ -48,6 +49,7 @@ const MatchPagination = ({ setPage, page, total }) => {
           </Btn>
         ))}
       <Btn
+        className="icon"
         onClick={() => {
           if (total <= page) {
             return;
@@ -56,7 +58,7 @@ const MatchPagination = ({ setPage, page, total }) => {
           setCurrPage(page);
         }}
       >
-        <ArrowForward />
+        {total > 5 && <ArrowForward />}
       </Btn>
     </Wrap>
   );

@@ -10,6 +10,7 @@ import axios from "axios";
 import { API_URL } from "../data/apiUrl";
 import matchGame from "../util/matchGame";
 const Icon = styled.div`
+  cursor: pointer;
   div {
     animation: vibration 0.4s infinite;
     transition: 1s;
@@ -101,7 +102,7 @@ const Drag = () => {
       {DnD.dragEnd && (
         <GameImg src={matchGame(gameInfo).image} alt="게임아이콘" />
       )}
-      {DnD.dragEnd && <Title>{gameInfo.korTitle}</Title>}
+      {DnD.dragEnd && <Title>{gameInfo.korTitle} 고 ?</Title>}
       {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
     </div>
   );

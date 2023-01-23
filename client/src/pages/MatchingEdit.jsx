@@ -7,12 +7,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
 import { useSelector } from "react-redux";
+
 const Label = styled.label`
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 150%;
   letter-spacing: -0.023em;
+  margin: 16px 0px;
 `;
 
 const TagsInput = styled.div`
@@ -73,9 +75,23 @@ const TagsInput = styled.div`
     }
   }
 `;
+const TextArea = styled.textarea`
+  background-color: var(--input-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  width: 100%;
+  min-height: 112px;
+  padding: 16px;
+  color: var(--strong-color);
+  resize: none;
+  white-space: pre-wrap;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const MatchingEdit = () => {
-  const { gameInfo } = useSelector((state) => state.games);
+  const gameInfo = useSelector((state) => state.games.gameInfo);
   const loginInfo = useSelector((state) => state.islogin.login);
   const navigate = useNavigate();
   const [info, setInfo] = useState({
@@ -124,7 +140,8 @@ const MatchingEdit = () => {
             Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
-        .then(() => navigate("/"));
+        .then(() => navigate("/"))
+        .catch((err) => alert(err));
     }
   };
   const [isOpen, setIsOpen] = useState(false);
@@ -149,7 +166,7 @@ const MatchingEdit = () => {
           minLength="5"
           placeholder="제목을 입력하세요"
           onChange={changeValue}
-          value={title || ""}
+          value={title}
         />
       </div>
       <div>
@@ -158,7 +175,7 @@ const MatchingEdit = () => {
           id="game"
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          game={game || ""}
+          game={game}
           setGame={setGame}
         />
       </div>
@@ -168,7 +185,7 @@ const MatchingEdit = () => {
           type="text"
           name="team"
           id="team"
-          value={team || ""}
+          value={team}
           placeholder="팀원수를 입력하세요"
           onChange={changeValue}
         />
@@ -196,11 +213,11 @@ const MatchingEdit = () => {
       </TagsInput>
       <div>
         <Label htmlFor="content">내용</Label>
-        <textarea
+        <TextArea
           name="content"
           placeholder="상세설명을 입력하세요"
           onChange={changeValue}
-          value={content || ""}
+          value={content}
           maxLength="500"
           minLength="5"
         />

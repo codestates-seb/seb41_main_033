@@ -29,7 +29,7 @@ const Matching = () => {
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
   const matchingBtn = () => {
-    if (loginInfo) {
+    if (loginInfo?.isLogin) {
       navigate("/matchwrite");
     } else {
       navigate("/login");
@@ -37,20 +37,40 @@ const Matching = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {
-        headers: { "ngrok-skip-browser-warning": "69420" },
-      })
-      .then((res) => {
-        setMatchinglist(res.data.data);
-        setTotal(res.data.pageInfo.totalPages);
-      })
-      .catch((err) => console.log(err));
+    if (loginInfo?.isLogin) {
+      axios
+        .get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "69420",
+            Authorization: `Bearer ${loginInfo.accessToken}`,
+          },
+        })
+        .then((res) => {
+          setMatchinglist(res.data.data);
+          setTotal(res.data.pageInfo.totalPages);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      axios
+        .get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "69420",
+          },
+        })
+        .then((res) => {
+          setMatchinglist(res.data.data);
+          setTotal(res.data.pageInfo.totalPages);
+        })
+        .catch((err) => console.log(err));
+    }
+
   }, [page, keyword]);
 
   return (
     <Wrap>
-      <SearchBar setKeyword={setKeyword} />
+
+      <SearchBar setKeyword={setKeyword} setPage={setPage} />
+v
       {matchinglist.length === 0 ? (
         <NoSearch />
       ) : (

@@ -18,6 +18,10 @@ const ListWrap = styled.div`
     }
     .unblock_btn {
       color: var(--error-color);
+      transition: 0.4s;
+      :hover {
+        color: var(--strong-color);
+      }
     }
   }
 `;

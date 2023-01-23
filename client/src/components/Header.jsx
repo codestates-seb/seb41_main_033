@@ -1,12 +1,12 @@
-import styled from "styled-components";
-import { ReactComponent as ProfileImg } from "./../assets/defaultImg.svg";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { API_URL } from "../data/apiUrl";
-import { logout } from "../redux/slice/loginstate";
-import { userInfo } from "../redux/slice/userInfo";
+import styled from 'styled-components';
+import { ReactComponent as ProfileImg } from './../assets/defaultImg.svg';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
+import { logout } from '../redux/slice/loginstate';
+import { userInfo } from '../redux/slice/userInfo';
 const HeaderWrap = styled.header`
   position: absolute;
   left: 0;
@@ -76,18 +76,19 @@ const BtnWrap = styled.div`
 
 const Header = () => {
   const loginInfo = useSelector((state) => state.islogin.login);
-  const [user, setUser] = useState({});
+  const userInform = useSelector((state) => state.userInfo.userInfo);
+  const [nickname, setNickname] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (loginInfo?.isLogin) {
       axios.get(`${API_URL}/api/members/${loginInfo?.memberId}`).then((res) => {
-        setUser(res.data.data);
+        setNickname(res.data.data.nickname);
         dispatch(userInfo(res.data.data));
       });
     }
-  }, [loginInfo?.isLogin, loginInfo?.memberId]);
+  }, [loginInfo?.isLogin, loginInfo?.memberId, dispatch]);
 
   const handleLogout = () => {
     axios
@@ -103,21 +104,21 @@ const Header = () => {
       .then(() => {
         localStorage.clear();
         dispatch(logout({ accessToken: null, memberId: null, isLogin: false }));
-        navigate("/");
+        navigate('/');
       });
   };
 
   return (
     <HeaderWrap>
-      {user && loginInfo?.isLogin ? (
+      {userInform && loginInfo?.isLogin ? (
         <>
           <ProfileWrap>
             <a href={`/profile/`}>
               <span className="alert">알림</span>
-              <span className="user_nickname">{user.nickname}</span>
+              <span className="user_nickname">{nickname}</span>
               <div className="user_img">
-                {user.profileImage ? (
-                  <img src={user.profileImage} alt="프로필이미지" />
+                {userInform.profileImage ? (
+                  <img src={userInform.profileImage} alt="프로필이미지" />
                 ) : (
                   <ProfileImg />
                 )}
@@ -132,13 +133,13 @@ const Header = () => {
         <BtnWrap>
           <NavLink
             to="/signup"
-            className={({ isActive }) => (isActive ? "active" : "")}
+            className={({ isActive }) => (isActive ? 'active' : '')}
           >
             회원가입
           </NavLink>
           <NavLink
             to="/login"
-            className={({ isActive }) => (isActive ? "active" : "")}
+            className={({ isActive }) => (isActive ? 'active' : '')}
           >
             로그인
           </NavLink>

@@ -27,7 +27,7 @@ const SearchWrap = styled.div`
 const SearchBar = ({ setKeyword, setPage }) => {
   const [searchData, setSearchData] = useState("");
   const handleKeydown = (e) => {
-    if (e.target.value.length === 0) {
+    if (e.target.value.length <= 1) {
       setKeyword("");
     }
     if (e.key === "Enter") {

@@ -24,8 +24,9 @@ const MatchPagination = ({ setPage, page, total }) => {
   return (
     <Wrap>
       <Btn
+        className="icon"
         onClick={() => {
-          if (currPage < 1) {
+          if (page <= 1) {
             return;
           }
           setPage(page - 1);
@@ -39,7 +40,7 @@ const MatchPagination = ({ setPage, page, total }) => {
         .map((_, i) => (
           <Btn
             key={i + 1}
-            aria-current={page === i + 1 && "page"}
+            aria-current={page === firstNum + i && "page"}
             onClick={() => {
               setPage(firstNum + i);
             }}
@@ -48,6 +49,7 @@ const MatchPagination = ({ setPage, page, total }) => {
           </Btn>
         ))}
       <Btn
+        className="icon"
         onClick={() => {
           if (total <= page) {
             return;

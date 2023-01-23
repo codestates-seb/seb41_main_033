@@ -21,6 +21,7 @@ const ProfileWrap = styled.div`
     margin-top: 6px;
     font-size: var(--font-body2-size);
     color: var(--white);
+    white-space: pre-wrap;
   }
 `;
 

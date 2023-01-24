@@ -40,9 +40,7 @@ const TabWrap = styled.div`
 `;
 
 const ProfileContent = () => {
-  const loginInfo = useSelector((state) => state.islogin.login);
-  const { userid } = useParams();
-  const [user, setUser] = useState(null);
+  const userInfo = useSelector((state) => state.profile.user);
   const [isMatch, setIsMatch] = useState(true);
   const [isStory, setIsStory] = useState(false);
 
@@ -51,20 +49,10 @@ const ProfileContent = () => {
     setIsStory((prev) => !prev);
   };
 
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/api/members/${userid}`, {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      })
-      .then((res) => {
-        setUser(res.data.data);
-      });
-  }, [userid, loginInfo?.accessToken]);
-
-  if (user) {
+  if (userInfo) {
     return (
       <ContentWrap className="card">
-        {user.blockStatus ? (
+        {userInfo.blockStatus ? (
           <div className="block_container">
             <BlockUser />
             <div className="block_msg">차단한 유저의 프로필입니다.</div>

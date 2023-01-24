@@ -6,12 +6,14 @@ import { combineReducers } from '@reduxjs/toolkit';
 import GameInfo from './slice/matchInfo';
 import UserInfo from './slice/userInfo';
 import blockSlice from './slice/blockSlice';
+import profileSlice from './slice/profileSlice';
 
 const reducer = combineReducers({
   islogin: Logined.reducer,
   games: GameInfo.reducer,
   userInfo: UserInfo.reducer,
   block: blockSlice.reducer,
+  profile: profileSlice.reducer,
 });
 const persistConfig = {
   key: 'persist',
@@ -25,5 +27,4 @@ const store = configureStore({
       serializableCheck: false,
     }),
 });
-
 export default store;

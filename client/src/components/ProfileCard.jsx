@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import SinglePofileWrap from './SingleProfileWrap';
 import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
@@ -8,6 +8,7 @@ import { ReactComponent as EmptyHeart } from '../assets/heartEmptyIcon.svg';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { useState, useEffect } from 'react';
+import { setProfile } from '../redux/slice/profileSlice';
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -21,6 +22,7 @@ const ProfileWrap = styled.div`
     margin-top: 6px;
     font-size: var(--font-body2-size);
     color: var(--white);
+    white-space: pre-wrap;
   }
 `;
 
@@ -90,44 +92,104 @@ const ProfileCard = () => {
   const [isMe, setIsMe] = useState(false);
   const { userid } = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
+  const userInfo = useSelector((state) => state.profile.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleFollow = () => {
     if (loginInfo?.isLogin) {
-      axios.post(
-        `${API_URL}/api/members/${userid}/follows`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-        }
-      );
-      window.location.reload();
+      axios
+        .post(
+          `${API_URL}/api/members/${userid}/follows`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+          }
+        )
+        .then((res) => {
+          if (res.data === '팔로우가 완료되었습니다.') {
+            dispatch(
+              setProfile({
+                ...userInfo,
+                followStatus: !userInfo.followStatus,
+                followerCount: userInfo.followerCount + 1,
+              })
+            );
+          } else {
+            dispatch(
+              setProfile({
+                ...userInfo,
+                followStatus: !userInfo.followStatus,
+                followerCount: userInfo.followerCount - 1,
+              })
+            );
+          }
+        });
     } else return navigate(`/login`);
   };
 
   const handleLike = () => {
     if (loginInfo?.isLogin) {
-      axios.post(
-        `${API_URL}/api/members/${userid}/likes`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-        }
-      );
-      window.location.reload();
+      axios
+        .post(
+          `${API_URL}/api/members/${userid}/likes`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+          }
+        )
+        .then((res) => {
+          if (res.data === '좋아요가 완료되었습니다.') {
+            dispatch(
+              setProfile({
+                ...userInfo,
+                likeStatus: !userInfo.likeStatus,
+                likeCount: userInfo.likeCount + 1,
+              })
+            );
+          } else {
+            dispatch(
+              setProfile({
+                ...userInfo,
+                likeStatus: !userInfo.likeStatus,
+                likeCount: userInfo.likeCount - 1,
+              })
+            );
+          }
+        });
     } else return navigate(`/login`);
   };
 
   const handleBlock = () => {
     if (loginInfo?.isLogin) {
-      axios.post(
-        `${API_URL}/api/members/${userid}/blocks`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-        }
-      );
-      window.location.reload();
+      axios
+        .post(
+          `${API_URL}/api/members/${userid}/blocks`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+          }
+        )
+        .then((res) => {
+          if (
+            res.data ===
+            '해당 유저를 차단하셨습니다. 팔로우와 좋아요가 취소됩니다.'
+          ) {
+            dispatch(
+              setProfile({
+                ...userInfo,
+                blockStatus: !userInfo.blockStatus,
+              })
+            );
+          } else {
+            dispatch(
+              setProfile({
+                ...userInfo,
+                blockStatus: !userInfo.blockStatus,
+              })
+            );
+          }
+        });
     } else return navigate(`/login`);
   };
 
@@ -138,9 +200,10 @@ const ProfileCard = () => {
       })
       .then((res) => {
         setUser(res.data.data);
+        dispatch(setProfile(res.data.data));
       });
     Number(userid) === loginInfo?.memberId ? setIsMe(true) : setIsMe(false);
-  }, [userid, loginInfo?.accessToken, loginInfo?.memberId]);
+  }, [userid, loginInfo?.accessToken, loginInfo?.memberId, dispatch]);
 
   if (user) {
     return (
@@ -163,9 +226,9 @@ const ProfileCard = () => {
               </div>
             ) : (
               <div className="icon">
-                {user.blockStatus ? null : (
+                {userInfo.blockStatus ? null : (
                   <>
-                    {user.likeStatus ? (
+                    {userInfo.likeStatus ? (
                       <Heart className="likes" onClick={handleLike} />
                     ) : (
                       <EmptyHeart className="likes" onClick={handleLike} />
@@ -178,22 +241,22 @@ const ProfileCard = () => {
           <FollowWrap>
             <Follow>
               <div className="follow">팔로잉</div>
-              <div className="number">{user.followingCount}</div>
+              <div className="number">{userInfo.followingCount}</div>
             </Follow>
             <Follow>
               <div className="follow">팔로워</div>
-              <div className="number">{user.followerCount}</div>
+              <div className="number">{userInfo.followerCount}</div>
             </Follow>
             <Follow>
               <div className="follow">좋아요</div>
-              <div className="number">{user.likeCount}</div>
+              <div className="number">{userInfo.likeCount}</div>
             </Follow>
           </FollowWrap>
           {!isMe ? (
             <ButtonWrap>
-              {user.blockStatus ? null : (
+              {userInfo.blockStatus ? null : (
                 <>
-                  {user.followStatus ? (
+                  {userInfo.followStatus ? (
                     <button className="em" onClick={handleFollow}>
                       팔로우 해제하기
                     </button>
@@ -210,7 +273,7 @@ const ProfileCard = () => {
             </ButtonWrap>
           ) : null}
         </ProfileWrap>
-        {user.blockStatus ? null : (
+        {userInfo.blockStatus ? null : (
           <>
             <ProfileWrap className="card sm">
               <div className="inform_title">주로하는 게임</div>

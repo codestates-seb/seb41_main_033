@@ -36,7 +36,7 @@ const StoryComments = ({ boardId }) => {
 
 	useEffect(() => {
 		getCommentsList();
-	}, [commentsList]);
+	}, []);
 
 	//CRUD
 	//CREATE: 댓글 생성
@@ -52,7 +52,7 @@ const StoryComments = ({ boardId }) => {
 				}
 			)
 			.then((res) => {
-				setCommentsList((prevData) => [res.data.data, ...prevData]);
+				setCommentsList((prevData) => [...prevData, res.data.data]);
 				setComment("");
 			})
 			.catch((err) => {

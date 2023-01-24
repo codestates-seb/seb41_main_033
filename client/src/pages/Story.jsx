@@ -63,7 +63,7 @@ const Story = () => {
 
 	//페이지 로딩 state
 	const [page, setPage] = useState(1);
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const pageEndPoint = useRef();
 	//페이지 증가 함수
 	const addPage = () => {
@@ -81,8 +81,10 @@ const Story = () => {
 				// },
 			})
 			.then((res) => {
-				setStoryData((prevData) => [...prevData, ...res.data.data]);
-				if (page === res.data.pageInfo.totalPages) {
+				setStoryData((prevData) => [...res.data.data, ...prevData]);
+				const totalPages = res.data.pageInfo.totalPages;
+				console.log(page, totalPages);
+				if (page === totalPages) {
 					setIsLoading(false);
 				} else {
 					setIsLoading(true);

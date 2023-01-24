@@ -120,7 +120,7 @@ const MatchDetails = ({ data, boardId }) => {
           Authorization: `Bearer ${loginInfo.accessToken}`,
         },
       })
-      .then((res) => navigate("/"));
+      .then((res) => navigate("/match"));
   };
 
   return (
@@ -151,7 +151,7 @@ const MatchDetails = ({ data, boardId }) => {
       </Div>
       {same && (
         <Div>
-          <EmLink className="em" to={`/${boardId}/edit`}>
+          <EmLink className="em" to={`/match/${boardId}/edit`}>
             수정하기
           </EmLink>
 

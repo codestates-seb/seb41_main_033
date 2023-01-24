@@ -72,7 +72,6 @@ const TagsInput = styled.div`
       background: var(--black);
       border: 1px solid var(--grey);
       border-radius: 30px;
-      cursor: pointer;
       .tag_title {
         font-weight: 500;
         font-size: 12px;
@@ -120,7 +119,8 @@ const MatchingWrite = () => {
   const loginInfo = useSelector((state) => state.islogin.login);
   const userInfo = useSelector((state) => state.userInfo.userInfo);
   const addTags = (event) => {
-    const newTag = event.target.value.replace(/ /g, "").substring(0, 6);
+    const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
+    const newTag = event.target.value.replace(reg, "").substring(0, 6);
     if (
       !tags.includes(newTag) &&
       event.key === "Enter" &&
@@ -143,7 +143,6 @@ const MatchingWrite = () => {
   const submitBtn = (e) => {
     const isEmpty = (object) =>
       !Object.values(object).every((el) => el !== null && el.length !== 0);
-
     const data = { title, game, team, tags, content };
     if (!isEmpty(data) && content.length >= 5 && game !== "게임을 선택하세요") {
       axios
@@ -152,7 +151,7 @@ const MatchingWrite = () => {
             Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
-        .then(navigate("/"))
+        .then(navigate("/match"))
         .catch((err) => console(err));
     }
   };
@@ -165,7 +164,7 @@ const MatchingWrite = () => {
       nickname={userInfo?.nickname}
       identifier={userInfo?.identifier}
       button1="작성완료"
-      link2="/"
+      link2="/match"
       button2="취소"
       handleSubmit={submitBtn}
     >

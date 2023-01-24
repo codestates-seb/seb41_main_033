@@ -61,7 +61,7 @@ const App = () => {
                 path="/story/:userid/:boardid/edit"
                 element={<StoryEdit />}
               />
-              <Route path="/storywrite" element={<StoryWrite />} />
+              <Route path="/story/storywrite" element={<StoryWrite />} />
               <Route path="/profile/:userid" element={<Profile />} />
               <Route path="/profile/:userid/edit" element={<ProfileEdit />} />
               <Route path="/profile/:userid/block" element={<BlockList />} />

@@ -1,23 +1,23 @@
-import styled from "styled-components";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./style.css";
-import Header from "./components/Header";
-import Nav from "./components/Nav";
-import Matching from "./pages/Matching";
-import MatchingDetail from "./pages/MatchingDetail";
-import MatchingWrite from "./pages/MatchingWrite";
-import MatchingEdit from "./pages/MatchingEdit";
-import Story from "./pages/Story";
-import StoryDetail from "./pages/StoryDetail";
-import StoryWrite from "./pages/StoryWrite";
-import StoryEdit from "./pages/StoryEdit";
-import Profile from "./pages/Profile";
-import ProfileEdit from "./pages/ProfileEdit";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Quit from "./pages/Quit";
-import GameRecommend from "./pages/GameRecommend";
-
+import styled from 'styled-components';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './style.css';
+import Header from './components/Header';
+import Nav from './components/Nav';
+import Matching from './pages/Matching';
+import MatchingDetail from './pages/MatchingDetail';
+import MatchingWrite from './pages/MatchingWrite';
+import MatchingEdit from './pages/MatchingEdit';
+import Story from './pages/Story';
+import StoryDetail from './pages/StoryDetail';
+import StoryWrite from './pages/StoryWrite';
+import StoryEdit from './pages/StoryEdit';
+import Profile from './pages/Profile';
+import ProfileEdit from './pages/ProfileEdit';
+import BlockList from './pages/BlockList';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Quit from './pages/Quit';
+import GameRecommend from './pages/GameRecommend';
 
 const Wrap = styled.div`
   display: flex;

@@ -62,8 +62,8 @@ const Story = () => {
 	const [storyData, setStoryData] = useState([]);
 
 	//페이지 로딩 state
-	const [page, setPage] = useState(0);
-	const [isLoading, setIsLoading] = useState(false);
+	const [page, setPage] = useState(1);
+	const [isLoading, setIsLoading] = useState(true);
 	const pageEndPoint = useRef();
 	//페이지 증가 함수
 	const addPage = () => {
@@ -82,18 +82,20 @@ const Story = () => {
 			})
 			.then((res) => {
 				setStoryData((prevData) => [...prevData, ...res.data.data]);
-				setIsLoading(true);
+				if (page === res.data.pageInfo.totalPages) {
+					setIsLoading(false);
+				} else {
+					setIsLoading(true);
+				}
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 	};
-
 	//페이지 바뀔때마다 데이터 요청
 	useEffect(() => {
 		requestPage(page);
 	}, [page]);
-
 	//Intersection Observer로 로딩 여부 확인
 	useEffect(() => {
 		if (isLoading) {
@@ -110,10 +112,11 @@ const Story = () => {
 			observer.observe(pageEndPoint.current);
 		}
 	}, [isLoading]);
-
+	//작성하기 버튼
 	const handleWriteFBtnOnClick = () => {
-		navigate(`/storywrite`);
+		navigate(`/story/storywrite`);
 	};
+
 	return (
 		<Wrap>
 			<TitleWrap>
@@ -127,7 +130,6 @@ const Story = () => {
 				})}
 			</StoryBoardWrap>
 			<WriteFloatButton click={handleWriteFBtnOnClick} />
-			{/* {isLoading && <Loading ref={pageEndPoint} />} */}
 			{isLoading && (
 				<div className="loadingObserver" ref={pageEndPoint}>
 					<div></div>

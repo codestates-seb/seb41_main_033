@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as ArrowBack } from '../assets/arrowBack.svg';
@@ -17,8 +18,10 @@ const PageWrap = styled.div`
     height: 32px;
     font-size: var(--font-body2-size);
   }
-  .active {
-    color: var(--yellow);
+  button {
+    &[aria-current='active'] {
+      color: var(--yellow);
+    }
   }
 `;
 
@@ -32,132 +35,58 @@ const ProfilePagination = ({
   storyPageInfo,
 }) => {
   const [matchFirstPage, setMatchFirstPage] = useState(matchPage);
+  const [matchPageCount, setMatchPageCount] = useState(5);
   const matchTotalPage = matchPageInfo.totalPages;
-  const matchFirstNum = matchFirstPage - (matchFirstPage % 8) + 1;
+  const matchFirstNum = matchFirstPage - (matchFirstPage % 5) + 1;
+  const matchLastNum = matchFirstPage - (matchFirstPage % 5) + 5;
 
   const [storyFirstPage, setStoryFirstPage] = useState(storyPage);
+  const [storyPageCount, setStoryPageCount] = useState(5);
   const storyTotalPage = storyPageInfo.totalPages;
-  const storyFirstNum = storyFirstPage - (storyFirstPage % 8) + 1;
+  const storyFirstNum = storyFirstPage - (storyFirstPage % 5) + 1;
+  const storyLastNum = storyFirstPage - (storyFirstPage % 5) + 5;
 
-  const [isMatchPage1, setIsMatchPage1] = useState(true);
-  const [isMatchPage2, setIsMatchPage2] = useState(false);
-  const [isMatchPage3, setIsMatchPage3] = useState(false);
-  const [isMatchPage4, setIsMatchPage4] = useState(false);
-  const [isMatchPage5, setIsMatchPage5] = useState(false);
-
-  const [isStoryPage1, setIsStoryPage1] = useState(true);
-  const [isStoryPage2, setIsStoryPage2] = useState(false);
-  const [isStoryPage3, setIsStoryPage3] = useState(false);
-  const [isStoryPage4, setIsStoryPage4] = useState(false);
-  const [isStoryPage5, setIsStoryPage5] = useState(false);
+  useEffect(() => {
+    if (matchLastNum > matchTotalPage) setMatchPageCount(matchTotalPage % 5);
+    if (storyLastNum > storyTotalPage) setStoryPageCount(storyTotalPage % 5);
+  }, [matchLastNum, matchTotalPage, storyLastNum, storyTotalPage]);
 
   return (
     <PageWrap>
       {isMatch ? (
         <>
-          {matchTotalPage > 5 ? (
+          {matchTotalPage > 1 ? (
             <button
               className="page_content"
               onClick={() => {
                 setMatchPage(matchPage - 1);
                 setMatchFirstPage(matchPage - 2);
-                setIsMatchPage1(true);
-                setIsMatchPage2(false);
-                setIsMatchPage3(false);
-                setIsMatchPage4(false);
-                setIsMatchPage5(false);
               }}
+              disabled={matchPage === 1}
             >
               <ArrowBack />
             </button>
           ) : null}
-          {matchTotalPage >= matchFirstNum ? (
-            <button
-              className={'page_content' + (isMatchPage1 ? ' active' : '')}
-              onClick={() => {
-                setMatchPage(matchFirstNum);
-                setIsMatchPage1(true);
-                setIsMatchPage2(false);
-                setIsMatchPage3(false);
-                setIsMatchPage4(false);
-                setIsMatchPage5(false);
-              }}
-            >
-              {matchFirstNum}
-            </button>
-          ) : null}
-          {matchTotalPage >= matchFirstNum + 1 ? (
-            <button
-              className={'page_content' + (isMatchPage2 ? ' active' : '')}
-              onClick={() => {
-                setMatchPage(matchFirstNum + 1);
-                setIsMatchPage1(false);
-                setIsMatchPage2(true);
-                setIsMatchPage3(false);
-                setIsMatchPage4(false);
-                setIsMatchPage5(false);
-              }}
-            >
-              {matchFirstNum + 1}
-            </button>
-          ) : null}
-          {matchTotalPage >= matchFirstNum + 2 ? (
-            <button
-              className={'page_content' + (isMatchPage3 ? ' active' : '')}
-              onClick={() => {
-                setMatchPage(matchFirstNum + 2);
-                setIsMatchPage1(false);
-                setIsMatchPage2(false);
-                setIsMatchPage3(true);
-                setIsMatchPage4(false);
-                setIsMatchPage5(false);
-              }}
-            >
-              {matchFirstNum + 2}
-            </button>
-          ) : null}
-          {matchTotalPage >= matchFirstNum + 3 ? (
-            <button
-              className={'page_content' + (isMatchPage4 ? ' active' : '')}
-              onClick={() => {
-                setMatchPage(matchFirstNum + 3);
-                setIsMatchPage1(false);
-                setIsMatchPage2(false);
-                setIsMatchPage3(false);
-                setIsMatchPage4(true);
-                setIsMatchPage5(false);
-              }}
-            >
-              {matchFirstNum + 3}
-            </button>
-          ) : null}
-          {matchTotalPage >= matchFirstNum + 4 ? (
-            <button
-              className={'page_content' + (isMatchPage5 ? ' active' : '')}
-              onClick={() => {
-                setMatchPage(matchFirstNum + 4);
-                setIsMatchPage1(false);
-                setIsMatchPage2(false);
-                setIsMatchPage3(false);
-                setIsMatchPage4(false);
-                setIsMatchPage5(true);
-              }}
-            >
-              {matchFirstNum + 4}
-            </button>
-          ) : null}
-          {matchTotalPage > 5 ? (
+          {Array(matchPageCount)
+            .fill()
+            .map((_, idx) => (
+              <button
+                className="page_content"
+                key={idx + 1}
+                onClick={() => setMatchPage(matchFirstNum + idx)}
+                aria-current={matchPage === matchFirstNum + idx && 'active'}
+              >
+                {matchFirstNum + idx}
+              </button>
+            ))}
+          {matchTotalPage > 1 ? (
             <button
               className="page_content"
               onClick={() => {
                 setMatchPage(matchPage + 1);
                 setMatchFirstPage(matchPage);
-                setIsMatchPage1(true);
-                setIsMatchPage2(false);
-                setIsMatchPage3(false);
-                setIsMatchPage4(false);
-                setIsMatchPage5(false);
               }}
+              disabled={matchPage === matchTotalPage}
             >
               <ArrowForward />
             </button>
@@ -165,109 +94,38 @@ const ProfilePagination = ({
         </>
       ) : (
         <>
-          {storyTotalPage > 5 ? (
+          {storyTotalPage > 1 ? (
             <button
               className="page_content"
               onClick={() => {
                 setStoryPage(storyPage - 1);
                 setStoryFirstPage(storyPage - 2);
-                setIsStoryPage1(true);
-                setIsStoryPage2(false);
-                setIsStoryPage3(false);
-                setIsStoryPage4(false);
-                setIsStoryPage5(false);
               }}
+              disabled={storyPage === 1}
             >
               <ArrowBack />
             </button>
           ) : null}
-          {storyTotalPage >= storyFirstNum ? (
-            <button
-              className={'page_content' + (isStoryPage1 ? ' active' : '')}
-              onClick={() => {
-                setStoryPage(storyFirstNum);
-                setIsStoryPage1(true);
-                setIsStoryPage2(false);
-                setIsStoryPage3(false);
-                setIsStoryPage4(false);
-                setIsStoryPage5(false);
-              }}
-            >
-              {storyFirstNum}
-            </button>
-          ) : null}
-          {storyTotalPage >= storyFirstNum + 1 ? (
-            <button
-              className={'page_content' + (isStoryPage2 ? ' active' : '')}
-              onClick={() => {
-                setStoryPage(storyFirstNum + 1);
-                setIsStoryPage1(false);
-                setIsStoryPage2(true);
-                setIsStoryPage3(false);
-                setIsStoryPage4(false);
-                setIsStoryPage5(false);
-              }}
-            >
-              {storyFirstNum + 1}
-            </button>
-          ) : null}
-          {storyTotalPage >= storyFirstNum + 2 ? (
-            <button
-              className={'page_content' + (isStoryPage3 ? ' active' : '')}
-              onClick={() => {
-                setStoryPage(storyFirstNum + 2);
-                setIsStoryPage1(false);
-                setIsStoryPage2(false);
-                setIsStoryPage3(true);
-                setIsStoryPage4(false);
-                setIsStoryPage5(false);
-              }}
-            >
-              {storyFirstNum + 2}
-            </button>
-          ) : null}
-          {storyTotalPage >= storyFirstNum + 3 ? (
-            <button
-              className={'page_content' + (isStoryPage4 ? ' active' : '')}
-              onClick={() => {
-                setStoryPage(storyFirstNum + 3);
-                setIsStoryPage1(false);
-                setIsStoryPage2(false);
-                setIsStoryPage3(false);
-                setIsStoryPage4(true);
-                setIsStoryPage5(false);
-              }}
-            >
-              {storyFirstNum + 3}
-            </button>
-          ) : null}
-          {storyTotalPage >= storyFirstNum + 4 ? (
-            <button
-              className={'page_content' + (isStoryPage5 ? ' active' : '')}
-              onClick={() => {
-                setStoryPage(storyFirstNum + 4);
-                setIsStoryPage1(false);
-                setIsStoryPage2(false);
-                setIsStoryPage3(false);
-                setIsStoryPage4(false);
-                setIsStoryPage5(true);
-              }}
-            >
-              {storyFirstNum + 4}
-            </button>
-          ) : null}
-          {storyTotalPage > 5 ? (
+          {Array(storyPageCount)
+            .fill()
+            .map((_, idx) => (
+              <button
+                className="page_content"
+                key={idx + 1}
+                onClick={() => setStoryPage(storyFirstNum + idx)}
+                aria-current={storyPage === storyFirstNum + idx && 'active'}
+              >
+                {storyFirstNum + idx}
+              </button>
+            ))}
+          {storyTotalPage > 1 ? (
             <button
               className="page_content"
               onClick={() => {
                 setStoryPage(storyPage + 1);
                 setStoryFirstPage(storyPage);
-                setIsStoryPage1(true);
-                setIsStoryPage2(false);
-                setIsStoryPage3(false);
-                setIsStoryPage4(false);
-                setIsStoryPage5(false);
               }}
+              disabled={storyPage === storyTotalPage}
             >
               <ArrowForward />
             </button>

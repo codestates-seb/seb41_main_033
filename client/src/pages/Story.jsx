@@ -61,10 +61,6 @@ const Story = () => {
 	const navigate = useNavigate();
 	const [storyData, setStoryData] = useState([]);
 
-	//고도화 필요
-	//두 번씩 로딩되는게 react.strictMode 때문인가... 일단 보류
-	//총 페이지 제한해서 마지막 페이지면 로딩 안보이게 하기
-
 	//페이지 로딩 state
 	const [page, setPage] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);

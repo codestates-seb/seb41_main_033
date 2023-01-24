@@ -117,17 +117,25 @@ const StoryDetail = () => {
 	const [isMe, setIsMe] = useState(false);
 	const [storyData, setStoryData] = useState({});
 	const [commentsList, setCommentsList] = useState([]);
-	//const [isBoardLike, setIsBoardLike] = useState(storyData.likeStatus);
+	const [boardLike, setboardLike] = useState({
+		status: false,
+		likeCount: 0,
+	});
 	useEffect(() => {
 		axios
 			.get(`${API_URL}/api/boards/${params.boardid}`, {
-				// headers: {
-				// 	//"ngrok-skip-browser-warning": "69420",
-				// 	Authorization: `Bearer ${accessToken}`,
-				// },
+				headers: {
+					//"ngrok-skip-browser-warning": "69420",
+					Authorization: `Bearer ${accessToken}`,
+				},
 			})
 			.then((res) => {
 				setStoryData(res.data.data);
+				setboardLike({
+					status: res.data.data.likeStatus,
+					likeCount: res.data.data.likeCount,
+				});
+				console.log(res.data.data.likeStatus);
 				if (res.data.data.memberId === Number(memberId)) setIsMe(true);
 			})
 			.catch((err) => {
@@ -137,25 +145,30 @@ const StoryDetail = () => {
 	let type = "";
 	if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
-	//23.1.21. 좋아요 기능 중단
+	//스토리 좋아요
 	const handleStoryLikeClick = () => {
-		// axios
-		// 	.post(
-		// 		`${API_URL}/api/boards/${params.boardid}/likes`,
-		// 		{},
-		// 		{
-		// 			headers: {
-		// 				Authorization: `Bearer ${isLogin.accessToken}`,
-		// 			},
-		// 		}
-		// 	)
-		// 	.then((res) => {
-		// 		//setIsBoardLike(res);
-		// 		console.log(res);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err);
-		// 	});
+		axios
+			.post(
+				`${API_URL}/api/boards/${params.boardid}/likes`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${loginInfo?.accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				let countValue = 0;
+				if (res.data) countValue = 1;
+				else countValue = -1;
+				setboardLike({
+					status: res,
+					likeCount: boardLike.likeCount + countValue,
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	//수정
@@ -200,14 +213,15 @@ const StoryDetail = () => {
 						/>
 					</a>
 					{storyData.likeStatus !== undefined ? (
-						<StoryLike onClick={handleStoryLikeClick}>
+						<StoryLike>
 							<input
 								type="checkbox"
 								id="storyLikes"
 								name="storyLikes"
-								defaultChecked={storyData.likeStatus ? true : null}
+								defaultChecked={boardLike.status ? true : null}
+								onClick={handleStoryLikeClick}
 							/>
-							<label htmlFor="storyLikes">{storyData.likeCount}</label>
+							<label htmlFor="storyLikes">{boardLike.likeCount}</label>
 						</StoryLike>
 					) : null}
 				</StoryHead>

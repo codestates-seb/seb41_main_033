@@ -18,6 +18,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Quit from './pages/Quit';
 import GameRecommend from './pages/GameRecommend';
+import Readme from './pages/Readme';
 
 const Wrap = styled.div`
   display: flex;
@@ -68,6 +69,7 @@ const App = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/quit" element={<Quit />} />
               <Route path="/game" element={<GameRecommend />} />
+              <Route path="/readme" element={<Readme />} />
             </Routes>
           </main>
         </MainWrap>

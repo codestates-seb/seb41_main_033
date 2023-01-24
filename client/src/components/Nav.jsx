@@ -4,6 +4,7 @@ import { ReactComponent as MenuIconMatch } from './../assets/handshakeIcon.svg';
 import { ReactComponent as MenuIconStory } from './../assets/boardIcon.svg';
 import { ReactComponent as MenuIconGame } from './../assets/gameIcon.svg';
 import { ReactComponent as MenuIconProfile } from './../assets/personIcon.svg';
+import { ReactComponent as CurtainCall } from '../assets/curtainIcon.svg';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -139,6 +140,15 @@ const Nav = () => {
               <span>마이프로필</span>
             </NavLink>
           ) : null}
+        </li>
+        <li>
+          <NavLink
+            to={`/readme`}
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            <CurtainCall />
+            <span>커튼코올?!</span>
+          </NavLink>
         </li>
       </Menu>
       <p className="copy">© 맑게고인물 team33 2023</p>

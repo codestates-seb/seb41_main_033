@@ -1,13 +1,12 @@
 package mainproject33.domain.comment.dto;
 
 import lombok.Getter;
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 public class CommentPostDto
 {
-    @NotNull
+    @NotBlank
     private String content;
 }

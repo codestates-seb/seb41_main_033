@@ -47,9 +47,16 @@ const ProfilePagination = ({
   const storyLastNum = storyFirstPage - (storyFirstPage % 5) + 5;
 
   useEffect(() => {
-    if (matchLastNum > matchTotalPage) setMatchPageCount(matchTotalPage % 5);
-    if (storyLastNum > storyTotalPage) setStoryPageCount(storyTotalPage % 5);
+    if (matchLastNum > matchTotalPage) {
+      setMatchPageCount(matchTotalPage % 5);
+    } else setMatchPageCount(5);
+
+    if (storyLastNum > storyTotalPage) {
+      setStoryPageCount(storyTotalPage % 5);
+    } else setStoryPageCount(5);
   }, [matchLastNum, matchTotalPage, storyLastNum, storyTotalPage]);
+
+  console.log(matchPage);
 
   return (
     <PageWrap>

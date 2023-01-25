@@ -9,6 +9,7 @@ import { API_URL } from '../data/apiUrl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfo } from '../redux/slice/userInfo';
+import Popup from '../components/Popup';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -125,6 +126,7 @@ const BlockWrap = styled.div`
 
 const ProfileEdit = () => {
   const { userid } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
   const [nickname, setNickname] = useState('');
   const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
   const [file, setFile] = useState('');
@@ -175,6 +177,10 @@ const ProfileEdit = () => {
   };
 
   const handlePatch = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const handlePatchSubmit = () => {
     const formData = new FormData();
     const data = {
       nickname,
@@ -200,6 +206,7 @@ const ProfileEdit = () => {
         },
       })
       .then((res) => {
+        setIsOpen((prev) => !prev);
         dispatch(userInfo(res.data.data));
         navigate(`/profile/${userid}`, { replace: true });
       });
@@ -313,6 +320,13 @@ const ProfileEdit = () => {
             </button>
           </BlockWrap>
         </ContentWrap>
+        <Popup
+          isOpen={isOpen}
+          title="프로필 수정"
+          content="프로필 수정이 완료되었습니다."
+          button1="확인"
+          handleBtn1={handlePatchSubmit}
+        />
       </PostPatch>
     );
   } else {

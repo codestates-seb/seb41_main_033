@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import displayedAt from "../util/displayedAt";
 import matchGame from "../util/matchGame";
+import { MOBILE_POINT } from "../data/breakpoint";
 
 const Card = styled.div`
 	padding: 24px 32px;
@@ -40,6 +41,10 @@ const Card = styled.div`
 	.tags_wrap {
 		display: flex;
 	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		padding: 24px;
+	}
 `;
 const ImgWrap = styled.div`
 	flex: none;
@@ -53,6 +58,11 @@ const ImgWrap = styled.div`
 		height: 100%;
 		object-fit: cover;
 	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		width: 56px;
+		height: 56px;
+	}
 `;
 const Title = styled.div`
 	width: calc(100% - 96px);
@@ -64,6 +74,12 @@ const Title = styled.div`
 		color: var(--white);
 		font-size: var(--font-head3-size);
 		margin-bottom: 5px;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		.game_title {
+			font-size: ;
+		}
 	}
 `;
 

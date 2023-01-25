@@ -6,21 +6,43 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import matchGame from "../util/matchGame";
+import { MOBILE_POINT } from "../data/breakpoint";
 
 const Detail = styled.div`
 	width: var(--col-9);
 	margin-right: 32px;
-	div :nth-child(1) {
-		> img {
-			align-content: flex-end;
+
+	.title_wrap {
+		display: flex;
+		align-items: flex-start;
+		margin-bottom: 16px;
+	}
+	.info_wrap {
+		display: flex;
+		align-items: center;
+		margin-bottom: 16px;
+		> div {
+			&:nth-child(1) {
+				margin-right: 16px;
+			}
+			span {
+				margin-right: 6px;
+			}
+			strong {
+				color: var(--strong-color);
+			}
 		}
 	}
-	.description {
+	.tag_wrap {
 		display: flex;
-		flex-direction: column;
-		> ::-webkit-scrollbar {
-			display: none;
-			width: 0 !important;
+		margin-bottom: 16px;
+	}
+
+	.description {
+		.content {
+			margin-top: 12px;
+			color: var(--strong-color);
+			word-break: break-all;
 		}
 	}
 	button,
@@ -28,8 +50,13 @@ const Detail = styled.div`
 		width: 280px;
 		margin-right: 16px;
 	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		width: 100%;
+	}
 `;
 const ImgWrap = styled.div`
+	flex: none;
 	width: 80px;
 	height: 80px;
 	overflow: hidden;
@@ -39,20 +66,22 @@ const ImgWrap = styled.div`
 		height: 100%;
 		object-fit: cover;
 	}
-`;
-const Span = styled.span`
-	display: block;
-	margin: 0 8px;
-	color: var(--white);
+
+	@media (max-width: ${MOBILE_POINT}) {
+		width: 56px;
+		height: 56px;
+	}
 `;
 const Info = styled.div`
 	width: 100%;
 	.title {
+		margin-bottom: 6px;
 		font-size: var(--font-head2-size);
 		color: var(--white);
-		line-height: 150%;
+		line-height: var(--line-height-lg);
 	}
 	.game {
+		line-height: var(--line-height-lg);
 		color: var(--yellow);
 	}
 `;
@@ -80,23 +109,17 @@ const Tag = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 4px 12px;
+	padding: 6px 12px;
 	margin-right: 6px;
-	height: 32px;
+	line-height: 20px;
+	font-size: var(--font-caption-size);
 	color: var(--white);
 	background: var(--black);
 	border: 1px solid var(--grey);
 	border-radius: 30px;
 	cursor: pointer;
 `;
-const Description = styled.div`
-	margin-bottom: 32px;
-	margin-top: 12px;
-	color: var(--white);
-	overflow: scroll;
-	-ms-overflow-style: none;
-	white-space: pre-wrap;
-`;
+
 const MatchDetails = ({ data, boardId }) => {
 	const [same, setSame] = useState(false);
 	const navigate = useNavigate();
@@ -125,7 +148,7 @@ const MatchDetails = ({ data, boardId }) => {
 
 	return (
 		<Detail className="card big">
-			<div>
+			<div className="title_wrap">
 				<Info>
 					<div className="title">{data.title}</div>
 					<div className="game">{data.game.korTitle}</div>
@@ -134,20 +157,24 @@ const MatchDetails = ({ data, boardId }) => {
 					<img src={matchGame(data.game).image} alt="게임아이콘" />
 				</ImgWrap>
 			</div>
-			<div>
-				<span>팀원수</span>
-				<Span>{data?.team} 명</Span>
-				<span>매칭생성시간</span>
-				<Span>{displayedAt(data?.createdAt)}</Span>
+			<div className="info_wrap">
+				<div>
+					<span>팀원수</span>
+					<strong>{data?.team} 명</strong>
+				</div>
+				<div>
+					<span>매칭생성시간</span>
+					<strong>{displayedAt(data?.createdAt)}</strong>
+				</div>
 			</div>
-			<div>
+			<div className="tag_wrap">
 				{data?.tags.map((el, idx) => (
 					<Tag key={idx}>{el}</Tag>
 				))}
 			</div>
 			<div className="description">
 				<div>상세설명</div>
-				<Description>{data?.content}</Description>
+				<div className="content">{data?.content}</div>
 			</div>
 			{same && (
 				<div>

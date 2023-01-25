@@ -113,14 +113,16 @@ const MatchDetails = ({ data, boardId }) => {
   }, []);
 
   const deleteBtn = () => {
+    window.confirm("게시물을 삭제 하시겠습니까?");
     axios
       .delete(`${API_URL}/api/matches/${boardId}`, {
         headers: {
-          "ngrok-skip-browser-warning": "69420",
           Authorization: `Bearer ${loginInfo.accessToken}`,
         },
       })
-      .then((res) => navigate("/match"));
+      .then((res) => {
+        navigate("/match");
+      });
   };
 
   return (

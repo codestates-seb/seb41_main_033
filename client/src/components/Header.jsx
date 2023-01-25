@@ -1,12 +1,13 @@
-import styled from 'styled-components';
-import { ReactComponent as ProfileImg } from './../assets/defaultImg.svg';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
-import { logout } from '../redux/slice/loginstate';
-import { userInfo } from '../redux/slice/userInfo';
+import styled from "styled-components";
+import { ReactComponent as ProfileImg } from "./../assets/defaultImg.svg";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { API_URL } from "../data/apiUrl";
+import { logout } from "../redux/slice/loginstate";
+import { userInfo } from "../redux/slice/userInfo";
+import { login } from "../redux/slice/loginstate";
 const HeaderWrap = styled.header`
   position: absolute;
   left: 0;
@@ -104,10 +105,44 @@ const Header = () => {
       .then(() => {
         localStorage.clear();
         dispatch(logout({ accessToken: null, memberId: null, isLogin: false }));
-        navigate('/');
+        navigate("/");
       });
   };
 
+  useEffect(() => {
+    if (loginInfo?.isLogin && Date.now() >= loginInfo?.expire) {
+      const memberId = loginInfo.memberId;
+      const expire = Date.now() + 1000 * 60 * 20;
+      console.log(loginInfo.refreshtoken);
+      axios
+        .get(
+          `${API_URL}/api/members/${loginInfo?.memberId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${loginInfo.accessToken}`,
+              refreshToken: `Bearer ${loginInfo.refreshtoken}`,
+            },
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          const refreshtoken = res.headers.refreshtoken;
+          const accessToken = res.headers.authorization;
+          setNickname(res.data.data.nickname);
+          dispatch(userInfo(res.data.data));
+          dispatch(
+            login({
+              accessToken,
+              memberId,
+              isLogin: true,
+              expire,
+              refreshtoken,
+            })
+          );
+        })
+        .catch((err) => console.log(err));
+    }
+  });
   return (
     <HeaderWrap>
       {userInform && loginInfo?.isLogin ? (
@@ -133,13 +168,13 @@ const Header = () => {
         <BtnWrap>
           <NavLink
             to="/signup"
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            className={({ isActive }) => (isActive ? "active" : "")}
           >
             회원가입
           </NavLink>
           <NavLink
             to="/login"
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            className={({ isActive }) => (isActive ? "active" : "")}
           >
             로그인
           </NavLink>

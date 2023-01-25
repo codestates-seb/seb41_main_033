@@ -81,7 +81,7 @@ const Story = () => {
 				// },
 			})
 			.then((res) => {
-				setStoryData((prevData) => [...res.data.data, ...prevData]);
+				setStoryData((prevData) => [...prevData, ...res.data.data]);
 				const totalPages = res.data.pageInfo.totalPages;
 				if (page === totalPages) {
 					setIsLoading(false);

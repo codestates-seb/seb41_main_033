@@ -141,8 +141,11 @@ const MatchingEdit = () => {
             Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
-        .then(() => navigate("/match"))
-        .catch((err) => alert(err));
+        .then(() => {
+          alert("게시물이 수정 되었습니다");
+          navigate("/match");
+        })
+        .catch((err) => console.log(err));
     }
   };
   const [isOpen, setIsOpen] = useState(false);

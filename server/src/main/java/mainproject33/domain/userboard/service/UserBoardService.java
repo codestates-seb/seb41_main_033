@@ -5,6 +5,7 @@ import mainproject33.domain.boardfile.entity.UserBoardFile;
 import mainproject33.domain.boardfile.service.UserBoardFileService;
 import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.repository.BlockRepository;
+import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
@@ -30,6 +31,7 @@ public class UserBoardService
 
     private final BlockRepository blockRepository;
     private final UserBoardFileService boardFileService;
+    private final FollowRepository followRepository;
 
     public UserBoard postUserBoard(UserBoard request, Member member, MultipartFile file) throws IOException
     {
@@ -60,6 +62,16 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
+    public UserBoard findUserBoard(Long id)
+    {
+        Optional<UserBoard> optionalBoard = userBoardRepository.findById(id);
+
+        UserBoard findBoard = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND));
+
+        return findBoard;
+    }
+
+    @Transactional(readOnly = true)
     public UserBoard getUserBoard(Long id, Member member)
     {
         Optional<UserBoard> optionalBoard = userBoardRepository.findById(id);
@@ -74,16 +86,6 @@ public class UserBoardService
 
         if(blackList.contains(findBoard.getMember().getId()))
             throw new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND);
-
-        return findBoard;
-    }
-
-    @Transactional(readOnly = true)
-    public UserBoard findUserBoard(Long id)
-    {
-        Optional<UserBoard> optionalBoard = userBoardRepository.findById(id);
-
-        UserBoard findBoard = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND));
 
         return findBoard;
     }
@@ -105,21 +107,40 @@ public class UserBoardService
         if(keyword == null)
         {
             List<UserBoard> boards = userBoardRepository.findAll();
-            List<UserBoard> filteredUserBoards = filterUserBoard(blockList, boards);
+            List<UserBoard> filteredUserBoards = filterBlackList(blockList, boards);
 
             return getPagedBoard(filteredUserBoards, pageable);
         }
 
         List<UserBoard> boards = userBoardRepository.findByKeyword(keyword);
 
-        List<UserBoard> filteredUserBoards = filterUserBoard(blockList, boards);
+        List<UserBoard> filteredUserBoards = filterBlackList(blockList, boards);
 
         Page<UserBoard> pagedBoard = getPagedBoard(filteredUserBoards, pageable);
 
         return pagedBoard;
     }
 
+    @Transactional(readOnly = true)
+    public Page<UserBoard> findFollowingBoards(String keyword, Pageable pageable, Member member)
+    {
+        if(member == null)
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
 
+        List<Long> filteredBoards = followRepository.findFollowedIdByFollowerId(member.getId());
+
+        if(keyword == null)
+        {
+            List<UserBoard> userBoards = filterFollowList(filteredBoards, userBoardRepository.findAll());
+            return getPagedBoard(userBoards, pageable);
+        }
+
+        List<UserBoard> boards = userBoardRepository.findByKeyword(keyword);
+
+        return getPagedBoard(filterFollowList(filteredBoards, boards), pageable);
+    }
+
+    @Transactional(readOnly = true)
     public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {
         return userBoardRepository.findByMemberId(memberId, pageable);
     }
@@ -158,6 +179,16 @@ public class UserBoardService
         }
     }
 
+    //========팔로우 리스트 관련 기능=======//
+    private List<UserBoard> filterFollowList(List<Long> followList, List<UserBoard> userBoards)
+    {
+        List<UserBoard> followersBoards = userBoards.stream()
+                .filter(userBoard -> followList.contains(userBoard.getMember().getId()))
+                .collect(Collectors.toList());
+
+        return followersBoards;
+    }
+
     //========블랙 리스트 관련 기능들========//
     private List<Long> getBlackList(Long blockerId)
     {
@@ -175,10 +206,10 @@ public class UserBoardService
         return page;
     }
 
-    private List<UserBoard> filterUserBoard(List<Long> blockList, List<UserBoard> boards)
+    private List<UserBoard> filterBlackList(List<Long> blackList, List<UserBoard> boards)
     {
         return boards.stream()
-                .filter(userBoard -> !blockList.contains(userBoard.getMember().getId()))
+                .filter(userBoard -> !blackList.contains(userBoard.getMember().getId()))
                 .collect(Collectors.toList());
     }
 }

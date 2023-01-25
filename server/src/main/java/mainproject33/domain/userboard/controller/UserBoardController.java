@@ -92,6 +92,20 @@ public class UserBoardController
         return new ResponseEntity(new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);
     }
 
+    @GetMapping("/following")
+    public ResponseEntity getFollowerBoards(@RequestParam(value = "keyword", required = false) String keyword,
+                                    @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
+                                    Pageable pageable,
+                                    @AuthenticationPrincipal Member member)
+    {
+        Page<UserBoard> pageBoards = boardService.findFollowingBoards(keyword, pageable.previousOrFirst(), member);
+
+        List<UserBoard> boards = pageBoards.getContent();
+        List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards, member);
+
+        return new ResponseEntity(new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);
+    }
+
     @DeleteMapping("{board-id}")
     public ResponseEntity deleteBoard(@PathVariable("board-id") @Positive long boardId,
                                       @AuthenticationPrincipal Member member)

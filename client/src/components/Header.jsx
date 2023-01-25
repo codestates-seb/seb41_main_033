@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { ReactComponent as ProfileImg } from "./../assets/defaultImg.svg";
+import { ReactComponent as LogoImg } from "./../assets/Logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
@@ -7,6 +8,8 @@ import axios from "axios";
 import { API_URL } from "../data/apiUrl";
 import { logout } from "../redux/slice/loginstate";
 import { userInfo } from "../redux/slice/userInfo";
+import { MOBILE_POINT } from "../data/breakpoint";
+
 const HeaderWrap = styled.header`
 	position: absolute;
 	left: 0;
@@ -17,6 +20,28 @@ const HeaderWrap = styled.header`
 	width: 100%;
 	height: 112px;
 	padding: 0 48px;
+	<<<<<<< Updated upstream ======= @media (max-width: ${MOBILE_POINT}) {
+		padding: 0 16px;
+		height: 56px;
+	}
+`;
+
+const LogoWrap = styled.div`
+	display: none;
+	width: 100%;
+	a {
+		display: block;
+		width: 130px;
+		height: 35px;
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	@media (max-width: ${MOBILE_POINT}) {
+		display: block;
+	}
+>>>>>>> Stashed changes
 `;
 
 const ProfileWrap = styled.div`
@@ -49,6 +74,14 @@ const ProfileWrap = styled.div`
 		img {
 			width: 100%;
 			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		.user_img {
+			width: 32px;
+			height: 32px;
 		}
 	}
 `;
@@ -71,6 +104,12 @@ const BtnWrap = styled.div`
 		border: 1px solid var(--border-color);
 		border-radius: 8px;
 		font-size: var(--font-caption-size);
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		a {
+			font-size: 12px;
+		}
 	}
 `;
 
@@ -109,6 +148,11 @@ const Header = () => {
 
 	return (
 		<HeaderWrap>
+			<LogoWrap>
+				<a href="/" title="GAMETO">
+					<LogoImg />
+				</a>
+			</LogoWrap>
 			{user && loginInfo?.isLogin ? (
 				<>
 					<ProfileWrap>

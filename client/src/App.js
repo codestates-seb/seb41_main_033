@@ -19,66 +19,78 @@ import Signup from "./pages/Signup";
 import Quit from "./pages/Quit";
 import GameRecommend from "./pages/GameRecommend";
 import Readme from "./pages/Readme";
+import Footer from "./components/Footer";
+import { MOBILE_POINT } from "./data/breakpoint";
 
 const Wrap = styled.div`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  background: var(--bg-color);
+	display: flex;
+	flex: 1;
+	width: 100%;
+	background: var(--bg-color);
 `;
 
 const MainWrap = styled.section`
-  display: flex;
-  flex: 1;
-  position: relative;
-  padding: 112px 0 0 0;
-  width: calc(100% - 200px);
-  .container {
-    width: 100%;
-    max-width: 1040px;
-    padding: 0 32px;
-    margin: 48px auto 48px auto;
-  }
+	display: flex;
+	flex: 1;
+	position: relative;
+	padding: 112px 0 0 0;
+	width: calc(100% - 200px);
+	.container {
+		width: 100%;
+		max-width: 1040px;
+		padding: 0 32px;
+		margin: 48px auto 48px auto;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		padding: 56px 0 56px 0;
+		width: 100%;
+		.container {
+			max-width: 100%;
+			padding: 0 16px;
+			margin: 24px auto 48px auto;
+		}
+	}
 `;
 
 const App = () => {
-  return (
-    <Wrap>
-      <Router basename={process.env.PUBLIC_URL}>
-        <Nav />
-        <MainWrap>
-          <Header />
-          {/* 아래 main 안에 각 페이지가 들어갑니다. */}
-          <main className="container">
-            <Routes>
-              <Route path="/match" element={<Matching />} />
-              <Route
-                path="/match/:boardid/detail"
-                element={<MatchingDetail />}
-              />
-              <Route path="/match/matchwrite" element={<MatchingWrite />} />
-              <Route path="/match/:boardid/edit" element={<MatchingEdit />} />
-              <Route path="/story" element={<Story />} />
-              <Route path="/story/:userid/:boardid" element={<StoryDetail />} />
-              <Route
-                path="/story/:userid/:boardid/edit"
-                element={<StoryEdit />}
-              />
-              <Route path="/story/storywrite" element={<StoryWrite />} />
-              <Route path="/profile/:userid" element={<Profile />} />
-              <Route path="/profile/:userid/edit" element={<ProfileEdit />} />
-              <Route path="/profile/:userid/block" element={<BlockList />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/quit" element={<Quit />} />
-              <Route path="/game" element={<GameRecommend />} />
-              <Route path="/" element={<Readme />} />
-            </Routes>
-          </main>
-        </MainWrap>
-      </Router>
-    </Wrap>
-  );
+	return (
+		<Wrap>
+			<Router basename={process.env.PUBLIC_URL}>
+				<Nav />
+				<MainWrap>
+					<Header />
+					{/* 아래 main 안에 각 페이지가 들어갑니다. */}
+					<main className="container">
+						<Routes>
+							<Route path="/match" element={<Matching />} />
+							<Route
+								path="/match/:boardid/detail"
+								element={<MatchingDetail />}
+							/>
+							<Route path="/match/matchwrite" element={<MatchingWrite />} />
+							<Route path="/match/:boardid/edit" element={<MatchingEdit />} />
+							<Route path="/story" element={<Story />} />
+							<Route path="/story/:userid/:boardid" element={<StoryDetail />} />
+							<Route
+								path="/story/:userid/:boardid/edit"
+								element={<StoryEdit />}
+							/>
+							<Route path="/story/storywrite" element={<StoryWrite />} />
+							<Route path="/profile/:userid" element={<Profile />} />
+							<Route path="/profile/:userid/edit" element={<ProfileEdit />} />
+							<Route path="/profile/:userid/block" element={<BlockList />} />
+							<Route path="/login" element={<Login />} />
+							<Route path="/signup" element={<Signup />} />
+							<Route path="/quit" element={<Quit />} />
+							<Route path="/game" element={<GameRecommend />} />
+							<Route path="/" element={<Readme />} />
+						</Routes>
+					</main>
+				</MainWrap>
+			</Router>
+		</Wrap>
+	);
 };
 
 export default App;

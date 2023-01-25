@@ -135,7 +135,6 @@ const StoryDetail = () => {
 					status: res.data.data.likeStatus,
 					likeCount: res.data.data.likeCount,
 				});
-				//console.log(res.data.data.likeStatus);
 				if (res.data.data.memberId === Number(memberId)) setIsMe(true);
 			})
 			.catch((err) => {

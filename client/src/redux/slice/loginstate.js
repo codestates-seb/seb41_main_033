@@ -18,7 +18,10 @@ const Logined = createSlice({
     logout: (state, action) => {
       state.login = action.payload;
     },
+    quit: (state, action) => {
+      state.login = action.payload;
+    },
   },
 });
 export default Logined;
-export const { login, logout } = Logined.actions;
+export const { login, logout, quit } = Logined.actions;

@@ -76,9 +76,11 @@ const QuitCard = () => {
   const [user, setUser] = useState(null);
 
   const handleQuit = () => {
-    axios.delete(`${API_URL}/api/members/${loginInfo?.memberId}`, {
-      headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-    });
+    axios
+      .delete(`${API_URL}/api/members/${loginInfo?.memberId}`, {
+        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+      })
+      .then(() => localStorage.clear());
   };
 
   useEffect(() => {

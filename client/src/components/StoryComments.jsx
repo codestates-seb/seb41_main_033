@@ -104,6 +104,8 @@ const StoryComments = ({ boardId }) => {
 			})
 			.then((res) => {
 				alert("댓글을 삭제합니다.");
+				let newData = commentsList.filter((el) => el.id !== commentsId);
+				setCommentsList(newData);
 			})
 			.catch((err) => {
 				alert("댓글 삭제에 실패했습니다.");
@@ -130,6 +132,7 @@ const StoryComments = ({ boardId }) => {
 						key={el.id}
 						data={el}
 						memberId={memberId}
+						accessToken={accessToken}
 						handleEdit={handleEditClick}
 						handleDelete={handleDeleteClick}
 					/>

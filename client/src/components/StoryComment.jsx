@@ -4,6 +4,8 @@ import HeartIcon from "./../assets/heart_sprite.svg";
 import SinglePofileWrap from "./SingleProfileWrap";
 import StoryBtn from "./StoryBtn";
 import displayedAt from "../util/displayedAt";
+import axios from "axios";
+import { API_URL } from "../data/apiUrl";
 
 const Wrap = styled.div`
 	display: flex;
@@ -61,38 +63,84 @@ const BtnWrap = styled.div`
 `;
 
 const CommentLike = styled.div`
-	width: 24px;
-	height: 24px;
-	input[type="checkbox"] {
-		appearance: none;
-		width: 100%;
-		height: 100%;
-		margin: 0;
+	flex: none;
+	display: flex;
+	align-items: stretch;
+	.heart {
+		display: block;
+		width: 24px;
+		height: 24px;
+		margin: 0 6px 0 0;
 		background-image: url(${HeartIcon});
 		background-repeat: no-repeat;
 		background-position: 0 0;
+		font-size: 0;
+		overflow: hidden;
 		cursor: pointer;
 	}
-	input[type="checkbox"]:checked {
+	.heart.selected {
 		background-position: 0 -24px;
+	}
+	.likeCount {
+		font-size: var(--caption-size);
+		color: var(--strong-color);
 	}
 `;
 
-const StoryComment = ({ memberId, data, handleEdit, handleDelete }) => {
+const StoryComment = ({
+	memberId,
+	data,
+	accessToken,
+	handleEdit,
+	handleDelete,
+}) => {
 	const [isMe, setIsMe] = useState(false);
 	const [isEdit, setIsEdit] = useState(false);
-	const [content, setContent] = useState("");
+	const [content, setContent] = useState(data.content);
+	const [commentLike, setCommentLike] = useState({
+		status: data.likeStatus,
+		count: data.likeCount,
+	});
 
 	useEffect(() => {
 		if (data.memberId === memberId) setIsMe(true);
 	}, []);
 
+	//수정 버튼 클릭
 	const handleChangeEditClick = () => {
 		setIsEdit(true);
 	};
 
+	//수정 내용 입력
 	const handleEditContentChange = (e) => {
 		setContent(e.currentTarget.value);
+	};
+
+	//댓글 좋아요
+	const handleCommentLikeClick = () => {
+		axios
+			.post(
+				`${API_URL}/api/boards/comments/${data.id}`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res);
+				// let countValue = 0;
+				// if (res.data) countValue = 1;
+				// else countValue = -1;
+				// setboardLike({
+				// 	status: res,
+				// 	likeCount: boardLike.likeCount + countValue,
+				// });
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	return (
@@ -110,12 +158,12 @@ const StoryComment = ({ memberId, data, handleEdit, handleDelete }) => {
 						<textarea
 							placeholder="내용을 입력하세요"
 							minLength="5"
-							defaultValue={data.content}
+							defaultValue={content}
 							onChange={(e) => handleEditContentChange(e)}
 						></textarea>
 					</div>
 				) : (
-					<div className="content_wrap">{data.content}</div>
+					<div className="content_wrap">{content}</div>
 				)}
 				{isMe ? (
 					<BtnWrap>
@@ -137,8 +185,9 @@ const StoryComment = ({ memberId, data, handleEdit, handleDelete }) => {
 					</BtnWrap>
 				) : null}
 			</div>
-			<CommentLike>
-				<input type="checkbox" title="commentLikes" />
+			<CommentLike onClick={handleCommentLikeClick}>
+				<span className="heart">이 댓글에 좋아요</span>
+				<span className="likeCount">12</span>
 			</CommentLike>
 		</Wrap>
 	);

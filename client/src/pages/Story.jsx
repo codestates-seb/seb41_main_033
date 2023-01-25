@@ -8,6 +8,7 @@ import { API_URL } from "../data/apiUrl";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Loading from "../components/Loading";
+import NoSearch from "../components/NoSearch";
 
 const Wrap = styled.div`
 	.loadingObserver {
@@ -62,6 +63,7 @@ const Story = () => {
 	const navigate = useNavigate();
 	const [storyData, setStoryData] = useState([]);
 	const [keyword, setKeyword] = useState("");
+	const [isNoSearch, setIsNoSearch] = useState(false);
 
 	//페이지 로딩 state
 	const [page, setPage] = useState(1);
@@ -75,30 +77,58 @@ const Story = () => {
 	};
 	//페이지 요청 함수
 	const requestPage = async (page) => {
-		await axios
-			.get(`${API_URL}/api/boards?page=${page}`, {
-				// headers: {
-				// 	// "ngrok-skip-browser-warning": "69420",
-				// 	Authorization: `Bearer ${accessToken}`,
-				// },
-			})
-			.then((res) => {
-				setStoryData((prevData) => [...prevData, ...res.data.data]);
-				const totalPages = res.data.pageInfo.totalPages;
-				if (page === totalPages) {
+		let config = {};
+		let url = "";
+		if (isLogin) {
+			config = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			};
+		}
+
+		if (keyword === "") {
+			if (page === 1) setStoryData([]);
+			url = `${API_URL}/api/boards?page=${page}`;
+			await axios
+				.get(url, config)
+				.then((res) => {
+					setStoryData((prevData) => [...prevData, ...res.data.data]);
+					const totalPages = res.data.pageInfo.totalPages;
+					if (page === totalPages) {
+						setIsLoading(false);
+					} else {
+						setIsLoading(true);
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		} else {
+			url = `${API_URL}/api/boards?page=${page}&keyword=${keyword}`;
+			await axios
+				.get(url, config)
+				.then((res) => {
+					//console.log(res.data.data);
+					setStoryData(res.data.data);
+					const totalPages = res.data.pageInfo.totalPages;
+					if (page === totalPages) {
+						setIsLoading(false);
+					} else {
+						setIsLoading(true);
+					}
+				})
+				.catch((err) => {
+					// console.log(err);
+					setIsNoSearch(true);
 					setIsLoading(false);
-				} else {
-					setIsLoading(true);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+				});
+		}
 	};
 	//페이지 바뀔때마다 데이터 요청
 	useEffect(() => {
 		requestPage(page);
-	}, [page]);
+	}, [page, keyword]);
 	//Intersection Observer로 로딩 여부 확인
 	useEffect(() => {
 		if (isLoading) {
@@ -125,24 +155,27 @@ const Story = () => {
 	};
 
 	//스토리 검색
-	useEffect(() => {
-		let config = {};
-		if (isLogin) {
-			config = {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			};
-		}
+	// useEffect(() => {
+	// 	let config = {};
+	// 	// if (isLogin) {
+	// 	// 	config = {
+	// 	// 		headers: {
+	// 	// 			Authorization: `Bearer ${accessToken}`,
+	// 	// 		},
+	// 	// 	};
+	// 	// }
 
-		axios
-			.get(`${API_URL}/api/boards?page=${page}&keyword=${keyword}`, config)
-			.then((res) => {
-				//setStoryData(res.data.data);
-				console.log(res);
-			})
-			.catch((err) => console.log(err));
-	}, [keyword]);
+	// 	console.log(keyword);
+
+	// 	axios
+	// 		.get(`${API_URL}/api/boards?page={page}keyword=${keyword}`, config)
+	// 		.then((res) => {
+	// 			setStoryData(res.data.data);
+	// 			setIsLoading(false);
+	// 			//console.log(res);
+	// 		})
+	// 		.catch((err) => console.log(err));
+	// }, [keyword]);
 
 	return (
 		<Wrap>
@@ -152,6 +185,7 @@ const Story = () => {
 			</TitleWrap>
 			<SearchBar setKeyword={setKeyword} setPage={setPage} />
 			<StoryBoardWrap>
+				{keyword && isNoSearch ? <NoSearch /> : null}
 				{storyData
 					? storyData.map((el, idx) => {
 							return <StorySingle key={idx} data={el} />;

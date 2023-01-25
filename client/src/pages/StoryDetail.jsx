@@ -1,16 +1,16 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import HeartIcon from './../assets/heart_sprite.svg';
-import { ReactComponent as CommentIcon } from './../assets/sms.svg';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { API_URL } from '../data/apiUrl';
-import axios from 'axios';
-import displayedAt from '../util/displayedAt';
-import SinglePofileWrap from '../components/SingleProfileWrap';
-import StoryComment from '../components/StoryComment';
-import StoryBtn from '../components/StoryBtn';
-import StoryFileView from './../components/StoryFileView';
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import HeartIcon from "./../assets/heart_sprite.svg";
+import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { API_URL } from "../data/apiUrl";
+import axios from "axios";
+import displayedAt from "../util/displayedAt";
+import SinglePofileWrap from "../components/SingleProfileWrap";
+import StoryComments from "../components/StoryComments";
+import StoryBtn from "../components/StoryBtn";
+import StoryFileView from "./../components/StoryFileView";
 
 const Title = styled.h4`
   margin-top: 24px;
@@ -46,7 +46,7 @@ const StoryLike = styled.div`
     color: var(--strong-color);
     cursor: pointer;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     appearance: none;
     position: absolute;
     left: 16px;
@@ -59,10 +59,10 @@ const StoryLike = styled.div`
     background-position: 0 0;
     cursor: pointer;
   }
-  input[type='checkbox']:checked {
+  input[type="checkbox"]:checked {
     background-position: 0 -24px;
   }
-  input[type='checkbox']:checked + label {
+  input[type="checkbox"]:checked + label {
     background: var(--border-color);
   }
 `;
@@ -108,37 +108,23 @@ const CommentsCountTag = styled.div`
   }
 `;
 
-const CommentWriteWrap = styled.div`
-  margin-bottom: 24px;
-  text-align: right;
-  .title {
-    width: 100%;
-    margin-bottom: 16px;
-    text-align: left;
-    font-size: var(--font-body1-size);
-    color: var(--strong-color);
-  }
-  textarea {
-    margin-bottom: 16px;
-  }
-  button.normal {
-    border-radius: var(--border-radius-sm);
-  }
-`;
-
 const StoryDetail = () => {
   const navigate = useNavigate();
   let params = useParams();
-  const { accessToken, memberId } = useSelector((state) => state.islogin.login);
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const accessToken = loginInfo.accessToken;
+  const memberId = loginInfo.memberId;
   const [isMe, setIsMe] = useState(false);
   const [storyData, setStoryData] = useState({});
+  const [commentsList, setCommentsList] = useState([]);
   //const [isBoardLike, setIsBoardLike] = useState(storyData.likeStatus);
   useEffect(() => {
     axios
       .get(`${API_URL}/api/boards/${params.boardid}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        // headers: {
+        // 	//"ngrok-skip-browser-warning": "69420",
+        // 	Authorization: `Bearer ${accessToken}`,
+        // },
       })
       .then((res) => {
         setStoryData(res.data.data);
@@ -147,12 +133,12 @@ const StoryDetail = () => {
       .catch((err) => {
         console.log(err);
       });
-  });
-  let type = '';
-  if (storyData.contentType) type = storyData.contentType.split('/')[0];
+  }, []);
+  let type = "";
+  if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
+  //23.1.21. 좋아요 기능 중단
   const handleStoryLikeClick = () => {
-    //23.1.21. 좋아요 기능 중단
     // axios
     // 	.post(
     // 		`${API_URL}/api/boards/${params.boardid}/likes`,
@@ -170,6 +156,30 @@ const StoryDetail = () => {
     // 	.catch((err) => {
     // 		console.log(err);
     // 	});
+  };
+
+  //수정
+  const handleStoryEditClick = () => {
+    navigate(`/story/${params.userid}/${params.boardid}/edit`);
+  };
+
+  //삭제
+  const handleStoryDeleteClick = () => {
+    axios
+      .delete(`${API_URL}/api/boards/${params.boardid}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((res) => {
+        //삭세하시겠습니까? 팝업 호출 필요
+        alert("게시물이 삭제됩니다.");
+        navigate("/story");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("게시물 삭제에 실패하였습니다.");
+      });
   };
 
   return (
@@ -217,18 +227,21 @@ const StoryDetail = () => {
         ) : null}
         {isMe ? (
           <BtnWrap>
-            <StoryBtn size="big" type="edit" />
-            <StoryBtn size="big" type="delete" />
+            <StoryBtn
+              size="big"
+              type="edit"
+              clickHandler={handleStoryEditClick}
+            />
+            <StoryBtn
+              size="big"
+              type="delete"
+              clickHandler={handleStoryDeleteClick}
+            />
           </BtnWrap>
         ) : null}
       </div>
       <Title>댓글</Title>
-      <CommentWriteWrap className="card sm">
-        <div className="title">댓글 작성</div>
-        <textarea placeholder="댓글을 입력하세요"></textarea>
-        <button className="normal">댓글 입력</button>
-      </CommentWriteWrap>
-      <StoryComment />
+      <StoryComments boardId={params.boardid} />
     </>
   );
 };

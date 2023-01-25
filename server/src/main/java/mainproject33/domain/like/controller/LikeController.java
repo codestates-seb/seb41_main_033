@@ -22,18 +22,18 @@ public class LikeController
 
     @PostMapping("/{board-id}/likes")
     public ResponseEntity boardLikes(@PathVariable("board-id") @Positive long boardId,
-                                     @AuthenticationPrincipal Member member)
+                                     @AuthenticationPrincipal Member user)
     {
-        boolean response = likeService.changeBoardLike(member, boardId);
+        boolean response = likeService.changeBoardLike(user, boardId);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @PostMapping("/comments/{comment-id}/likes")
     public ResponseEntity commentLikes(@PathVariable("comment-id") @Positive long commentId,
-                                       @AuthenticationPrincipal Member member)
+                                       @AuthenticationPrincipal Member user)
     {
-        boolean response = likeService.changeCommentLike(member, commentId);
+        boolean response = likeService.changeCommentLike(user, commentId);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }

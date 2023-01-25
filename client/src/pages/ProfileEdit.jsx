@@ -6,8 +6,9 @@ import InputWrap from '../components/InputWrap';
 import gameList from '../data/gameList.json';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { userInfo } from '../redux/slice/userInfo';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -99,7 +100,7 @@ const GameWrap = styled.div`
 `;
 
 const BioWrap = styled.div`
-  margin: 24px 0 16px 0;
+  margin: 16px 0;
   textarea {
     resize: none;
     width: 100%;
@@ -113,17 +114,26 @@ const BioWrap = styled.div`
   }
 `;
 
+const BlockWrap = styled.div`
+  .block_button {
+    border-radius: 8px;
+  }
+`;
+
 const ProfileEdit = () => {
   const { userid } = useParams();
-  const [user, setUser] = useState(null);
   const [nickname, setNickname] = useState('');
   const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
   const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
-  const { accessToken } = useSelector((state) => state.islogin.login);
+  const [bio, setBio] = useState('');
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const userInform = useSelector((state) => state.userInfo.userInfo);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNickname = (e) => {
-    setUser({ ...user, nickname: e.target.value });
+    setNickname(e.target.value);
   };
 
   const handleOnChange = (e) => {
@@ -148,14 +158,14 @@ const ProfileEdit = () => {
   );
 
   const handleBio = (e) => {
-    setUser({ ...user, introduction: e.target.value });
+    setBio(e.target.value);
   };
 
   const handlePatch = () => {
     const formData = new FormData();
     const data = {
-      nickname: user.nickname,
-      introduction: user.introduction,
+      nickname,
+      introduction: bio,
       games: checkedGame,
     };
 
@@ -173,26 +183,33 @@ const ProfileEdit = () => {
       .patch(`${API_URL}/api/members/${userid}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${loginInfo?.accessToken}`,
         },
       })
-      .then(() => window.location.replace(`/profile/${userid}`));
+      .then((res) => {
+        dispatch(userInfo(res.data.data));
+        navigate(`/profile/${userid}`, { replace: true });
+      });
   };
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/members/${userid}`).then((res) => {
-      setUser(res.data.data);
-      setNickname(res.data.data.nickname);
-      setCheckedGame(res.data.data.games.map((game) => game.korTitle));
-    });
-  }, [userid]);
+    axios
+      .get(`${API_URL}/api/members/${userid}`, {
+        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+      })
+      .then((res) => {
+        setNickname(res.data.data.nickname);
+        setBio(res.data.data.introduction);
+      });
+    setCheckedGame(userInform.games.map((game) => game.korTitle));
+  }, []);
 
-  if (user) {
+  if (userInform) {
     return (
       <PostPatch
-        image={user.profileImage}
-        nickname={nickname}
-        identifier={user.identifier}
+        image={userInform.profileImage}
+        nickname={userInform.nickname}
+        identifier={userInform.identifier}
         button1="수정완료"
         button2="탈퇴하기"
         link="/quit"
@@ -204,7 +221,7 @@ const ProfileEdit = () => {
             <InputWrap
               type="text"
               name="nickname"
-              value={user.nickname || ''}
+              value={nickname || ''}
               onChange={handleNickname}
             />
           </NicknameWrap>
@@ -238,7 +255,7 @@ const ProfileEdit = () => {
                       handleCheckbox(e, e.target.checked, e.target.id);
                     }}
                     defaultChecked={
-                      user.games.filter(
+                      userInform.games.filter(
                         (games) => games.korTitle === game.title
                       ).length > 0
                         ? true
@@ -256,11 +273,20 @@ const ProfileEdit = () => {
             <label htmlFor="bio">자기소개 수정</label>
             <textarea
               id="bio"
-              value={user.introduction || ''}
+              value={bio || ''}
               placeholder="내용을 입력하세요"
               onChange={handleBio}
             />
           </BioWrap>
+          <BlockWrap>
+            <label>차단한 유저 편집</label>
+            <button
+              className="normal block_button"
+              onClick={() => navigate(`/profile/${userid}/block`)}
+            >
+              차단한 유저 목록 보기
+            </button>
+          </BlockWrap>
         </ContentWrap>
       </PostPatch>
     );

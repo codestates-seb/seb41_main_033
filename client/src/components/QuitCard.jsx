@@ -1,5 +1,11 @@
-import styled from "styled-components";
-import { ReactComponent as Glummy } from "../assets/glummy.svg";
+import styled from 'styled-components';
+import { ReactComponent as Glummy } from '../assets/glummy.svg';
+import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { quit } from '../redux/slice/loginstate';
 
 const QuitWrap = styled.div`
   display: flex;
@@ -66,51 +72,82 @@ const ButtonWrap = styled.div`
 `;
 
 const QuitCard = () => {
-  return (
-    <QuitWrap className="card big">
-      <ImgWrap>
-        <Glummy />
-      </ImgWrap>
-      <Content>
-        <p>
-          <span className="nickname">👊🏻닉네임👊🏻</span>님
-          <br />
-          <span>GAMETO</span> 탈퇴 신청을 원하시나요🥹
-          <span className="sad">ㅠㅠ</span>🥹
-        </p>
-        <p>
-          <span className="warning">
-            🤬다.시.한.번 생각해주세요 아시겠어요?🤬
-          </span>
-        </p>
-        <p>
-          <span className="nickname">닉네임</span>님이 올리신 게시글 내가
-          좋아하는 유저 ...
-          <br />
-          추억과 애정 모두 버리실건가요? ㅠㅠ
-          <br />
-          <span className="gameto">GAMETO</span>는 편리한 서비스 이용을 위해
-          밤낮 없이
-          <br />
-          고민하고 고민하여 발전하고 있답니다 🤔
-          <br />
-          정말정말! 탈퇴하실거라면 아래 버튼을 눌러주세요
-          <br />
-          <span className="warning">탈퇴시 계정 복구는 불가해요🤬</span>
-          <br />
-          그동안 저희 서비스 이용해주셔서 감사합니다
-        </p>
-        <p>
-          <span className="nickname">닉네임</span>님이 탈퇴하면 저희 서비스는
-          망할겁니다
-        </p>
-      </Content>
-      <ButtonWrap>
-        <button className="warning">그래도 탈퇴하기🧨</button>
-        <button className="normal">💖취소하기💖</button>
-      </ButtonWrap>
-    </QuitWrap>
-  );
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const [user, setUser] = useState(null);
+
+  const handleQuit = () => {
+    axios
+      .delete(`${API_URL}/api/members/${loginInfo?.memberId}`, {
+        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+      })
+      .then(() => {
+        localStorage.clear();
+        dispatch(quit({ accessToken: null, memberId: null, isLogin: false }));
+        navigate('/');
+      });
+  };
+
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/members/${loginInfo?.memberId}`, {
+        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+      })
+      .then((res) => setUser(res.data.data));
+  });
+
+  if (user) {
+    return (
+      <QuitWrap className="card big">
+        <ImgWrap>
+          <Glummy />
+        </ImgWrap>
+        <Content>
+          <p>
+            <span className="nickname">👊🏻{user.nickname}👊🏻</span>님
+            <br />
+            <span>GAMETO</span> 탈퇴 신청을 원하시나요🥹
+            <span className="sad">ㅠㅠ</span>🥹
+          </p>
+          <p>
+            <span className="warning">
+              🤬다.시.한.번 생각해주세요 아시겠어요?🤬
+            </span>
+          </p>
+          <p>
+            <span className="nickname">{user.nickname}</span>님이 올리신 게시글
+            내가 좋아하는 유저 ...
+            <br />
+            추억과 애정 모두 버리실건가요? ㅠㅠ
+            <br />
+            <span className="gameto">GAMETO</span>는 편리한 서비스 이용을 위해
+            밤낮 없이
+            <br />
+            고민하고 고민하여 발전하고 있답니다 🤔
+            <br />
+            정말정말! 탈퇴하실거라면 아래 버튼을 눌러주세요
+            <br />
+            <span className="warning">탈퇴시 계정 복구는 불가해요🤬</span>
+            <br />
+            그동안 저희 서비스 이용해주셔서 감사합니다
+          </p>
+          <p>
+            <span className="nickname">{user.nickname}</span>님이 탈퇴하면 저희
+            서비스는 망할겁니다
+          </p>
+        </Content>
+        <ButtonWrap>
+          <button className="warning" onClick={handleQuit}>
+            그래도 탈퇴하기🧨
+          </button>
+          <button className="normal" onClick={() => navigate(-1)}>
+            💖취소하기💖
+          </button>
+        </ButtonWrap>
+      </QuitWrap>
+    );
+  } else return null;
 };
 
 export default QuitCard;

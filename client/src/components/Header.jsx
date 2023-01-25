@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { logout } from '../redux/slice/loginstate';
-
+import { userInfo } from '../redux/slice/userInfo';
 const HeaderWrap = styled.header`
   position: absolute;
   left: 0;
@@ -75,20 +75,20 @@ const BtnWrap = styled.div`
 `;
 
 const Header = () => {
-  const { accessToken, isLogin, memberId } = useSelector(
-    (state) => state.islogin.login
-  );
-  const [user, setUser] = useState({});
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const userInform = useSelector((state) => state.userInfo.userInfo);
+  const [nickname, setNickname] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLogin) {
-      axios
-        .get(`${API_URL}/api/members/${memberId}`)
-        .then((res) => setUser(res.data.data));
+    if (loginInfo?.isLogin) {
+      axios.get(`${API_URL}/api/members/${loginInfo?.memberId}`).then((res) => {
+        setNickname(res.data.data.nickname);
+        dispatch(userInfo(res.data.data));
+      });
     }
-  }, [isLogin, memberId]);
+  }, [loginInfo?.isLogin, loginInfo?.memberId, dispatch]);
 
   const handleLogout = () => {
     axios
@@ -97,7 +97,7 @@ const Header = () => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         }
       )
@@ -110,15 +110,15 @@ const Header = () => {
 
   return (
     <HeaderWrap>
-      {user && isLogin ? (
+      {userInform && loginInfo?.isLogin ? (
         <>
           <ProfileWrap>
-            <a href={`/profile/${memberId}`}>
+            <a href={`/profile/`}>
               <span className="alert">알림</span>
-              <span className="user_nickname">{user.nickname}</span>
+              <span className="user_nickname">{nickname}</span>
               <div className="user_img">
-                {user.profileImage ? (
-                  <img src={user.profileImage} alt="프로필이미지" />
+                {userInform.profileImage ? (
+                  <img src={userInform.profileImage} alt="프로필이미지" />
                 ) : (
                   <ProfileImg />
                 )}

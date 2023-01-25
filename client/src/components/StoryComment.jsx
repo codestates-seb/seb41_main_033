@@ -1,12 +1,14 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeartIcon from "./../assets/heart_sprite.svg";
 import SinglePofileWrap from "./SingleProfileWrap";
 import StoryBtn from "./StoryBtn";
+import displayedAt from "../util/displayedAt";
 
 const Wrap = styled.div`
 	display: flex;
 	align-items: center;
+	margin-bottom: 16px;
 
 	.comment_body {
 		flex: 1;
@@ -76,24 +78,62 @@ const CommentLike = styled.div`
 	}
 `;
 
-const StoryComment = () => {
-	const [isMe, setIsMe] = useState(true);
-	const [isEdit, setIsEdit] = useState(true);
+const StoryComment = ({ memberId, data, handleEdit, handleDelete }) => {
+	const [isMe, setIsMe] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
+	const [content, setContent] = useState("");
+
+	useEffect(() => {
+		if (data.memberId === memberId) setIsMe(true);
+	}, []);
+
+	const handleChangeEditClick = () => {
+		setIsEdit(true);
+	};
+
+	const handleEditContentChange = (e) => {
+		setContent(e.currentTarget.value);
+	};
+
 	return (
 		<Wrap className="card sm">
 			<div className="comment_body">
-				<SinglePofileWrap className="profile_wrap" imgSize="small" name="맑게고인뜨악어" subInfo="3분전" />
+				<SinglePofileWrap
+					className="profile_wrap"
+					imgSize="small"
+					imgSrc={data.profileImage}
+					name={data.nickname}
+					subInfo={displayedAt(data.createdAt)}
+				/>
 				{isEdit ? (
 					<div className="content_wrap edit">
-						<textarea placeholder="내용을 입력하세요" minLength="5"></textarea>
+						<textarea
+							placeholder="내용을 입력하세요"
+							minLength="5"
+							defaultValue={data.content}
+							onChange={(e) => handleEditContentChange(e)}
+						></textarea>
 					</div>
 				) : (
-					<div className="content_wrap">안녕하세요 저는 뜨악어에요 뜨거운 관심 캄사합니다</div>
+					<div className="content_wrap">{data.content}</div>
 				)}
 				{isMe ? (
 					<BtnWrap>
-						<StoryBtn type="edit" />
-						<StoryBtn type="delete" />
+						{isEdit ? (
+							<StoryBtn
+								type="editComplete"
+								clickHandler={() => {
+									handleEdit(data.id, content);
+									setIsEdit(false);
+								}}
+							/>
+						) : (
+							<StoryBtn type="edit" clickHandler={handleChangeEditClick} />
+						)}
+						<StoryBtn
+							type="delete"
+							clickHandler={() => handleDelete(data.id)}
+						/>
 					</BtnWrap>
 				) : null}
 			</div>

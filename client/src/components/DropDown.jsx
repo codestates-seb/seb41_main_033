@@ -8,7 +8,7 @@ const DropdownBody = styled.div`
   background-color: var(--darkgrey2);
   border: 1px solid var(--grey);
   color: var(--white);
-  border-radius: 8px;
+  border-radius: ${(props) => (props.isActive ? ` 8px 8px 0 0` : `8px`)};
   padding: 12px 16px;
   font-size: 14px;
   margin-bottom: 16px;
@@ -30,13 +30,14 @@ const DropdownMenu = styled.ul`
   width: 100%;
   border: 1px solid var(--grey);
   border-radius: 0 0 8px 8px;
-  padding: 8px;
+
   font-size: 14px;
   margin-bottom: 16px;
-  height: 220px;
+  height: 210px;
   position: absolute;
   overflow-y: scroll;
-  top: 43px;
+  top: 40px;
+  border-top-style: none;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -72,10 +73,9 @@ const Dropdown = ({ isOpen, setIsOpen, setGame, game }) => {
     "닌텐도 게임",
     "기타",
   ];
-
   return (
     <DropdownContainer>
-      <DropdownBody onClick={() => setIsOpen(!isOpen)}>
+      <DropdownBody onClick={() => setIsOpen(!isOpen)} isActive={isOpen}>
         {game}
         <span>
           <Arrow />

@@ -25,12 +25,18 @@ const BtnStoryStyle = styled.button`
 	}
 `;
 
-const StoryBtn = ({ size, type }) => {
+const StoryBtn = ({ size, type, clickHandler }) => {
 	return (
-		<BtnStoryStyle size={size}>
+		<BtnStoryStyle size={size} onClick={clickHandler}>
 			{type === "edit" ? (
 				<>
 					수정
+					<EditIcon />
+				</>
+			) : null}
+			{type === "editComplete" ? (
+				<>
+					수정완료
 					<EditIcon />
 				</>
 			) : null}

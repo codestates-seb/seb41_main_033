@@ -45,7 +45,6 @@ const TagsInput = styled.div`
       background: var(--black);
       border: 1px solid var(--grey);
       border-radius: 30px;
-      cursor: pointer;
       .tag_title {
         font-weight: 500;
         font-size: 12px;
@@ -108,7 +107,8 @@ const MatchingEdit = () => {
   };
 
   const addTags = (event) => {
-    const newTag = event.target.value.replace(/ /g, "").substring(0, 6);
+    const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
+    const newTag = event.target.value.replace(reg, "").substring(0, 6);
     if (
       !tags.includes(newTag) &&
       event.key === "Enter" &&
@@ -140,7 +140,7 @@ const MatchingEdit = () => {
             Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
-        .then(() => navigate("/"))
+        .then(() => navigate("/match"))
         .catch((err) => alert(err));
     }
   };

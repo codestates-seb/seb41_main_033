@@ -1,12 +1,12 @@
-import styled from 'styled-components';
-import { ReactComponent as LogoImg } from './../assets/Logo.svg';
-import { ReactComponent as MenuIconMatch } from './../assets/handshakeIcon.svg';
-import { ReactComponent as MenuIconStory } from './../assets/boardIcon.svg';
-import { ReactComponent as MenuIconGame } from './../assets/gameIcon.svg';
-import { ReactComponent as MenuIconProfile } from './../assets/personIcon.svg';
-import { ReactComponent as CurtainCall } from '../assets/curtainIcon.svg';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import styled from "styled-components";
+import { ReactComponent as LogoImg } from "./../assets/Logo.svg";
+import { ReactComponent as MenuIconMatch } from "./../assets/handshakeIcon.svg";
+import { ReactComponent as MenuIconStory } from "./../assets/boardIcon.svg";
+import { ReactComponent as MenuIconGame } from "./../assets/gameIcon.svg";
+import { ReactComponent as MenuIconProfile } from "./../assets/personIcon.svg";
+import { ReactComponent as CurtainCall } from "../assets/curtainIcon.svg";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const NavWrap = styled.nav`
   position: relative;
@@ -98,15 +98,15 @@ const Nav = () => {
   return (
     <NavWrap>
       <LogoWrap>
-        <NavLink to="/" title="GAMETO">
+        <NavLink to="/match" title="GAMETO">
           <LogoImg />
         </NavLink>
       </LogoWrap>
       <Menu>
         <li>
           <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            to="/match"
+            className={({ isActive }) => (isActive ? "active" : "")}
           >
             <MenuIconMatch />
             <span>매칭하기</span>
@@ -115,7 +115,7 @@ const Nav = () => {
         <li>
           <NavLink
             to="/story"
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            className={({ isActive }) => (isActive ? "active" : "")}
           >
             <MenuIconStory />
             <span>스토리</span>
@@ -124,7 +124,7 @@ const Nav = () => {
         <li>
           <NavLink
             to="/game"
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            className={({ isActive }) => (isActive ? "active" : "")}
           >
             <MenuIconGame />
             <span>오늘뭐하지?</span>
@@ -134,7 +134,7 @@ const Nav = () => {
           {loginInfo?.isLogin ? (
             <NavLink
               to={`/profile/${loginInfo?.memberId}`}
-              className={({ isActive }) => (isActive ? 'active' : '')}
+              className={({ isActive }) => (isActive ? "active" : "")}
             >
               <MenuIconProfile />
               <span>마이프로필</span>
@@ -143,8 +143,8 @@ const Nav = () => {
         </li>
         <li>
           <NavLink
-            to={`/readme`}
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            to={`/`}
+            className={({ isActive }) => (isActive ? "active" : "")}
           >
             <CurtainCall />
             <span>커튼코올?!</span>

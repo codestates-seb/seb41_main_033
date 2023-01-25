@@ -1,15 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   login: {
     accessToken: null,
     memberId: null,
     isLogin: false,
+    expire: null,
+    refreshtoken: null,
   },
 };
 
 const Logined = createSlice({
-  name: 'logined',
+  name: "logined",
   initialState,
   reducers: {
     login: (state, action) => {

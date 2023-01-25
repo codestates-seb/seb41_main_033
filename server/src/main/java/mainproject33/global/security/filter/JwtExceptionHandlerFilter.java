@@ -61,7 +61,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
             TokenDto tokenDto = authService.reissue(request, authentication); // 토큰 재발급
             setHeaderResponse(wrapper, response, tokenDto); // header, response 값 재설정
 
-            log.error("Access Token, Refresh Token 재발급이 완료되었씁니다.");
+            log.error("Access Token, Refresh Token 재발급이 완료되었습니다.");
 
             filterChain.doFilter(wrapper, response);
         }

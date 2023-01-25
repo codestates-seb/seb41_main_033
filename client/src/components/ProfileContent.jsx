@@ -2,11 +2,7 @@ import styled from 'styled-components';
 import { ReactComponent as BlockUser } from '../assets/blockUser.svg';
 import ProfileContentList from './ProfileContentList';
 import { useState } from 'react';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { API_URL } from '../data/apiUrl';
 
 const ContentWrap = styled.div`
   width: var(--col-8);

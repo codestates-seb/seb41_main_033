@@ -4,7 +4,8 @@ import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { quit } from '../redux/slice/loginstate';
 
 const QuitWrap = styled.div`
   display: flex;
@@ -72,13 +73,20 @@ const ButtonWrap = styled.div`
 
 const QuitCard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const loginInfo = useSelector((state) => state.islogin.login);
   const [user, setUser] = useState(null);
 
   const handleQuit = () => {
-    axios.delete(`${API_URL}/api/members/${loginInfo?.memberId}`, {
-      headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-    });
+    axios
+      .delete(`${API_URL}/api/members/${loginInfo?.memberId}`, {
+        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+      })
+      .then(() => {
+        localStorage.clear();
+        dispatch(quit({ accessToken: null, memberId: null, isLogin: false }));
+        navigate('/');
+      });
   };
 
   useEffect(() => {

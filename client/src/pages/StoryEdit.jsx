@@ -1,18 +1,20 @@
-import styled from "styled-components";
-import { useState, useEffect } from "react";
-import { API_URL } from "../data/apiUrl";
-import axios from "axios";
-import PostPatch from "../components/PostPatch";
-import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { API_URL } from '../data/apiUrl';
+import axios from 'axios';
+import PostPatch from '../components/PostPatch';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import Popup from '../components/Popup';
 
 const TextArea = styled.div`
   margin: 24px 0 16px 0;
 `;
 
 const StoryEdit = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState({});
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
   const navigate = useNavigate();
   const params = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
@@ -34,6 +36,10 @@ const StoryEdit = () => {
     setContent(e.currentTarget.value);
   };
   //제출
+  const handlePatch = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   const handleStoryEditSubmit = () => {
     axios
       .patch(
@@ -46,8 +52,8 @@ const StoryEdit = () => {
         }
       )
       .then((res) => {
-        alert("수정이 완료되었습니다.");
-        navigate("/story");
+        setIsOpen((prev) => !prev);
+        navigate('/story');
       })
       .catch((err) => {
         console.log(err);
@@ -62,7 +68,7 @@ const StoryEdit = () => {
       button1="수정완료"
       button2="취소"
       link={-1}
-      handleSubmit={handleStoryEditSubmit}
+      handleSubmit={handlePatch}
     >
       <TextArea>
         <label>내용</label>
@@ -71,6 +77,13 @@ const StoryEdit = () => {
           onChange={(e) => handleContentOnChange(e)}
         ></textarea>
       </TextArea>
+      <Popup
+        isOpen={isOpen}
+        title="스토리 수정"
+        content="스토리 수정이 완료되었습니다."
+        button1="확인"
+        handleBtn1={handleStoryEditSubmit}
+      />
     </PostPatch>
   );
 };

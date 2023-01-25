@@ -39,6 +39,7 @@ const Like = styled.div`
   }
 `;
 const UserCard = ({ data }) => {
+  console.log(data);
   return (
     <Card className="card big">
       <Div>
@@ -54,7 +55,9 @@ const UserCard = ({ data }) => {
         </Link>
         <Like>
           <div>Likes</div>
-          <div className="number">{data.likeCount ? data.likeCount : 0}</div>
+          <div className="number">
+            {data.memberLikeCount ? data.memberLikeCount : 0}
+          </div>
         </Like>
       </Div>
     </Card>

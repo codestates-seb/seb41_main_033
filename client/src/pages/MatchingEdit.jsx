@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
 import { useSelector } from "react-redux";
-
+import validity from "../util/validity";
 const Label = styled.label`
   font-style: normal;
   font-weight: 500;
@@ -108,7 +108,7 @@ const MatchingEdit = () => {
 
   const addTags = (event) => {
     const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
-    const newTag = event.target.value.replace(reg, "").substring(0, 6);
+    const newTag = event.target.value.replace(reg, "").substring(0, 5);
     if (
       !tags.includes(newTag) &&
       event.key === "Enter" &&
@@ -130,9 +130,10 @@ const MatchingEdit = () => {
   const { title, team, content } = info;
   const submitBtn = (e) => {
     e.preventDefault();
+    const data = { title, game, team, tags, content };
+    validity(data);
     const isEmpty = (object) =>
       !Object.values(object).every((el) => el !== null && el.length !== 0);
-    const data = { title, game, team, tags, content };
     if (!isEmpty(data)) {
       axios
         .patch(`${API_URL}/api/matches/${gameInfo.id}`, data, {
@@ -140,8 +141,11 @@ const MatchingEdit = () => {
             Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
-        .then(() => navigate("/match"))
-        .catch((err) => alert(err));
+        .then(() => {
+          alert("게시물이 수정 되었습니다");
+          navigate("/match");
+        })
+        .catch((err) => console.log(err));
     }
   };
   const [isOpen, setIsOpen] = useState(false);
@@ -152,7 +156,7 @@ const MatchingEdit = () => {
       nickname={gameInfo?.nickname}
       identifier={gameInfo?.identifier}
       button1="작성완료"
-      link2="-1"
+      link={-1}
       button2="취소"
       handleSubmit={submitBtn}
     >

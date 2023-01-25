@@ -194,14 +194,21 @@ const ProfileCard = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/members/${userid}`, {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      })
-      .then((res) => {
+    if (loginInfo?.accessToken) {
+      axios
+        .get(`${API_URL}/api/members/${userid}`, {
+          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+        })
+        .then((res) => {
+          setUser(res.data.data);
+          dispatch(setProfile(res.data.data));
+        });
+    } else {
+      axios.get(`${API_URL}/api/members/${userid}`).then((res) => {
         setUser(res.data.data);
         dispatch(setProfile(res.data.data));
       });
+    }
     Number(userid) === loginInfo?.memberId ? setIsMe(true) : setIsMe(false);
   }, [userid, loginInfo?.accessToken, loginInfo?.memberId, dispatch]);
 

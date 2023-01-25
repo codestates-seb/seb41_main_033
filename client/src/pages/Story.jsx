@@ -204,7 +204,7 @@ const Story = () => {
       <WriteFloatButton click={handleWriteFBtnOnClick} />
       <Popup
         isOpen={isOpen}
-        title="스토리 작성 알림"
+        title="스토리 작성"
         content="스토리 작성은 로그인 후 이용 가능합니다."
         button1="로그인"
         button2="회원가입"

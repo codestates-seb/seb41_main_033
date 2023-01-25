@@ -17,7 +17,9 @@ const MatchingDetail = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/matches/${boardid}`)
+      .get(`${API_URL}/api/matches/${boardid}`, {
+        headers: { "ngrok-skip-browser-warning": "69420" },
+      })
       .then((res) => {
         setInfo(res.data.data);
         dispatch(gameInfo(res.data.data));

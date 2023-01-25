@@ -16,6 +16,9 @@ const ContentWrap = styled.div`
     font-size: var(--font-body1-size);
     margin-bottom: 8px;
   }
+  .error_caption {
+    padding: 0 16px;
+  }
 `;
 
 const NicknameWrap = styled.div`
@@ -127,6 +130,7 @@ const ProfileEdit = () => {
   const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
   const [bio, setBio] = useState('');
+  const [isError, setIsError] = useState({ nickname: false });
   const loginInfo = useSelector((state) => state.islogin.login);
   const userInform = useSelector((state) => state.userInfo.userInfo);
   const navigate = useNavigate();
@@ -134,6 +138,12 @@ const ProfileEdit = () => {
 
   const handleNickname = (e) => {
     setNickname(e.target.value);
+    if (
+      !e.target.value ||
+      !/(?=.*\d)|(?=.*[a-zA-Z])|(?=.*[가-힣]).{2,8}/.test(e.target.value)
+    ) {
+      setIsError({ ...isError, nickname: true });
+    } else setIsError({ ...isError, nickname: false });
   };
 
   const handleOnChange = (e) => {
@@ -159,6 +169,9 @@ const ProfileEdit = () => {
 
   const handleBio = (e) => {
     setBio(e.target.value);
+    if (e.target.value.length > 500) {
+      setIsError({ ...isError, introduction: true });
+    } else setIsError({ ...isError, introduction: false });
   };
 
   const handlePatch = () => {
@@ -219,11 +232,17 @@ const ProfileEdit = () => {
           <NicknameWrap>
             <label htmlFor="nickname">닉네임 수정</label>
             <InputWrap
+              className={isError.nickname ? 'error' : null}
               type="text"
               name="nickname"
               value={nickname || ''}
               onChange={handleNickname}
             />
+            {isError.nickname ? (
+              <div className="error_caption">
+                닉네임은 2~8자의 영문, 한글, 숫자만 가능합니다.
+              </div>
+            ) : null}
           </NicknameWrap>
           <ProfileWrap>
             <div className="custom_label">프로필 이미지 수정</div>
@@ -272,11 +291,17 @@ const ProfileEdit = () => {
           <BioWrap>
             <label htmlFor="bio">자기소개 수정</label>
             <textarea
+              className={isError.introduction ? 'error' : null}
               id="bio"
               value={bio || ''}
               placeholder="내용을 입력하세요"
               onChange={handleBio}
             />
+            {isError.nickname ? (
+              <div className="error_caption">
+                자기소개는 500자 이하만 가능합니다.
+              </div>
+            ) : null}
           </BioWrap>
           <BlockWrap>
             <label>차단한 유저 편집</label>

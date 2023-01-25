@@ -54,9 +54,19 @@ const ProfilePagination = ({
     if (storyLastNum > storyTotalPage) {
       setStoryPageCount(storyTotalPage % 5);
     } else setStoryPageCount(5);
-  }, [matchLastNum, matchTotalPage, storyLastNum, storyTotalPage]);
 
-  console.log(matchPage);
+    if (matchFirstPage > matchPage) setMatchFirstPage(matchPage);
+    if (storyFirstPage > storyPage) setStoryFirstPage(storyPage);
+  }, [
+    matchLastNum,
+    matchTotalPage,
+    storyLastNum,
+    storyTotalPage,
+    matchPage,
+    matchFirstPage,
+    storyPage,
+    storyFirstPage,
+  ]);
 
   return (
     <PageWrap>

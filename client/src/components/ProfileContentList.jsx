@@ -98,8 +98,11 @@ const ProfileContentList = ({ isMatch, isStory }) => {
       .then((res) => {
         setMatch(res.data.data);
         setMatchPageInfo(res.data.pageInfo);
+      })
+      .then(() => {
+        if (matchPage > matchPageInfo?.totalPages) setMatchPage(1);
       });
-  }, [matchPage, userid]);
+  }, [matchPage, userid, matchPageInfo?.totalPages]);
 
   useEffect(() => {
     axios
@@ -107,8 +110,11 @@ const ProfileContentList = ({ isMatch, isStory }) => {
       .then((res) => {
         setStory(res.data.data);
         setStoryPageInfo(res.data.pageInfo);
+      })
+      .then(() => {
+        if (storyPage > storyPageInfo?.totalPages) setStoryPage(1);
       });
-  }, [storyPage, userid]);
+  }, [storyPage, userid, storyPageInfo?.totalPages]);
 
   if (match && story) {
     return (

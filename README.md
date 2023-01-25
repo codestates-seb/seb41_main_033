@@ -61,6 +61,7 @@ BE_조대희
 - Member CRUD Business Logic 구현  
 - Security 기본 설정 및 JWT 적용  
 - redis를 활용하여 로그아웃 구현  
+- 팔로우, 회원 좋아요, 차단 API, Business Logic 구현
 
 소감 :   
 **즐겁다!**  저희 팀의 모토가 아닐까 싶습니다.  

@@ -120,7 +120,7 @@ const StoryComment = ({
 	const handleCommentLikeClick = () => {
 		axios
 			.post(
-				`${API_URL}/api/boards/comments/${data.id}`,
+				`${API_URL}/api/boards/comments/${data.id}/likes`,
 				{},
 				{
 					headers: {
@@ -129,14 +129,13 @@ const StoryComment = ({
 				}
 			)
 			.then((res) => {
-				console.log(res);
-				// let countValue = 0;
-				// if (res.data) countValue = 1;
-				// else countValue = -1;
-				// setboardLike({
-				// 	status: res,
-				// 	likeCount: boardLike.likeCount + countValue,
-				// });
+				let countValue = 0;
+				if (res.data) countValue = 1;
+				else countValue = -1;
+				setCommentLike({
+					status: res.data,
+					count: commentLike.count + countValue,
+				});
 			})
 			.catch((err) => {
 				console.log(err);
@@ -186,8 +185,10 @@ const StoryComment = ({
 				) : null}
 			</div>
 			<CommentLike onClick={handleCommentLikeClick}>
-				<span className="heart">이 댓글에 좋아요</span>
-				<span className="likeCount">12</span>
+				<span className={commentLike.status ? "heart selected" : "heart"}>
+					이 댓글에 좋아요
+				</span>
+				<span className="likeCount">{commentLike.count}</span>
 			</CommentLike>
 		</Wrap>
 	);

@@ -79,11 +79,19 @@ public class JwtTokenizer { // 토큰을 생성하고 검증하는 역할을 수
 
     public String generateRefreshToken(Authentication authentication) {
 
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        Map<String, String> claims = new HashMap<>();
+        claims.put("auth", authorities);
+
         long now = (new Date()).getTime();
 
         Date expiration = new Date(now + refreshTokenExpirationMinutes * 1000 * 60);
 
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(authentication.getName())
                 .setIssuedAt(Calendar.getInstance().getTime())
                 .setExpiration(expiration)

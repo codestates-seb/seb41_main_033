@@ -58,8 +58,10 @@ const StoryBoardWrap = styled.div`
 const Story = () => {
 	const loginInfo = useSelector((state) => state.islogin.login);
 	const accessToken = loginInfo.accessToken;
+	const isLogin = loginInfo.isLogin;
 	const navigate = useNavigate();
 	const [storyData, setStoryData] = useState([]);
+	const [keyword, setKeyword] = useState("");
 
 	//페이지 로딩 state
 	const [page, setPage] = useState(1);
@@ -115,12 +117,32 @@ const Story = () => {
 	}, [isLoading]);
 	//작성하기 버튼
 	const handleWriteFBtnOnClick = () => {
-		if(accessToken){
+		if (accessToken) {
 			navigate(`/story/storywrite`);
-		}else{
+		} else {
 			alert("스토리 작성은 로그인 후 이용 가능합니다.");
 		}
 	};
+
+	//스토리 검색
+	useEffect(() => {
+		let config = {};
+		if (isLogin) {
+			config = {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			};
+		}
+
+		axios
+			.get(`${API_URL}/api/boards?page=${page}&keyword=${keyword}`, config)
+			.then((res) => {
+				//setStoryData(res.data.data);
+				console.log(res);
+			})
+			.catch((err) => console.log(err));
+	}, [keyword]);
 
 	return (
 		<Wrap>
@@ -128,7 +150,7 @@ const Story = () => {
 				<h3 className="active">모두의 스토리</h3>
 				<h3>친구의 스토리</h3>
 			</TitleWrap>
-			<SearchBar />
+			<SearchBar setKeyword={setKeyword} setPage={setPage} />
 			<StoryBoardWrap>
 				{storyData
 					? storyData.map((el, idx) => {

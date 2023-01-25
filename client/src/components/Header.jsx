@@ -8,88 +8,89 @@ import { API_URL } from "../data/apiUrl";
 import { logout } from "../redux/slice/loginstate";
 import { userInfo } from "../redux/slice/userInfo";
 import { login } from "../redux/slice/loginstate";
+
 const HeaderWrap = styled.header`
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  height: 112px;
-  padding: 0 48px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	width: 100%;
+	height: 112px;
+	padding: 0 48px;
 `;
 
 const ProfileWrap = styled.div`
-  a {
-    flex: none;
-    display: flex;
-    align-items: center;
-    margin-left: 32px;
-  }
-  .alert {
-    display: block;
-    width: 6px;
-    height: 6px;
-    margin-right: 6px;
-    border-radius: 6px;
-    background: var(--primary-color);
-    font-size: 0;
-    overflow: hidden;
-  }
-  .user_nickname {
-    margin-right: 12px;
-    font-size: var(--font-caption-size);
-    color: var(--font-color);
-  }
-  .user_img {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
+	a {
+		flex: none;
+		display: flex;
+		align-items: center;
+		margin-left: 32px;
+	}
+	.alert {
+		display: block;
+		width: 6px;
+		height: 6px;
+		margin-right: 6px;
+		border-radius: 6px;
+		background: var(--primary-color);
+		font-size: 0;
+		overflow: hidden;
+	}
+	.user_nickname {
+		margin-right: 12px;
+		font-size: var(--font-caption-size);
+		color: var(--font-color);
+	}
+	.user_img {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		overflow: hidden;
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
 `;
 
 const BtnWrap = styled.div`
-  flex: none;
-  display: flex;
-  margin-left: 48px;
-  a {
-    display: block;
-    padding: 6px 16px;
-    font-size: var(--font-body2-size);
-    font-weight: var(--font-weight-md);
-    color: var(--strong-color);
-  }
-  a.active {
-    color: var(--primary-color);
-  }
-  button {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: var(--font-caption-size);
-  }
+	flex: none;
+	display: flex;
+	margin-left: 48px;
+	a {
+		display: block;
+		padding: 6px 16px;
+		font-size: var(--font-body2-size);
+		font-weight: var(--font-weight-md);
+		color: var(--strong-color);
+	}
+	a.active {
+		color: var(--primary-color);
+	}
+	button {
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		font-size: var(--font-caption-size);
+	}
 `;
 
 const Header = () => {
-  const loginInfo = useSelector((state) => state.islogin.login);
-  const userInform = useSelector((state) => state.userInfo.userInfo);
-  const [nickname, setNickname] = useState(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const [user, setUser] = useState({});
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (loginInfo?.isLogin) {
-      axios.get(`${API_URL}/api/members/${loginInfo?.memberId}`).then((res) => {
-        setNickname(res.data.data.nickname);
-        dispatch(userInfo(res.data.data));
-      });
-    }
-  }, [loginInfo?.isLogin, loginInfo?.memberId, dispatch]);
+	useEffect(() => {
+		if (loginInfo?.isLogin) {
+			axios.get(`${API_URL}/api/members/${loginInfo?.memberId}`).then((res) => {
+				setUser(res.data.data);
+				dispatch(userInfo(res.data.data));
+			});
+		}
+	}, [loginInfo?.isLogin, loginInfo?.memberId]);
+
 
   const handleLogout = () => {
     axios
@@ -182,6 +183,7 @@ const Header = () => {
       )}
     </HeaderWrap>
   );
+
 };
 
 export default Header;

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
 import PostPatch from "../components/PostPatch";
+import validity from "../util/validity";
 const MatchContainer = styled.form`
   .user_info {
     display: flex;
@@ -120,7 +121,7 @@ const MatchingWrite = () => {
   const userInfo = useSelector((state) => state.userInfo.userInfo);
   const addTags = (event) => {
     const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
-    const newTag = event.target.value.replace(reg, "").substring(0, 6);
+    const newTag = event.target.value.replace(reg, "").substring(0, 5);
     if (
       !tags.includes(newTag) &&
       event.key === "Enter" &&
@@ -141,9 +142,10 @@ const MatchingWrite = () => {
   };
   const { title, team, content } = info;
   const submitBtn = (e) => {
+    const data = { title, game, team, tags, content };
+    validity(data);
     const isEmpty = (object) =>
       !Object.values(object).every((el) => el !== null && el.length !== 0);
-    const data = { title, game, team, tags, content };
     if (!isEmpty(data) && content.length >= 5 && game !== "게임을 선택하세요") {
       axios
         .post(`${API_URL}/api/matches`, data, {
@@ -151,7 +153,10 @@ const MatchingWrite = () => {
             Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
-        .then(navigate("/match"))
+        .then((res) => {
+          alert("게시물 작성이 완료 되었습니다");
+          navigate("/match");
+        })
         .catch((err) => console(err));
     }
   };
@@ -164,7 +169,7 @@ const MatchingWrite = () => {
       nickname={userInfo?.nickname}
       identifier={userInfo?.identifier}
       button1="작성완료"
-      link2="/match"
+      link={-1}
       button2="취소"
       handleSubmit={submitBtn}
     >
@@ -228,7 +233,7 @@ const MatchingWrite = () => {
             />
           </TagsInput>
           <div>
-            <Label htmlFor="content">상세 설명</Label>
+            <Label htmlFor="content">내용</Label>
             <textarea
               name="content"
               placeholder="상세설명을 입력하세요(최소 5자)"

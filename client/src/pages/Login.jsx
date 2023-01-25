@@ -91,9 +91,19 @@ const Login = () => {
         )
         .then((res) => {
           localStorage.clear();
+          const expire = Date.now() + 1000 * 60 * 20;
+          const refreshtoken = res.headers.refreshtoken;
           const accessToken = res.headers.authorization;
           const memberId = res.data.data.id;
-          dispatch(login({ accessToken, memberId, isLogin: true }));
+          dispatch(
+            login({
+              accessToken,
+              memberId,
+              isLogin: true,
+              expire,
+              refreshtoken,
+            })
+          );
           navigate("/match");
         });
     }

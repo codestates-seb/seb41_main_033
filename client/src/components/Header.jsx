@@ -3,9 +3,10 @@ import { ReactComponent as ProfileImg } from "./../assets/defaultImg.svg";
 import { ReactComponent as LogoImg } from "./../assets/Logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../data/apiUrl";
+import { login } from "../redux/slice/loginstate";
 import { logout } from "../redux/slice/loginstate";
 import { userInfo } from "../redux/slice/userInfo";
 import { MOBILE_POINT } from "../data/breakpoint";
@@ -20,7 +21,8 @@ const HeaderWrap = styled.header`
 	width: 100%;
 	height: 112px;
 	padding: 0 48px;
-	<<<<<<< Updated upstream ======= @media (max-width: ${MOBILE_POINT}) {
+
+	@media (max-width: ${MOBILE_POINT}) {
 		padding: 0 16px;
 		height: 56px;
 	}
@@ -41,7 +43,6 @@ const LogoWrap = styled.div`
 	@media (max-width: ${MOBILE_POINT}) {
 		display: block;
 	}
->>>>>>> Stashed changes
 `;
 
 const ProfileWrap = styled.div`
@@ -115,18 +116,17 @@ const BtnWrap = styled.div`
 
 const Header = () => {
 	const loginInfo = useSelector((state) => state.islogin.login);
-	const [user, setUser] = useState({});
+	const userInform = useSelector((state) => state.userInfo.userInfo);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (loginInfo?.isLogin) {
 			axios.get(`${API_URL}/api/members/${loginInfo?.memberId}`).then((res) => {
-				setUser(res.data.data);
 				dispatch(userInfo(res.data.data));
 			});
 		}
-	}, [loginInfo?.isLogin, loginInfo?.memberId]);
+	}, [loginInfo?.isLogin, loginInfo?.memberId, dispatch]);
 
 	const handleLogout = () => {
 		axios
@@ -146,6 +146,40 @@ const Header = () => {
 			});
 	};
 
+	useEffect(() => {
+		if (loginInfo?.isLogin && Date.now() >= loginInfo?.expire) {
+			const memberId = loginInfo.memberId;
+			const expire = Date.now() + 1000 * 60 * 20;
+
+			axios
+				.get(
+					`${API_URL}/api/members/${loginInfo?.memberId}`,
+					{
+						headers: {
+							Authorization: `Bearer ${loginInfo.accessToken}`,
+							refreshToken: `Bearer ${loginInfo.refreshtoken}`,
+						},
+					},
+					{ withCredentials: true }
+				)
+				.then((res) => {
+					const refreshtoken = res.headers.refreshtoken;
+					const accessToken = res.headers.authorization;
+					dispatch(userInfo(res.data.data));
+					dispatch(
+						login({
+							accessToken,
+							memberId,
+							isLogin: true,
+							expire,
+							refreshtoken,
+						})
+					);
+					window.location.reload();
+				})
+				.catch((err) => console.log(err));
+		}
+	});
 	return (
 		<HeaderWrap>
 			<LogoWrap>
@@ -153,15 +187,15 @@ const Header = () => {
 					<LogoImg />
 				</a>
 			</LogoWrap>
-			{user && loginInfo?.isLogin ? (
+			{userInform && loginInfo?.isLogin ? (
 				<>
 					<ProfileWrap>
 						<a href={`/profile/${loginInfo?.memberId}`}>
 							<span className="alert">알림</span>
-							<span className="user_nickname">{user.nickname}</span>
+							<span className="user_nickname">{userInform.nickname}</span>
 							<div className="user_img">
-								{user.profileImage ? (
-									<img src={user.profileImage} alt="프로필이미지" />
+								{userInform.profileImage ? (
+									<img src={userInform.profileImage} alt="프로필이미지" />
 								) : (
 									<ProfileImg />
 								)}

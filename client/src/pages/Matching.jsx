@@ -53,6 +53,7 @@ const Matching = () => {
 	const [keyword, setKeyword] = useState("");
 	const navigate = useNavigate();
 	const loginInfo = useSelector((state) => state.islogin.login);
+
 	const matchingBtn = () => {
 		if (loginInfo?.isLogin) {
 			navigate("/match/matchwrite");
@@ -66,7 +67,6 @@ const Matching = () => {
 			axios
 				.get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {
 					headers: {
-						"ngrok-skip-browser-warning": "69420",
 						Authorization: `Bearer ${loginInfo.accessToken}`,
 					},
 				})
@@ -78,11 +78,7 @@ const Matching = () => {
 				.catch((err) => console.log(err));
 		} else {
 			axios
-				.get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {
-					headers: {
-						"ngrok-skip-browser-warning": "69420",
-					},
-				})
+				.get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {})
 				.then((res) => {
 					setMatchinglist(res.data.data);
 					setTotal(res.data.pageInfo.totalPages);

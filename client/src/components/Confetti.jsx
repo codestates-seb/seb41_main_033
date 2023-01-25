@@ -1,11 +1,11 @@
-import JSConfetti from 'js-confetti';
+import JSConfetti from "js-confetti";
 const jsConfetti = new JSConfetti();
 
 const Confetti = () => {
   jsConfetti.addConfetti({
-    emojis: ['🌈', '💥', '✨', '💫', '🦄', '🌟', '💕', '🌺'],
+    emojis: ["🌈", "💥", "✨", "💫", "🦄", "🌟", "💕", "🌺"],
     emojiSize: 100,
-    confettiNumber: 70,
+    confettiNumber: 30,
   });
 
   return <div className="con02_event"></div>;

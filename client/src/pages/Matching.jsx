@@ -9,6 +9,7 @@ import { API_URL } from "../data/apiUrl";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import NoSearch from "../components/NoSearch";
+import Loading from "../components/Loading";
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -20,9 +21,14 @@ const Ul = styled.ul`
   justify-content: space-between;
   margin-top: 40px;
 `;
-
+const Empty = styled.div`
+  text-align: center;
+  font-size: var(--font-head1-size);
+  padding-top: 96px;
+`;
 const Matching = () => {
   const [matchinglist, setMatchinglist] = useState([]);
+  const [loading, setLoding] = useState(true);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
   const [keyword, setKeyword] = useState("");
@@ -30,7 +36,7 @@ const Matching = () => {
   const loginInfo = useSelector((state) => state.islogin.login);
   const matchingBtn = () => {
     if (loginInfo?.isLogin) {
-      navigate("/matchwrite");
+      navigate("/match/matchwrite");
     } else {
       navigate("/login");
     }
@@ -48,6 +54,7 @@ const Matching = () => {
         .then((res) => {
           setMatchinglist(res.data.data);
           setTotal(res.data.pageInfo.totalPages);
+          setLoding(false);
         })
         .catch((err) => console.log(err));
     } else {
@@ -60,33 +67,39 @@ const Matching = () => {
         .then((res) => {
           setMatchinglist(res.data.data);
           setTotal(res.data.pageInfo.totalPages);
+          setLoding(false);
         })
         .catch((err) => console.log(err));
     }
-
   }, [page, keyword]);
 
   return (
-    <Wrap>
-
-      <SearchBar setKeyword={setKeyword} setPage={setPage} />
-v
-      {matchinglist.length === 0 ? (
-        <NoSearch />
+    <>
+      {loading ? (
+        <Loading />
       ) : (
-        <Ul>
-          {matchinglist?.map((el) => (
-            <li key={el.id}>
-              <Link to={`/${el.id}/detail`}>
-                <MatchingCard data={el} />
-              </Link>
-            </li>
-          ))}
-        </Ul>
+        <Wrap>
+          <SearchBar setKeyword={setKeyword} setPage={setPage} />
+          {!keyword && !total ? (
+            <Empty>매칭하기 게시물이 없습니다</Empty>
+          ) : matchinglist.length === 0 ? (
+            <NoSearch />
+          ) : (
+            <Ul>
+              {matchinglist?.map((el) => (
+                <li key={el.id}>
+                  <Link to={`/match/${el.id}/detail`}>
+                    <MatchingCard data={el} />
+                  </Link>
+                </li>
+              ))}
+            </Ul>
+          )}
+          <WriteFloatButton click={matchingBtn} />
+          <MatchPagination setPage={setPage} page={page} total={total} />
+        </Wrap>
       )}
-      <WriteFloatButton click={matchingBtn} />
-      <MatchPagination setPage={setPage} page={page} total={total} />
-    </Wrap>
+    </>
   );
 };
 export default Matching;

@@ -23,7 +23,8 @@ const MatchingDetail = () => {
       .then((res) => {
         setInfo(res.data.data);
         dispatch(gameInfo(res.data.data));
-      });
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (

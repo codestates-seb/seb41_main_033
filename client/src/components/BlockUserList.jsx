@@ -23,6 +23,10 @@ const ListWrap = styled.div`
         color: var(--strong-color);
       }
     }
+    .content_none {
+      width: 100%;
+      text-align: center;
+    }
   }
 `;
 
@@ -73,22 +77,28 @@ const BlockUserList = () => {
       <>
         <ListWrap>
           <ul>
-            {blockUser.map((block) => (
-              <li key={block.id}>
-                <SingleProfileWrap
-                  className="profile_container"
-                  imgSrc={block.profileImage}
-                  name={block.nickname}
-                  subInfo={block.identifier}
-                />
-                <button
-                  className="unblock_btn"
-                  onClick={() => handleBlock(block.id)}
-                >
-                  차단해제
-                </button>
+            {blockUser.length > 0 ? (
+              blockUser.map((block) => (
+                <li key={block.id}>
+                  <SingleProfileWrap
+                    className="profile_container"
+                    imgSrc={block.profileImage}
+                    name={block.nickname}
+                    subInfo={block.identifier}
+                  />
+                  <button
+                    className="unblock_btn"
+                    onClick={() => handleBlock(block.id)}
+                  >
+                    차단해제
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li>
+                <div className="content_none">차단한 유저가 없습니다.</div>
               </li>
-            ))}
+            )}
           </ul>
         </ListWrap>
         <ButtonWrap>

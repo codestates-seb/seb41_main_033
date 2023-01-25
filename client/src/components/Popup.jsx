@@ -43,11 +43,9 @@ const ButtonWrap = styled.div`
   width: 100%;
 
   button {
-    width: calc((100% - 24px) / 2);
-
-    :first-child {
-      /* 버튼이 1개면 오른쪽 마진 16px, 없으면 0 */
-      margin-right: ${({ button2 }) => (button2 ? '16px' : '0')};
+    width: 100%;
+    :last-child {
+      margin-left: 24px;
     }
   }
 `;

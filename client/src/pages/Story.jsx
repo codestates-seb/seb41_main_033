@@ -115,7 +115,11 @@ const Story = () => {
 	}, [isLoading]);
 	//작성하기 버튼
 	const handleWriteFBtnOnClick = () => {
-		navigate(`/story/storywrite`);
+		if(accessToken){
+			navigate(`/story/storywrite`);
+		}else{
+			alert("스토리 작성은 로그인 후 이용 가능합니다.");
+		}
 	};
 
 	return (
@@ -126,9 +130,11 @@ const Story = () => {
 			</TitleWrap>
 			<SearchBar />
 			<StoryBoardWrap>
-				{storyData?.map((el, idx) => {
-					return <StorySingle key={idx} data={el} />;
-				})}
+				{storyData
+					? storyData.map((el, idx) => {
+							return <StorySingle key={idx} data={el} />;
+					  })
+					: "작성된 스토리가 없습니다."}
 			</StoryBoardWrap>
 			<WriteFloatButton click={handleWriteFBtnOnClick} />
 			{isLoading && (

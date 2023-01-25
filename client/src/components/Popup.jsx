@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import styled from 'styled-components';
 
 const Background = styled.div`
@@ -60,19 +59,6 @@ const Popup = ({
   handleBtn1,
   handleBtn2,
 }) => {
-  useEffect(() => {
-    document.body.style.cssText = `
-    position:fixed;
-    top: -${window.scrollY}px;
-    overflow-y: scroll;
-    width:100%;`;
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
-  }, []);
-
   if (isOpen) {
     return (
       <Background>

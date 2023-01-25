@@ -12,11 +12,8 @@ import NoSearch from "../components/NoSearch";
 import Loading from "../components/Loading";
 import { MOBILE_POINT } from "../data/breakpoint";
 
-const Wrap = styled.div`
-	display: flex;
-	flex-direction: column;
-	max-width: 974px;
-`;
+const Wrap = styled.div``;
+
 const Ul = styled.ul`
 	display: flex;
 	flex-wrap: wrap;
@@ -24,8 +21,9 @@ const Ul = styled.ul`
 	margin-top: 40px;
 
 	li {
-		flex-basis: calc(50% - 20px);
+		width: calc(50% - 20px);
 		margin-right: 40px;
+		margin-bottom: 40px;
 	}
 	li:nth-child(2n) {
 		margin-right: 0;
@@ -33,7 +31,7 @@ const Ul = styled.ul`
 
 	@media (max-width: ${MOBILE_POINT}) {
 		li {
-			flex: 1;
+			width: 100%;
 			margin-right: 0;
 			margin-bottom: 16px;
 		}

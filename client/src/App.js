@@ -19,7 +19,6 @@ import Signup from "./pages/Signup";
 import Quit from "./pages/Quit";
 import GameRecommend from "./pages/GameRecommend";
 import Readme from "./pages/Readme";
-import Footer from "./components/Footer";
 import { MOBILE_POINT } from "./data/breakpoint";
 
 const Wrap = styled.div`

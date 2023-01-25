@@ -280,7 +280,12 @@ button:hover.normal {
 }
 button.em {
 	background-size: 200% auto;
-	background-image: linear-gradient(to right, rgba(255, 186, 41, 1) 0%, rgba(255, 143, 147, 1) 51%, rgba(255, 186, 41, 1) 100%);
+	background-image: linear-gradient(
+		to right,
+		rgba(255, 186, 41, 1) 0%,
+		rgba(255, 143, 147, 1) 51%,
+		rgba(255, 186, 41, 1) 100%
+	);
 	border-radius: var(--border-radius-btn);
 }
 button:hover.em {
@@ -299,4 +304,12 @@ button:hover.em {
 }
 .card.sm {
 	padding: 24px;
+}
+
+@media (max-width: 1239px) {
+	:root {
+		--font-head1-size: 24px;
+		--font-head2-size: 20px;
+		--font-head3-size: 18px;
+	}
 }

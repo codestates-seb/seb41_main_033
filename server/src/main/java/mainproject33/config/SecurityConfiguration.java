@@ -86,7 +86,7 @@ public class SecurityConfiguration {
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://port-0-seb41-main-033-1jx7m2gld2o3uit.gksl2.cloudtype.app"));
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://www.gameto.kr", "https://gameto.kr"));
         corsConfiguration.setAllowedMethods(List.of("*"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setExposedHeaders(List.of("Authorization", "RefreshToken"));

@@ -9,6 +9,7 @@ import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { useState, useEffect } from 'react';
 import { setProfile } from '../redux/slice/profileSlice';
+import Popup from './Popup';
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -88,6 +89,9 @@ const GameWrap = styled.div`
 `;
 
 const ProfileCard = () => {
+  const [isLikeOpen, setIsLikeOpen] = useState(false);
+  const [isFollowOpen, setIsFollowOpen] = useState(false);
+  const [isBlockOpen, setIsBlockOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isMe, setIsMe] = useState(false);
   const { userid } = useParams();
@@ -95,6 +99,14 @@ const ProfileCard = () => {
   const userInfo = useSelector((state) => state.profile.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleLogin = () => {
+    navigate(`/login`);
+  };
+
+  const handleSignup = () => {
+    navigate(`/signup`);
+  };
 
   const handleFollow = () => {
     if (loginInfo?.isLogin) {
@@ -125,7 +137,7 @@ const ProfileCard = () => {
             );
           }
         });
-    } else return navigate(`/login`);
+    } else setIsFollowOpen((prev) => !prev);
   };
 
   const handleLike = () => {
@@ -157,7 +169,7 @@ const ProfileCard = () => {
             );
           }
         });
-    } else return navigate(`/login`);
+    } else setIsLikeOpen((prev) => !prev);
   };
 
   const handleBlock = () => {
@@ -190,7 +202,7 @@ const ProfileCard = () => {
             );
           }
         });
-    } else return navigate(`/login`);
+    } else setIsBlockOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -300,6 +312,33 @@ const ProfileCard = () => {
             </ProfileWrap>
           </>
         )}
+        <Popup
+          isOpen={isLikeOpen}
+          title="좋아요"
+          content="좋아요는 로그인 후 이용 가능합니다."
+          button1="로그인"
+          button2="회원가입"
+          handleBtn1={handleLogin}
+          handleBtn2={handleSignup}
+        />
+        <Popup
+          isOpen={isFollowOpen}
+          title="팔로우"
+          content="팔로우는 로그인 후 이용 가능합니다."
+          button1="로그인"
+          button2="회원가입"
+          handleBtn1={handleLogin}
+          handleBtn2={handleSignup}
+        />
+        <Popup
+          isOpen={isBlockOpen}
+          title="차단"
+          content="차단은 로그인 후 이용 가능합니다."
+          button1="로그인"
+          button2="회원가입"
+          handleBtn1={handleLogin}
+          handleBtn2={handleSignup}
+        />
       </div>
     );
   } else return null;

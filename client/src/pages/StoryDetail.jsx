@@ -117,7 +117,7 @@ const StoryDetail = () => {
 	const [isMe, setIsMe] = useState(false);
 	const [storyData, setStoryData] = useState({});
 	const [commentsList, setCommentsList] = useState([]);
-	const [boardLike, setboardLike] = useState({
+	const [storyLike, setStoryLike] = useState({
 		status: false,
 		likeCount: 0,
 	});
@@ -131,11 +131,11 @@ const StoryDetail = () => {
 			})
 			.then((res) => {
 				setStoryData(res.data.data);
-				setboardLike({
+				setStoryLike({
 					status: res.data.data.likeStatus,
 					likeCount: res.data.data.likeCount,
 				});
-				console.log(res.data.data.likeStatus);
+				//console.log(res.data.data.likeStatus);
 				if (res.data.data.memberId === Number(memberId)) setIsMe(true);
 			})
 			.catch((err) => {
@@ -161,9 +161,9 @@ const StoryDetail = () => {
 				let countValue = 0;
 				if (res.data) countValue = 1;
 				else countValue = -1;
-				setboardLike({
+				setStoryLike({
 					status: res,
-					likeCount: boardLike.likeCount + countValue,
+					likeCount: storyLike.likeCount + countValue,
 				});
 			})
 			.catch((err) => {
@@ -218,10 +218,10 @@ const StoryDetail = () => {
 								type="checkbox"
 								id="storyLikes"
 								name="storyLikes"
-								defaultChecked={boardLike.status ? true : null}
+								defaultChecked={storyLike.status ? true : null}
 								onClick={handleStoryLikeClick}
 							/>
-							<label htmlFor="storyLikes">{boardLike.likeCount}</label>
+							<label htmlFor="storyLikes">{storyLike.likeCount}</label>
 						</StoryLike>
 					) : null}
 				</StoryHead>

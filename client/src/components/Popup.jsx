@@ -63,6 +63,7 @@ const Popup = ({
 }) => {
   const handlePopup = () => {
     setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   if (isOpen) {

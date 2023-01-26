@@ -264,7 +264,7 @@ const StoryDetail = () => {
       <Popup
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
-        title="스토리 삭제하기"
+        title="스토리 삭제"
         content="스토리를 삭제하시겠습니까?"
         button1="삭제하기"
         button2="취소"

@@ -177,7 +177,7 @@ const MatchDetails = ({ data, boardId }) => {
       <Popup
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        title="매칭하기 삭제하기"
+        title="매칭하기 삭제"
         content="매칭하기를 삭제하시겠습니까?"
         button1="삭제하기"
         button2="취소"

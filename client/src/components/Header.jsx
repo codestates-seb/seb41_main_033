@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as ProfileImg } from "./../assets/defaultImg.svg";
-import { ReactComponent as LogoImg } from "./../assets/Logo.svg";
+import { ReactComponent as LogoImg } from "./../assets/logoImgM.svg";
+import { ReactComponent as LogoutImg } from "./../assets/logoutIcon.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -33,7 +34,7 @@ const LogoWrap = styled.div`
 	width: 100%;
 	a {
 		display: block;
-		width: 130px;
+		width: 120px;
 		height: 35px;
 		svg {
 			width: 100%;
@@ -50,7 +51,6 @@ const ProfileWrap = styled.div`
 		flex: none;
 		display: flex;
 		align-items: center;
-		margin-left: 32px;
 	}
 	.alert {
 		display: block;
@@ -70,9 +70,11 @@ const ProfileWrap = styled.div`
 	.user_img {
 		width: 48px;
 		height: 48px;
+		margin-right: 16px;
 		border-radius: 50%;
 		overflow: hidden;
-		img {
+		img,
+		svg {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
@@ -83,6 +85,11 @@ const ProfileWrap = styled.div`
 		.user_img {
 			width: 32px;
 			height: 32px;
+			margin-right: 6px;
+		}
+		.alert,
+		.user_nickname {
+			display: none;
 		}
 	}
 `;
@@ -90,7 +97,7 @@ const ProfileWrap = styled.div`
 const BtnWrap = styled.div`
 	flex: none;
 	display: flex;
-	margin-left: 48px;
+	margin-left: 16px;
 	a {
 		display: block;
 		padding: 6px 16px;
@@ -101,15 +108,14 @@ const BtnWrap = styled.div`
 	a.active {
 		color: var(--primary-color);
 	}
-	button {
-		border: 1px solid var(--border-color);
-		border-radius: 8px;
-		font-size: var(--font-caption-size);
-	}
 
 	@media (max-width: ${MOBILE_POINT}) {
+		margin-left: 6px;
 		a {
 			font-size: 12px;
+		}
+		button {
+			padding: 6px;
 		}
 	}
 `;
@@ -191,8 +197,6 @@ const Header = () => {
 				<>
 					<ProfileWrap>
 						<a href={`/profile/${loginInfo?.memberId}`}>
-							<span className="alert">알림</span>
-							<span className="user_nickname">{userInform.nickname}</span>
 							<div className="user_img">
 								{userInform.profileImage ? (
 									<img src={userInform.profileImage} alt="프로필이미지" />
@@ -200,10 +204,14 @@ const Header = () => {
 									<ProfileImg />
 								)}
 							</div>
+							<span className="user_nickname">{userInform.nickname}</span>
+							<span className="alert">알림</span>
 						</a>
 					</ProfileWrap>
 					<BtnWrap>
-						<button onClick={handleLogout}>로그아웃</button>
+						<button onClick={handleLogout} title="로그아웃">
+							<LogoutImg />
+						</button>
 					</BtnWrap>
 				</>
 			) : (

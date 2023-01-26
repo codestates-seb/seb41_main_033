@@ -310,6 +310,16 @@ button:hover.em {
 	:root {
 		--font-head1-size: 24px;
 		--font-head2-size: 20px;
-		--font-head3-size: 18px;
+		--font-head3-size: 16px;
+		--font-body1-size: 14px;
+	}
+	.card.big {
+		padding: 24px;
+	}
+	.card.md {
+		padding: 20px;
+	}
+	.card.sm {
+		padding: 16px;
 	}
 }

@@ -39,6 +39,7 @@ const Detail = styled.div`
 	}
 
 	.description {
+		margin-bottom: 48px;
 		.content {
 			margin-top: 12px;
 			color: var(--strong-color);
@@ -49,6 +50,16 @@ const Detail = styled.div`
 	a {
 		width: 280px;
 		margin-right: 16px;
+	}
+
+	.btn_wrap {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		button:last-child {
+			margin-right: 0;
+		}
 	}
 
 	@media (max-width: ${MOBILE_POINT}) {
@@ -177,11 +188,10 @@ const MatchDetails = ({ data, boardId }) => {
 				<div className="content">{data?.content}</div>
 			</div>
 			{same && (
-				<div>
+				<div className="btn_wrap">
 					<EmLink className="em" to={`/match/${boardId}/edit`}>
 						수정하기
 					</EmLink>
-
 					<button className="normal" onClick={deleteBtn}>
 						삭제하기
 					</button>

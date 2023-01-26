@@ -8,7 +8,6 @@ import { ReactComponent as CurtainCall } from "../assets/curtainIcon.svg";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MOBILE_POINT } from "../data/breakpoint";
-// import NavMenu from "./NavMenu";
 
 const NavWrap = styled.nav`
 	position: relative;
@@ -48,6 +47,7 @@ const NavWrap = styled.nav`
 
 const LogoWrap = styled.div`
 	position: sticky;
+	top: 0;
 	width: 100%;
 	height: 112px;
 	display: flex;
@@ -70,10 +70,13 @@ const LogoWrap = styled.div`
 
 const Menu = styled.ul`
 	position: sticky;
+	top: 112px;
 	width: 100%;
 	padding: 0 16px;
 
 	@media (max-width: ${MOBILE_POINT}) {
+		position: relative;
+		top: 0;
 		padding: 0;
 		display: flex;
 		justify-content: space-evenly;

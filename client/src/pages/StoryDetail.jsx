@@ -88,6 +88,9 @@ const BtnWrap = styled.div`
 	button {
 		margin-right: 12px;
 	}
+	button:last-child {
+		margin-right: 0;
+	}
 `;
 
 const CommentsCountTag = styled.div`

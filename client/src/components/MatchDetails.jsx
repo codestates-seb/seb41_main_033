@@ -1,11 +1,12 @@
-import styled from "styled-components";
-import displayedAt from "../util/displayedAt";
-import { useState, useEffect } from "react";
-import { API_URL } from "../data/apiUrl";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import matchGame from "../util/matchGame";
+import styled from 'styled-components';
+import displayedAt from '../util/displayedAt';
+import { useState, useEffect } from 'react';
+import { API_URL } from '../data/apiUrl';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import matchGame from '../util/matchGame';
+import Popup from '../components/Popup';
 
 const Detail = styled.div`
   width: var(--col-9);
@@ -102,6 +103,7 @@ const Description = styled.div`
   white-space: pre-wrap;
 `;
 const MatchDetails = ({ data, boardId }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [same, setSame] = useState(false);
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
@@ -113,18 +115,27 @@ const MatchDetails = ({ data, boardId }) => {
   }, []);
 
   const deleteBtn = () => {
-    if (window.confirm("게시물을 삭제 하시겠습니까?")) {
-      axios
-        .delete(`${API_URL}/api/matches/${boardId}`, {
-          headers: {
-            Authorization: `Bearer ${loginInfo.accessToken}`,
-          },
-        })
-        .then((res) => {
-          alert("게시물이 삭제 되었습니다");
-          navigate("/match");
-        });
-    }
+    axios
+      .delete(`${API_URL}/api/matches/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${loginInfo.accessToken}`,
+        },
+      })
+      .then((res) => {
+        setIsOpen((prev) => !prev);
+        navigate('/match');
+        document.body.style.overflow = 'unset';
+      });
+  };
+
+  const handleDelete = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleCancel = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   return (
@@ -158,12 +169,21 @@ const MatchDetails = ({ data, boardId }) => {
           <EmLink className="em" to={`/match/${boardId}/edit`}>
             수정하기
           </EmLink>
-
-          <button className="normal" onClick={deleteBtn}>
+          <button className="normal" onClick={handleDelete}>
             삭제하기
           </button>
         </Div>
       )}
+      <Popup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title="매칭하기 삭제하기"
+        content="매칭하기를 삭제하시겠습니까?"
+        button1="삭제하기"
+        button2="취소"
+        handleBtn1={deleteBtn}
+        handleBtn2={handleCancel}
+      />
     </Detail>
   );
 };

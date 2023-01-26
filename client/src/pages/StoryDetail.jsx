@@ -116,7 +116,6 @@ const StoryDetail = () => {
   const accessToken = loginInfo.accessToken;
   const memberId = loginInfo.memberId;
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [isMe, setIsMe] = useState(false);
   const [storyData, setStoryData] = useState({});
   const [commentsList, setCommentsList] = useState([]);
@@ -201,8 +200,7 @@ const StoryDetail = () => {
         document.body.style.overflow = 'unset';
       })
       .catch((err) => {
-        setIsDeleteOpen((prev) => !prev);
-        setIsErrorOpen((prev) => !prev);
+        alert('스토리 삭제에 실패했습니다.');
       });
   };
 
@@ -272,13 +270,6 @@ const StoryDetail = () => {
         button2="취소"
         handleBtn1={handleStoryDeleteClick}
         handleBtn2={handleCancel}
-      />
-      <Popup
-        isOpen={isErrorOpen}
-        title="오류"
-        content="스토리 삭제에 실패하였습니다."
-        button1="확인"
-        handleBtn1={handleCancel}
       />
     </>
   );

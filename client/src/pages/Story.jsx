@@ -7,7 +7,6 @@ import axios from "axios";
 import { API_URL } from "../data/apiUrl";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Loading from "../components/Loading";
 import NoSearch from "../components/NoSearch";
 
 const Wrap = styled.div`
@@ -153,29 +152,6 @@ const Story = () => {
 			alert("스토리 작성은 로그인 후 이용 가능합니다.");
 		}
 	};
-
-	//스토리 검색
-	// useEffect(() => {
-	// 	let config = {};
-	// 	// if (isLogin) {
-	// 	// 	config = {
-	// 	// 		headers: {
-	// 	// 			Authorization: `Bearer ${accessToken}`,
-	// 	// 		},
-	// 	// 	};
-	// 	// }
-
-	// 	console.log(keyword);
-
-	// 	axios
-	// 		.get(`${API_URL}/api/boards?page={page}keyword=${keyword}`, config)
-	// 		.then((res) => {
-	// 			setStoryData(res.data.data);
-	// 			setIsLoading(false);
-	// 			//console.log(res);
-	// 		})
-	// 		.catch((err) => console.log(err));
-	// }, [keyword]);
 
 	return (
 		<Wrap>

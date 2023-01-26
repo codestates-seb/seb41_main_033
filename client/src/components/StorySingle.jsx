@@ -5,11 +5,22 @@ import { Link, useNavigate } from "react-router-dom";
 import displayedAt from "../util/displayedAt";
 import SinglePofileWrap from "./SingleProfileWrap";
 import StoryFileView from "./StoryFileView";
+import { MOBILE_POINT } from "../data/breakpoint";
 
 const StoryWrap = styled.div`
 	cursor: pointer;
 	.storyMain {
 		display: flex;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		.storyMain {
+			flex-direction: column;
+		}
+		.story_list_flieview {
+			width: 100%;
+			margin-top: 16px;
+		}
 	}
 `;
 
@@ -62,15 +73,27 @@ const StorySingle = ({ data }) => {
 	};
 
 	return (
-		<StoryWrap className="card md" onClick={(e) => handleNaviOnClick(e, data.memberId, data.id)}>
+		<StoryWrap
+			className="card md"
+			onClick={(e) => handleNaviOnClick(e, data.memberId, data.id)}
+		>
 			<div className="storyMain">
 				<TextArea>
 					<div onClick={(e) => handleProfileClick(e, data.memberId)} title="">
-						<SinglePofileWrap imgSrc={data.profileImage} name={data.nickname} subInfo={displayedAt(data.createdAt)} />
+						<SinglePofileWrap
+							imgSrc={data.profileImage}
+							name={data.nickname}
+							subInfo={displayedAt(data.createdAt)}
+						/>
 					</div>
 					<div className="content">{data.content}</div>
 				</TextArea>
-				<StoryFileView fileName={data.uploadFileName} contentType={data.contentType} />
+				<div className="story_list_flieview">
+					<StoryFileView
+						fileName={data.uploadFileName}
+						contentType={data.contentType}
+					/>
+				</div>
 			</div>
 			<InfoWrap>
 				{data.likeCount ? (

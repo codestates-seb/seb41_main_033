@@ -1,13 +1,15 @@
-import styled from "styled-components";
-import Dropdown from "../components/DropDown";
-import React, { useState } from "react";
-import InputWrap from "../components/InputWrap";
-import PostPatch from "../components/PostPatch";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { API_URL } from "../data/apiUrl";
-import { useSelector } from "react-redux";
-import validity from "../util/validity";
+import styled from 'styled-components';
+import Dropdown from '../components/DropDown';
+import React, { useState } from 'react';
+import InputWrap from '../components/InputWrap';
+import PostPatch from '../components/PostPatch';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../data/apiUrl';
+import { useSelector } from 'react-redux';
+import validity from '../util/validity';
+import Popup from '../components/Popup';
+
 const Label = styled.label`
   font-style: normal;
   font-weight: 500;
@@ -93,6 +95,7 @@ const MatchingEdit = () => {
   const gameInfo = useSelector((state) => state.games.gameInfo);
   const loginInfo = useSelector((state) => state.islogin.login);
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   const [info, setInfo] = useState({
     title: gameInfo?.title,
     team: gameInfo?.team,
@@ -108,17 +111,17 @@ const MatchingEdit = () => {
 
   const addTags = (event) => {
     const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
-    const newTag = event.target.value.replace(reg, "").substring(0, 5);
+    const newTag = event.target.value.replace(reg, '').substring(0, 5);
     if (
       !tags.includes(newTag) &&
-      event.key === "Enter" &&
+      event.key === 'Enter' &&
       tags.length < 3 &&
       newTag.length > 0
     ) {
       setTags([...tags, `#${newTag}`]);
-      event.target.value = "";
+      event.target.value = '';
     } else if (tags.length >= 3) {
-      event.target.value = "";
+      event.target.value = '';
     }
   };
   const changeValue = (e) => {
@@ -128,6 +131,12 @@ const MatchingEdit = () => {
     });
   };
   const { title, team, content } = info;
+
+  const handlePatch = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
+
   const submitBtn = (e) => {
     e.preventDefault();
     const data = { title, game, team, tags, content };
@@ -142,13 +151,13 @@ const MatchingEdit = () => {
           },
         })
         .then(() => {
-          alert("게시물이 수정 되었습니다");
-          navigate("/match");
+          setIsOpen((prev) => !prev);
+          document.body.style.overflow = 'unset';
+          navigate('/match');
         })
         .catch((err) => console.log(err));
     }
   };
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <PostPatch
@@ -158,7 +167,7 @@ const MatchingEdit = () => {
       button1="작성완료"
       link={-1}
       button2="취소"
-      handleSubmit={submitBtn}
+      handleSubmit={handlePatch}
     >
       <div>
         <Label htmlFor="title">제목</Label>
@@ -226,6 +235,13 @@ const MatchingEdit = () => {
           minLength="5"
         />
       </div>
+      <Popup
+        isOpen={isOpen}
+        title="매칭하기 수정"
+        content="매칭하기 수정이 완료되었습니다."
+        button1="확인"
+        handleBtn1={submitBtn}
+      />
     </PostPatch>
   );
 };

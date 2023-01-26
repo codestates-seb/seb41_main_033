@@ -81,6 +81,7 @@ const QuitCard = () => {
 
   const handleClick = () => {
     setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
   };
 
   const handleQuit = () => {
@@ -91,6 +92,7 @@ const QuitCard = () => {
       .then(() => {
         localStorage.clear();
         setIsOpen((prev) => !prev);
+        document.body.style.overflow = 'unset';
         dispatch(quit({ accessToken: null, memberId: null, isLogin: false }));
         navigate('/');
       });
@@ -153,6 +155,7 @@ const QuitCard = () => {
           </button>
           <Popup
             isOpen={isOpen}
+            setIsOpen={setIsOpen}
             content={`${user.nickname}님 때문에 우리 서비스는 망했습니다`}
             button1="그래도 사랑해요"
             handleBtn1={handleQuit}

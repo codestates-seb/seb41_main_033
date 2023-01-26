@@ -181,6 +181,7 @@ const StoryDetail = () => {
   //삭제
   const handleDelete = () => {
     setIsDeleteOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
   };
   const handleStoryDeleteClick = () => {
     axios
@@ -191,6 +192,7 @@ const StoryDetail = () => {
       })
       .then((res) => {
         navigate('/story');
+        document.body.style.overflow = 'unset';
       })
       .catch((err) => {
         setIsDeleteOpen((prev) => !prev);
@@ -257,6 +259,7 @@ const StoryDetail = () => {
       <StoryComments boardId={params.boardid} />
       <Popup
         isOpen={isDeleteOpen}
+        setIsOpen={setIsDeleteOpen}
         title="스토리 삭제하기"
         content="스토리를 삭제하시겠습니까?"
         button1="삭제하기"

@@ -15,10 +15,13 @@ const ImgArea = styled.div`
 		${(props) => (props.size === "big" ? "" : "height: 100%;")}
 		${(props) => (props.size === "big" ? "" : "object-fit: cover;")}
 		${(props) => (props.size === "big" ? "max-width:100%;" : "")}
+		display: block;
 	}
 
 	@media (max-width: ${MOBILE_POINT}) {
 		width: 100%;
+		height: auto;
+		margin-top: 16px;
 	}
 `;
 
@@ -38,6 +41,7 @@ const VideoArea = styled.div`
 
 	@media (max-width: ${MOBILE_POINT}) {
 		width: 100%;
+		margin-top: 16px;
 	}
 `;
 

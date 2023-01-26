@@ -68,10 +68,14 @@ const Story = () => {
 
   const handleLogin = () => {
     navigate(`/login`);
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   const handleSignup = () => {
     navigate(`/signup`);
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   //페이지 로딩 state
@@ -160,6 +164,7 @@ const Story = () => {
       navigate(`/story/storywrite`);
     } else {
       setIsOpen((prev) => !prev);
+      document.body.style.overflow = 'hidden';
     }
   };
 
@@ -204,6 +209,7 @@ const Story = () => {
       <WriteFloatButton click={handleWriteFBtnOnClick} />
       <Popup
         isOpen={isOpen}
+        setIsOpen={setIsOpen}
         title="스토리 작성"
         content="스토리 작성은 로그인 후 이용 가능합니다."
         button1="로그인"

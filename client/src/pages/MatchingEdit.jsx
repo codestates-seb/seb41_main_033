@@ -9,6 +9,7 @@ import { API_URL } from "../data/apiUrl";
 import { useSelector } from "react-redux";
 import validity from "../util/validity";
 import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from '../components/Popup';
 
 const Label = styled.label`
 	font-style: normal;
@@ -99,143 +100,157 @@ const TextArea = styled.textarea`
 `;
 
 const MatchingEdit = () => {
-	const gameInfo = useSelector((state) => state.games.gameInfo);
-	const loginInfo = useSelector((state) => state.islogin.login);
-	const navigate = useNavigate();
-	const [info, setInfo] = useState({
-		title: gameInfo?.title,
-		team: gameInfo?.team,
-		content: gameInfo?.content,
-	});
-	const [tags, setTags] = useState(gameInfo?.tags);
-	const [game, setGame] = useState(gameInfo?.game.korTitle);
+  const gameInfo = useSelector((state) => state.games.gameInfo);
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [info, setInfo] = useState({
+    title: gameInfo?.title,
+    team: gameInfo?.team,
+    content: gameInfo?.content,
+  });
+  const [tags, setTags] = useState(gameInfo?.tags);
+  const [game, setGame] = useState(gameInfo?.game.korTitle);
 
 	const removeTags = (index) => {
 		const newTag = tags.filter((_, idx) => idx !== index);
 		setTags(newTag);
 	};
 
-	const addTags = (event) => {
-		const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
-		const newTag = event.target.value.replace(reg, "").substring(0, 5);
-		if (
-			!tags.includes(newTag) &&
-			event.key === "Enter" &&
-			tags.length < 3 &&
-			newTag.length > 0
-		) {
-			setTags([...tags, `#${newTag}`]);
-			event.target.value = "";
-		} else if (tags.length >= 3) {
-			event.target.value = "";
-		}
-	};
-	const changeValue = (e) => {
-		setInfo({
-			...info,
-			[e.target.name]: e.target.value,
-		});
-	};
-	const { title, team, content } = info;
-	const submitBtn = (e) => {
-		e.preventDefault();
-		const data = { title, game, team, tags, content };
-		validity(data);
-		const isEmpty = (object) =>
-			!Object.values(object).every((el) => el !== null && el.length !== 0);
-		if (!isEmpty(data)) {
-			axios
-				.patch(`${API_URL}/api/matches/${gameInfo.id}`, data, {
-					headers: {
-						Authorization: `Bearer ${loginInfo.accessToken}`,
-					},
-				})
-				.then(() => {
-					alert("게시물이 수정 되었습니다");
-					navigate("/match");
-				})
-				.catch((err) => console.log(err));
-		}
-	};
-	const [isOpen, setIsOpen] = useState(false);
+  const addTags = (event) => {
+    const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
+    const newTag = event.target.value.replace(reg, '').substring(0, 5);
+    if (
+      !tags.includes(newTag) &&
+      event.key === 'Enter' &&
+      tags.length < 3 &&
+      newTag.length > 0
+    ) {
+      setTags([...tags, `#${newTag}`]);
+      event.target.value = '';
+    } else if (tags.length >= 3) {
+      event.target.value = '';
+    }
+  };
+  const changeValue = (e) => {
+    setInfo({
+      ...info,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const { title, team, content } = info;
 
-	return (
-		<PostPatch
-			image={gameInfo?.profileImage}
-			nickname={gameInfo?.nickname}
-			identifier={gameInfo?.identifier}
-			button1="작성완료"
-			link={-1}
-			button2="취소"
-			handleSubmit={submitBtn}
-		>
-			<div>
-				<Label htmlFor="title">제목</Label>
-				<InputWrap
-					type="text"
-					name="title"
-					id="title"
-					maxLength="30"
-					minLength="5"
-					placeholder="제목을 입력하세요"
-					onChange={changeValue}
-					value={title}
-				/>
-			</div>
-			<div>
-				<Label htmlFor="game">플레이어 할 게임</Label>
-				<Dropdown
-					id="game"
-					setIsOpen={setIsOpen}
-					isOpen={isOpen}
-					game={game}
-					setGame={setGame}
-				/>
-			</div>
-			<div>
-				<Label htmlFor="team">구하려는 팀원수</Label>
-				<InputWrap
-					type="text"
-					name="team"
-					id="team"
-					value={team}
-					placeholder="팀원수를 입력하세요"
-					onChange={changeValue}
-				/>
-			</div>
+  const handlePatch = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
 
-			<Label htmlFor="tag">태그</Label>
-			<TagsInput>
-				<ul id="tags">
-					{tags?.map((tag, index) => (
-						<li key={index} className="tag" onClick={() => removeTags(index)}>
-							<span className="tag_title">{tag}</span>
-							<span>×</span>
-						</li>
-					))}
-				</ul>
-				<input
-					className="tag_input"
-					type="text"
-					maxLength="12"
-					onKeyUp={(event) => {
-						addTags(event);
-					}}
-					placeholder="입력 후 엔터키를 누르세요"
-				/>
-			</TagsInput>
-			<div>
-				<Label htmlFor="content">내용</Label>
-				<TextArea
-					name="content"
-					placeholder="상세설명을 입력하세요"
-					onChange={changeValue}
-					value={content}
-					maxLength="500"
-					minLength="5"
-				/>
-			</div>
-		</PostPatch>
-	);
+  const submitBtn = (e) => {
+    e.preventDefault();
+    const data = { title, game, team, tags, content };
+    validity(data);
+    const isEmpty = (object) =>
+      !Object.values(object).every((el) => el !== null && el.length !== 0);
+    if (!isEmpty(data)) {
+      axios
+        .patch(`${API_URL}/api/matches/${gameInfo.id}`, data, {
+          headers: {
+            Authorization: `Bearer ${loginInfo.accessToken}`,
+          },
+        })
+        .then(() => {
+          setIsOpen((prev) => !prev);
+          document.body.style.overflow = 'unset';
+          navigate('/match');
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  return (
+    <PostPatch
+      image={gameInfo?.profileImage}
+      nickname={gameInfo?.nickname}
+      identifier={gameInfo?.identifier}
+      button1="작성완료"
+      link={-1}
+      button2="취소"
+      handleSubmit={handlePatch}
+    >
+      <div>
+        <Label htmlFor="title">제목</Label>
+        <InputWrap
+          type="text"
+          name="title"
+          id="title"
+          maxLength="30"
+          minLength="5"
+          placeholder="제목을 입력하세요"
+          onChange={changeValue}
+          value={title}
+        />
+      </div>
+      <div>
+        <Label htmlFor="game">플레이어 할 게임</Label>
+        <Dropdown
+          id="game"
+          setIsOpen={setIsOpen}
+          isOpen={isOpen}
+          game={game}
+          setGame={setGame}
+        />
+      </div>
+      <div>
+        <Label htmlFor="team">구하려는 팀원수</Label>
+        <InputWrap
+          type="text"
+          name="team"
+          id="team"
+          value={team}
+          placeholder="팀원수를 입력하세요"
+          onChange={changeValue}
+        />
+      </div>
+
+      <Label htmlFor="tag">태그</Label>
+      <TagsInput>
+        <ul id="tags">
+          {tags?.map((tag, index) => (
+            <li key={index} className="tag" onClick={() => removeTags(index)}>
+              <span className="tag_title">{tag}</span>
+              <span>×</span>
+            </li>
+          ))}
+        </ul>
+        <input
+          className="tag_input"
+          type="text"
+          maxLength="12"
+          onKeyUp={(event) => {
+            addTags(event);
+          }}
+          placeholder="입력 후 엔터키를 누르세요"
+        />
+      </TagsInput>
+      <div>
+        <Label htmlFor="content">내용</Label>
+        <TextArea
+          name="content"
+          placeholder="상세설명을 입력하세요"
+          onChange={changeValue}
+          value={content}
+          maxLength="500"
+          minLength="5"
+        />
+      </div>
+      <Popup
+        isOpen={isOpen}
+        title="매칭하기 수정"
+        content="매칭하기 수정이 완료되었습니다."
+        button1="확인"
+        handleBtn1={submitBtn}
+      />
+    </PostPatch>
+  );
 };
 export default MatchingEdit;

@@ -113,63 +113,62 @@ const TagsInput = styled.div`
 `;
 
 const MatchingWrite = () => {
-	const [info, setInfo] = useState({
-		title: "",
-		game: "",
-		team: "",
-		content: "",
-	});
-	const [tags, setTags] = useState([]);
-	const [game, setGame] = useState("게임을 선택하세요");
-	const navigate = useNavigate();
-	const removeTags = (index) => {
-		const newTag = tags.filter((_, idx) => idx !== index);
-		setTags(newTag);
-	};
-	const loginInfo = useSelector((state) => state.islogin.login);
-	const userInfo = useSelector((state) => state.userInfo.userInfo);
-	const addTags = (event) => {
-		const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
-		const newTag = event.target.value.replace(reg, "").substring(0, 5);
-		if (
-			!tags.includes(newTag) &&
-			event.key === "Enter" &&
-			tags.length < 3 &&
-			newTag.length > 0
-		) {
-			setTags([...tags, `#${newTag}`]);
-			event.target.value = "";
-		} else if (tags.length >= 3) {
-			event.target.value = "";
-		}
-	};
-	const changeValue = (e) => {
-		setInfo({
-			...info,
-			[e.target.name]: e.target.value,
-		});
-	};
-	const { title, team, content } = info;
-	const submitBtn = (e) => {
-		const data = { title, game, team, tags, content };
-		validity(data);
-		const isEmpty = (object) =>
-			!Object.values(object).every((el) => el !== null && el.length !== 0);
-		if (!isEmpty(data) && content.length >= 5 && game !== "게임을 선택하세요") {
-			axios
-				.post(`${API_URL}/api/matches`, data, {
-					headers: {
-						Authorization: `Bearer ${loginInfo.accessToken}`,
-					},
-				})
-				.then((res) => {
-					alert("게시물 작성이 완료 되었습니다");
-					navigate("/match");
-				})
-				.catch((err) => console(err));
-		}
-	};
-	const [isOpen, setIsOpen] = useState(false);
+  const [info, setInfo] = useState({
+    title: "",
+    game: "",
+    team: "",
+    content: "",
+  });
+  const [tags, setTags] = useState([]);
+  const [game, setGame] = useState("게임을 선택하세요");
+  const navigate = useNavigate();
+  const removeTags = (index) => {
+    const newTag = tags.filter((_, idx) => idx !== index);
+    setTags(newTag);
+  };
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const userInfo = useSelector((state) => state.userInfo.userInfo);
+  const addTags = (event) => {
+    const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
+    const newTag = event.target.value.replace(reg, "").substring(0, 5);
+    if (
+      !tags.includes(newTag) &&
+      event.key === "Enter" &&
+      tags.length < 3 &&
+      newTag.length > 0
+    ) {
+      setTags([...tags, `#${newTag}`]);
+      event.target.value = "";
+    } else if (tags.length >= 3) {
+      event.target.value = "";
+    }
+  };
+  const changeValue = (e) => {
+    setInfo({
+      ...info,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const { title, team, content } = info;
+  const submitBtn = (e) => {
+    const data = { title, game, team, tags, content };
+    validity(data);
+    const isEmpty = (object) =>
+      !Object.values(object).every((el) => el !== null && el.length !== 0);
+    if (!isEmpty(data) && content.length >= 5 && game !== "게임을 선택하세요") {
+      axios
+        .post(`${API_URL}/api/matches`, data, {
+          headers: {
+            Authorization: `Bearer ${loginInfo.accessToken}`,
+          },
+        })
+        .then((res) => {
+          navigate("/match");
+        })
+        .catch((err) => console(err));
+    }
+  };
+  const [isOpen, setIsOpen] = useState(false);
 
 	return (
 		<PostPatch

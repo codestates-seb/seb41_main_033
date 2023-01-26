@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Background = styled.div`
   background: rgba(229, 229, 229, 0.2);
@@ -10,6 +10,7 @@ const Background = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 100;
 `;
 
 const PopupWrap = styled.div`
@@ -39,36 +40,55 @@ const Content = styled.div`
 
 const ButtonWrap = styled.div`
   display: flex;
-  justify-content: center;
   width: 100%;
-
   button {
-    width: calc((100% - 24px) / 2);
-
-    :first-child {
-      /* 버튼이 1개면 오른쪽 마진 16px, 없으면 0 */
-      margin-right: ${({ button2 }) => (button2 ? "16px" : "0")};
+    width: 100%;
+    margin-right: 0px;
+    :last-child {
+      margin-left: 24px;
     }
   }
 `;
 
-const Popup = ({ title, content, button1, button2 }) => {
-  return (
-    <Background>
-      <PopupWrap className="card big" button2={button2}>
-        <Title>
-          <div className="title">{title}</div>
-        </Title>
-        <Content>
-          <p className="content">{content}</p>
-        </Content>
-        <ButtonWrap button2={button2}>
-          <button className="em">{button1}</button>
-          {button2 ? <button className="normal">{button2}</button> : null}
-        </ButtonWrap>
-      </PopupWrap>
-    </Background>
-  );
+const Popup = ({
+  isOpen,
+  setIsOpen,
+  title,
+  content,
+  button1,
+  button2,
+  handleBtn1,
+  handleBtn2,
+}) => {
+  const handlePopup = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
+  };
+
+  if (isOpen) {
+    return (
+      <Background onClick={handlePopup}>
+        <PopupWrap className="card big" onClick={(e) => e.stopPropagation()}>
+          <Title>
+            <div className="title">{title}</div>
+          </Title>
+          <Content>
+            <p className="content">{content}</p>
+          </Content>
+          <ButtonWrap>
+            <button className="em" onClick={handleBtn1}>
+              {button1}
+            </button>
+            {button2 ? (
+              <button className="normal" onClick={handleBtn2}>
+                {button2}
+              </button>
+            ) : null}
+          </ButtonWrap>
+        </PopupWrap>
+      </Background>
+    );
+  } else return null;
 };
 
 export default Popup;

@@ -69,7 +69,7 @@ const Popup = ({
   if (isOpen) {
     return (
       <Background onClick={handlePopup}>
-        <PopupWrap className="card big">
+        <PopupWrap className="card big" onClick={(e) => e.stopPropagation()}>
           <Title>
             <div className="title">{title}</div>
           </Title>

@@ -1,15 +1,17 @@
-import styled from "styled-components";
-import MatchingCard from "../components/MatchingCard";
-import SearchBar from "../components/SearchBar";
-import WriteFloatButton from "../components/WriteFloatButton";
-import MatchPagination from "../components/MatchPagination";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { API_URL } from "../data/apiUrl";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import NoSearch from "../components/NoSearch";
-import Loading from "../components/Loading";
+import styled from 'styled-components';
+import MatchingCard from '../components/MatchingCard';
+import SearchBar from '../components/SearchBar';
+import WriteFloatButton from '../components/WriteFloatButton';
+import MatchPagination from '../components/MatchPagination';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { API_URL } from '../data/apiUrl';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import NoSearch from '../components/NoSearch';
+import Loading from '../components/Loading';
+import Popup from '../components/Popup';
+
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,20 +29,34 @@ const Empty = styled.div`
   padding-top: 96px;
 `;
 const Matching = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [matchinglist, setMatchinglist] = useState([]);
   const [loading, setLoding] = useState(true);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
 
   const matchingBtn = () => {
     if (loginInfo?.isLogin) {
-      navigate("/match/matchwrite");
+      navigate('/match/matchwrite');
     } else {
-      navigate("/login");
+      setIsOpen((prev) => !prev);
+      document.body.style.overflow = 'hidden';
     }
+  };
+
+  const handleLogin = () => {
+    navigate(`/login`);
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
+  };
+
+  const handleSignup = () => {
+    navigate(`/signup`);
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   useEffect(() => {
@@ -95,6 +111,16 @@ const Matching = () => {
           <MatchPagination setPage={setPage} page={page} total={total} />
         </Wrap>
       )}
+      <Popup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title="매칭하기 작성"
+        content="매칭하기 작성은 로그인 후 이용 가능합니다."
+        button1="로그인"
+        button2="회원가입"
+        handleBtn1={handleLogin}
+        handleBtn2={handleSignup}
+      />
     </>
   );
 };

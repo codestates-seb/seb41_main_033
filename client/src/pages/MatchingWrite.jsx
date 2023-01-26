@@ -154,7 +154,6 @@ const MatchingWrite = () => {
           },
         })
         .then((res) => {
-          alert("게시물 작성이 완료 되었습니다");
           navigate("/match");
         })
         .catch((err) => console(err));

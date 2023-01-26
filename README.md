@@ -1,5 +1,7 @@
 # ✨맑게✨고인물
 
+![gameto_og](https://user-images.githubusercontent.com/111413253/214849189-3abe2fbd-008c-42ee-b4d1-96f9164d7005.png)
+
 ## 소개문구 - notion 소개글 참고
 
 (예시)

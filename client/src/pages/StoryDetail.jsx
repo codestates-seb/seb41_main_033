@@ -82,13 +82,16 @@ const StoryBody = styled.div`
 `;
 
 const BtnWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 48px;
-  button {
-    margin-right: 12px;
-  }
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 48px;
+	button {
+		margin-right: 12px;
+	}
+	button:last-child {
+		margin-right: 0;
+	}
 `;
 
 const CommentsCountTag = styled.div`
@@ -118,7 +121,6 @@ const StoryDetail = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isMe, setIsMe] = useState(false);
   const [storyData, setStoryData] = useState({});
-  const [commentsList, setCommentsList] = useState([]);
   const [storyLike, setStoryLike] = useState({
     status: false,
     likeCount: 0,

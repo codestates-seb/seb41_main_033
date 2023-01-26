@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { MOBILE_POINT } from '../data/breakpoint';
 import Popup from '../components/Popup';
 
 const Wrap = styled.div`
@@ -12,6 +13,10 @@ const Wrap = styled.div`
   button.em {
     width: 100%;
     margin-top: 24px;
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 100%;
   }
 `;
 

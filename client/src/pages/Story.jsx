@@ -122,7 +122,6 @@ const Story = () => {
       await axios
         .get(url, config)
         .then((res) => {
-          //console.log(res.data.data);
           setStoryData(res.data.data);
           const totalPages = res.data.pageInfo.totalPages;
           if (page === totalPages) {
@@ -132,7 +131,6 @@ const Story = () => {
           }
         })
         .catch((err) => {
-          // console.log(err);
           setIsNoSearch(true);
           setIsLoading(false);
         });
@@ -167,29 +165,6 @@ const Story = () => {
       document.body.style.overflow = 'hidden';
     }
   };
-
-  //스토리 검색
-  // useEffect(() => {
-  // 	let config = {};
-  // 	// if (isLogin) {
-  // 	// 	config = {
-  // 	// 		headers: {
-  // 	// 			Authorization: `Bearer ${accessToken}`,
-  // 	// 		},
-  // 	// 	};
-  // 	// }
-
-  // 	console.log(keyword);
-
-  // 	axios
-  // 		.get(`${API_URL}/api/boards?page={page}keyword=${keyword}`, config)
-  // 		.then((res) => {
-  // 			setStoryData(res.data.data);
-  // 			setIsLoading(false);
-  // 			//console.log(res);
-  // 		})
-  // 		.catch((err) => console.log(err));
-  // }, [keyword]);
 
   return (
     <Wrap>

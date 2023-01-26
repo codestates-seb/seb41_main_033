@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { quit } from '../redux/slice/loginstate';
+import { MOBILE_POINT } from '../data/breakpoint';
 import Popup from './Popup';
 
 const QuitWrap = styled.div`
@@ -14,6 +15,10 @@ const QuitWrap = styled.div`
   align-items: center;
   width: var(--col-8);
   margin: 0 auto;
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 100%;
+  }
 `;
 
 const ImgWrap = styled.div`
@@ -68,6 +73,14 @@ const ButtonWrap = styled.div`
 
     :hover {
       background-position: right center;
+    }
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    flex-direction: column;
+    button {
+      width: 100%;
+      margin: 0 0 16px 0;
     }
   }
 `;

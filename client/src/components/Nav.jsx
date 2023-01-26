@@ -7,6 +7,7 @@ import { ReactComponent as MenuIconProfile } from './../assets/personIcon.svg';
 import { ReactComponent as CurtainCall } from '../assets/curtainIcon.svg';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { MOBILE_POINT } from '../data/breakpoint';
 
 const NavWrap = styled.nav`
   position: relative;
@@ -23,10 +24,30 @@ const NavWrap = styled.nav`
     text-align: center;
     font-size: var(--font-caption-size);
   }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    position: fixed;
+    width: 100%;
+    height: 56px;
+    padding: 0 16px;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-card-color);
+    border-top: 1px solid var(--border-color);
+    z-index: 20;
+
+    .copy {
+      display: none;
+    }
+  }
 `;
 
 const LogoWrap = styled.div`
   position: sticky;
+  top: 0;
   width: 100%;
   height: 112px;
   display: flex;
@@ -41,53 +62,93 @@ const LogoWrap = styled.div`
       height: 100%;
     }
   }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    display: none;
+  }
 `;
 
 const Menu = styled.ul`
   position: sticky;
+  top: 112px;
   width: 100%;
   padding: 0 16px;
-  li {
+
+  @media (max-width: ${MOBILE_POINT}) {
+    position: relative;
+    top: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
     width: 100%;
-    border-radius: var(--border-raidus-md);
-    color: var(--font-color);
-    overflow: hidden;
-    a {
-      display: flex;
-      align-items: center;
-      padding: 16px;
-      color: inherit;
-      svg {
-        width: 24px;
-        height: 24px;
-        margin-right: 12px;
-        fill: var(--font-color);
-        path {
-          fill: inherit;
-        }
-      }
-      span {
-        font-size: var(--font-body2-size);
+  }
+`;
+
+const MenuItem = styled.li`
+  width: 100%;
+  border-radius: var(--border-raidus-md);
+  color: var(--font-color);
+  overflow: hidden;
+  a {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    color: inherit;
+    svg {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      fill: var(--font-color);
+      path {
+        fill: inherit;
       }
     }
-    a:hover {
-      color: var(--grey);
-      path {
-        fill: var(--grey);
+    span {
+      font-size: var(--font-body2-size);
+    }
+  }
+  a:hover {
+    color: var(--grey);
+    path {
+      fill: var(--grey);
+    }
+  }
+  a.active {
+    background: var(--black);
+    color: var(--primary-color);
+    svg {
+      fill: var(--primary-color);
+    }
+  }
+  a:hover.active {
+    color: var(--primary-color);
+    path {
+      fill: var(--primary-color);
+    }
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    padding: 8px 0;
+    margin: 0 auto;
+    flex: 1;
+    a {
+      display: block;
+      padding: 0;
+      svg {
+        display: block;
+        margin: 0 auto;
+      }
+      span {
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+        font-size: var(--font-caption-size);
+        white-space: nowrap;
       }
     }
     a.active {
-      background: var(--black);
-      color: var(--primary-color);
-      svg {
-        fill: var(--primary-color);
-      }
-    }
-    a:hover.active {
-      color: var(--primary-color);
-      path {
-        fill: var(--primary-color);
-      }
+      background: none;
     }
   }
 `;
@@ -103,7 +164,7 @@ const Nav = () => {
         </NavLink>
       </LogoWrap>
       <Menu>
-        <li>
+        <MenuItem>
           <NavLink
             to="/match"
             className={({ isActive }) => (isActive ? 'active' : '')}
@@ -111,8 +172,8 @@ const Nav = () => {
             <MenuIconMatch />
             <span>매칭하기</span>
           </NavLink>
-        </li>
-        <li>
+        </MenuItem>
+        <MenuItem>
           <NavLink
             to="/story"
             className={({ isActive }) => (isActive ? 'active' : '')}
@@ -120,8 +181,8 @@ const Nav = () => {
             <MenuIconStory />
             <span>스토리</span>
           </NavLink>
-        </li>
-        <li>
+        </MenuItem>
+        <MenuItem>
           <NavLink
             to="/game"
             className={({ isActive }) => (isActive ? 'active' : '')}
@@ -129,9 +190,9 @@ const Nav = () => {
             <MenuIconGame />
             <span>오늘뭐하지?</span>
           </NavLink>
-        </li>
-        <li>
-          {loginInfo?.isLogin ? (
+        </MenuItem>
+        {loginInfo?.isLogin ? (
+          <MenuItem>
             <NavLink
               to={`/profile/${loginInfo?.memberId}`}
               className={({ isActive }) => (isActive ? 'active' : '')}
@@ -139,9 +200,9 @@ const Nav = () => {
               <MenuIconProfile />
               <span>마이프로필</span>
             </NavLink>
-          ) : null}
-        </li>
-        <li>
+          </MenuItem>
+        ) : null}
+        <MenuItem>
           <NavLink
             to={`/curtaincall`}
             className={({ isActive }) => (isActive ? 'active' : '')}
@@ -149,7 +210,7 @@ const Nav = () => {
             <CurtainCall />
             <span>커튼코올?!</span>
           </NavLink>
-        </li>
+        </MenuItem>
       </Menu>
       <p className="copy">© 맑게고인물 team33 2023</p>
     </NavWrap>

@@ -29,6 +29,15 @@ const StoryEdit = () => {
       .catch((err) => {
         console.log(err);
       });
+
+    axios
+      .get(`${API_URL}/api/boards/${params.boardid}`)
+      .then((res) => {
+        setContent(res.data.data.content);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   //입력

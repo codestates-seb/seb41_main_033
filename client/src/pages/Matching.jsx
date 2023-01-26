@@ -10,24 +10,40 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import NoSearch from '../components/NoSearch';
 import Loading from '../components/Loading';
+import { MOBILE_POINT } from '../data/breakpoint';
 import Popup from '../components/Popup';
 
-const Wrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 974px;
-`;
+const Wrap = styled.div``;
+
 const Ul = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-top: 40px;
+
+  li {
+    width: calc(50% - 20px);
+    margin-right: 40px;
+    margin-bottom: 40px;
+  }
+  li:nth-child(2n) {
+    margin-right: 0;
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    li {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 16px;
+    }
+  }
 `;
 const Empty = styled.div`
   text-align: center;
   font-size: var(--font-head1-size);
   padding-top: 96px;
 `;
+
 const Matching = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [matchinglist, setMatchinglist] = useState([]);

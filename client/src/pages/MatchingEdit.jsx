@@ -1,94 +1,102 @@
-import styled from 'styled-components';
-import Dropdown from '../components/DropDown';
-import React, { useState } from 'react';
-import InputWrap from '../components/InputWrap';
-import PostPatch from '../components/PostPatch';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../data/apiUrl';
-import { useSelector } from 'react-redux';
-import validity from '../util/validity';
+import styled from "styled-components";
+import Dropdown from "../components/DropDown";
+import React, { useState } from "react";
+import InputWrap from "../components/InputWrap";
+import PostPatch from "../components/PostPatch";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../data/apiUrl";
+import { useSelector } from "react-redux";
+import validity from "../util/validity";
+import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from '../components/Popup';
 
 const Label = styled.label`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 150%;
-  letter-spacing: -0.023em;
-  margin: 16px 0px;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 150%;
+	letter-spacing: -0.023em;
+	margin: 16px 0px;
 `;
 
 const TagsInput = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  background: var(--darkgrey2);
-  border: 1px solid var(--grey);
-  border-radius: 8px;
-  padding: 8px;
-  font-size: 14px;
-  color: var(--white);
-  margin: 8px 0px;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	background: var(--darkgrey2);
+	border: 1px solid var(--grey);
+	border-radius: 8px;
+	padding: 8px;
+	font-size: 14px;
+	color: var(--white);
+	margin: 8px 0px;
 
-  > ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+	> ul {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: center;
 
-    .tag {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 4px 12px;
-      margin-right: 6px;
-      height: 32px;
-      background: var(--black);
-      border: 1px solid var(--grey);
-      border-radius: 30px;
-      .tag_title {
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        letter-spacing: 0.1px;
-        margin-right: 8px;
-      }
-      .tag_close {
-        cursor: pointer;
-        color: var(--lightgrey);
-      }
-    }
-  }
-  input {
-    display: inline-flex;
-    border: none;
-    outline: none;
-    background: none;
-    width: auto;
-    color: var(--font-color);
-    padding: 6px 0;
-    &:focus {
-      outline: transparent;
-    }
-  }
+		.tag {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 4px 12px;
+			margin-right: 6px;
+			height: 32px;
+			background: var(--black);
+			border: 1px solid var(--grey);
+			border-radius: 30px;
+			.tag_title {
+				font-weight: 500;
+				font-size: 12px;
+				line-height: 20px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				letter-spacing: 0.1px;
+				margin-right: 8px;
+			}
+			.tag_close {
+				cursor: pointer;
+				color: var(--lightgrey);
+			}
+		}
+	}
+	input {
+		display: inline-flex;
+		border: none;
+		outline: none;
+		background: none;
+		width: auto;
+		color: var(--font-color);
+		padding: 6px;
+		&:focus {
+			outline: transparent;
+		}
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		flex-direction: column;
+		.tag {
+			margin-bottom: 6px;
+		}
+	}
 `;
 const TextArea = styled.textarea`
-  background-color: var(--input-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  width: 100%;
-  min-height: 112px;
-  padding: 16px;
-  color: var(--strong-color);
-  resize: none;
-  white-space: pre-wrap;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+	background-color: var(--input-color);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius-sm);
+	width: 100%;
+	min-height: 112px;
+	padding: 16px;
+	color: var(--strong-color);
+	resize: none;
+	white-space: pre-wrap;
+	::-webkit-scrollbar {
+		display: none;
+	}
 `;
 
 const MatchingEdit = () => {
@@ -104,10 +112,10 @@ const MatchingEdit = () => {
   const [tags, setTags] = useState(gameInfo?.tags);
   const [game, setGame] = useState(gameInfo?.game.korTitle);
 
-  const removeTags = (index) => {
-    const newTag = tags.filter((_, idx) => idx !== index);
-    setTags(newTag);
-  };
+	const removeTags = (index) => {
+		const newTag = tags.filter((_, idx) => idx !== index);
+		setTags(newTag);
+	};
 
   const addTags = (event) => {
     const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;

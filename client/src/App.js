@@ -1,44 +1,55 @@
-import styled from 'styled-components';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './style.css';
-import Header from './components/Header';
-import Nav from './components/Nav';
-import Matching from './pages/Matching';
-import MatchingDetail from './pages/MatchingDetail';
-import MatchingWrite from './pages/MatchingWrite';
-import MatchingEdit from './pages/MatchingEdit';
-import Story from './pages/Story';
-import StoryDetail from './pages/StoryDetail';
-import StoryWrite from './pages/StoryWrite';
-import StoryEdit from './pages/StoryEdit';
-import Profile from './pages/Profile';
-import ProfileEdit from './pages/ProfileEdit';
-import BlockList from './pages/BlockList';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Quit from './pages/Quit';
-import GameRecommend from './pages/GameRecommend';
-import Readme from './pages/Readme';
+import styled from "styled-components";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./style.css";
+import Header from "./components/Header";
+import Nav from "./components/Nav";
+import Matching from "./pages/Matching";
+import MatchingDetail from "./pages/MatchingDetail";
+import MatchingWrite from "./pages/MatchingWrite";
+import MatchingEdit from "./pages/MatchingEdit";
+import Story from "./pages/Story";
+import StoryDetail from "./pages/StoryDetail";
+import StoryWrite from "./pages/StoryWrite";
+import StoryEdit from "./pages/StoryEdit";
+import Profile from "./pages/Profile";
+import ProfileEdit from "./pages/ProfileEdit";
+import BlockList from "./pages/BlockList";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Quit from "./pages/Quit";
+import GameRecommend from "./pages/GameRecommend";
+import Readme from "./pages/Readme";
+import { MOBILE_POINT } from "./data/breakpoint";
 
 const Wrap = styled.div`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  background: var(--bg-color);
+	display: flex;
+	flex: 1;
+	width: 100%;
+	background: var(--bg-color);
 `;
 
 const MainWrap = styled.section`
-  display: flex;
-  flex: 1;
-  position: relative;
-  padding: 112px 0 0 0;
-  width: calc(100% - 200px);
-  .container {
-    width: 100%;
-    max-width: 1040px;
-    padding: 0 32px;
-    margin: 48px auto 48px auto;
-  }
+	display: flex;
+	flex: 1;
+	position: relative;
+	padding: 112px 0 0 0;
+	width: calc(100% - 200px);
+	.container {
+		width: 100%;
+		max-width: 1040px;
+		padding: 0 32px;
+		margin: 48px auto 48px auto;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		padding: 56px 0 56px 0;
+		width: 100%;
+		.container {
+			max-width: 100%;
+			padding: 0 16px;
+			margin: 24px auto 48px auto;
+		}
+	}
 `;
 
 const App = () => {

@@ -9,6 +9,7 @@ import { API_URL } from '../data/apiUrl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfo } from '../redux/slice/userInfo';
+import { MOBILE_POINT } from '../data/breakpoint';
 import Popup from '../components/Popup';
 
 const ContentWrap = styled.div`
@@ -56,6 +57,7 @@ const ProfileWrap = styled.div`
       flex: none;
       display: flex;
       align-items: center;
+      justify-content: center;
       padding: 8px 24px;
       margin: 0;
       background: var(--bg-color);
@@ -66,6 +68,20 @@ const ProfileWrap = styled.div`
         width: 24px;
         height: 24px;
         margin-right: 6px;
+      }
+    }
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 100%;
+    .custom_input_wrap {
+      flex-direction: column;
+      .custom_input {
+        width: 100%;
+        margin: 0 0 12px 0;
+      }
+      .custom_btn {
+        width: 100%;
       }
     }
   }
@@ -178,6 +194,7 @@ const ProfileEdit = () => {
 
   const handlePatch = () => {
     setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
   };
 
   const handlePatchSubmit = () => {
@@ -207,6 +224,7 @@ const ProfileEdit = () => {
       })
       .then((res) => {
         setIsOpen((prev) => !prev);
+        document.body.style.overflow = 'unset';
         dispatch(userInfo(res.data.data));
         navigate(`/profile/${userid}`, { replace: true });
       });
@@ -222,7 +240,7 @@ const ProfileEdit = () => {
         setBio(res.data.data.introduction);
       });
     setCheckedGame(userInform.games.map((game) => game.korTitle));
-  }, []);
+  }, [loginInfo?.accessToken, userInform.games, userid]);
 
   if (userInform) {
     return (

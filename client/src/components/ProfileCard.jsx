@@ -9,6 +9,7 @@ import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { useState, useEffect } from 'react';
 import { setProfile } from '../redux/slice/profileSlice';
+import { MOBILE_POINT } from '../data/breakpoint';
 import Popup from './Popup';
 
 const ProfileWrap = styled.div`
@@ -24,6 +25,10 @@ const ProfileWrap = styled.div`
     font-size: var(--font-body2-size);
     color: var(--white);
     white-space: pre-wrap;
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 100%;
   }
 `;
 
@@ -101,10 +106,30 @@ const ProfileCard = () => {
   const dispatch = useDispatch();
 
   const handleLogin = () => {
+    if (isLikeOpen) {
+      setIsLikeOpen((prev) => !prev);
+    }
+    if (isFollowOpen) {
+      setIsFollowOpen((prev) => !prev);
+    }
+    if (isBlockOpen) {
+      setIsBlockOpen((prev) => !prev);
+    }
+    document.body.style.overflow = 'unset';
     navigate(`/login`);
   };
 
   const handleSignup = () => {
+    if (isLikeOpen) {
+      setIsLikeOpen((prev) => !prev);
+    }
+    if (isFollowOpen) {
+      setIsFollowOpen((prev) => !prev);
+    }
+    if (isBlockOpen) {
+      setIsBlockOpen((prev) => !prev);
+    }
+    document.body.style.overflow = 'unset';
     navigate(`/signup`);
   };
 
@@ -137,7 +162,10 @@ const ProfileCard = () => {
             );
           }
         });
-    } else setIsFollowOpen((prev) => !prev);
+    } else {
+      setIsFollowOpen((prev) => !prev);
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   const handleLike = () => {
@@ -169,7 +197,10 @@ const ProfileCard = () => {
             );
           }
         });
-    } else setIsLikeOpen((prev) => !prev);
+    } else {
+      setIsLikeOpen((prev) => !prev);
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   const handleBlock = () => {
@@ -202,7 +233,10 @@ const ProfileCard = () => {
             );
           }
         });
-    } else setIsBlockOpen((prev) => !prev);
+    } else {
+      setIsBlockOpen((prev) => !prev);
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   useEffect(() => {

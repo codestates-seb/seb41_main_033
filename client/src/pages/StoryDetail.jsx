@@ -183,6 +183,12 @@ const StoryDetail = () => {
     setIsDeleteOpen((prev) => !prev);
     document.body.style.overflow = 'hidden';
   };
+
+  const handleCancel = () => {
+    setIsDeleteOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
+  };
+
   const handleStoryDeleteClick = () => {
     axios
       .delete(`${API_URL}/api/boards/${params.boardid}`, {
@@ -265,14 +271,14 @@ const StoryDetail = () => {
         button1="삭제하기"
         button2="취소"
         handleBtn1={handleStoryDeleteClick}
-        handleBtn2={() => setIsDeleteOpen((prev) => !prev)}
+        handleBtn2={handleCancel}
       />
       <Popup
         isOpen={isErrorOpen}
         title="오류"
         content="스토리 삭제에 실패하였습니다."
         button1="확인"
-        handleBtn1={() => setIsErrorOpen((prev) => !prev)}
+        handleBtn1={handleCancel}
       />
     </>
   );

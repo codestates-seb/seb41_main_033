@@ -38,6 +38,7 @@ const StoryEdit = () => {
   //제출
   const handlePatch = () => {
     setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
   };
 
   const handleStoryEditSubmit = () => {
@@ -54,6 +55,7 @@ const StoryEdit = () => {
       .then((res) => {
         setIsOpen((prev) => !prev);
         navigate('/story');
+        document.body.style.overflow = 'unset';
       })
       .catch((err) => {
         console.log(err);

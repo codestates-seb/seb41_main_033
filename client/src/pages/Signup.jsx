@@ -1,8 +1,9 @@
-import styled from "styled-components";
-import axios from "axios";
-import { API_URL } from "../data/apiUrl";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import styled from 'styled-components';
+import axios from 'axios';
+import { API_URL } from '../data/apiUrl';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Popup from '../components/Popup';
 
 const Wrap = styled.div`
   width: var(--col-6);
@@ -29,8 +30,8 @@ const InputWrap = styled.div`
     width: 100%;
     margin-bottom: 16px;
   }
-  input[type="text"],
-  input[type="password"] {
+  input[type='text'],
+  input[type='password'] {
     width: 100%;
   }
 
@@ -40,44 +41,56 @@ const InputWrap = styled.div`
 `;
 
 const Signup = () => {
-	const navigate = useNavigate();
-	//회원가입 상태
-	const [form, setForm] = useState({
-		identifier: "",
-		password: "",
-		nickname: "",
-	});
-	const [isError, setIsError] = useState({
-		identifier: false,
-		password: false,
-		nickname: false,
-	});
-	//회원가입 입력
-	const handleInputValue = (key, e) => {
-		setForm({ ...form, [key]: e.currentTarget.value });
-	};
-	//회원가입 API
-	const handleSignup = () => {
-		const { identifier, password, nickname } = form;
-		console.log(form);
-		if (!identifier || !/(?=.*\d)|(?=.*[a-zA-Z]).{4,16}/.test(identifier)) {
-			setIsError({ ...isError, identifier: true });
-			return;
-		} else if (!password || !/(?=.*\d)(?=.*[a-zA-Z])(?=.*[~!@]).{8,20}/.test(password)) {
-			setIsError({ ...isError, password: true });
-			return;
-		} else if (!nickname || !/(?=.*\d)|(?=.*[a-zA-Z])|(?=.*[가-힣]).{2,8}/.test(nickname)) {
-			setIsError({ ...isError, nickname: true });
-			return;
-		}
-		return axios
-			.post(`${API_URL}/api/members/signup`, form)
-			.then((res) => {
-				alert("가입을 환영합니다!");
-				navigate("/login");
-			})
-			.catch((err) => alert("회원가입에 실패하였습니다."));
-	};
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  //회원가입 상태
+  const [form, setForm] = useState({
+    identifier: '',
+    password: '',
+    nickname: '',
+  });
+  const [isError, setIsError] = useState({
+    identifier: false,
+    password: false,
+    nickname: false,
+  });
+  //회원가입 입력
+  const handleInputValue = (key, e) => {
+    setForm({ ...form, [key]: e.currentTarget.value });
+  };
+  //회원가입 API
+  const handleSignup = () => {
+    const { identifier, password, nickname } = form;
+    console.log(form);
+    if (!identifier || !/(?=.*\d)|(?=.*[a-zA-Z]).{4,16}/.test(identifier)) {
+      setIsError({ ...isError, identifier: true });
+      return;
+    } else if (
+      !password ||
+      !/(?=.*\d)(?=.*[a-zA-Z])(?=.*[~!@]).{8,20}/.test(password)
+    ) {
+      setIsError({ ...isError, password: true });
+      return;
+    } else if (
+      !nickname ||
+      !/(?=.*\d)|(?=.*[a-zA-Z])|(?=.*[가-힣]).{2,8}/.test(nickname)
+    ) {
+      setIsError({ ...isError, nickname: true });
+      return;
+    }
+    return axios
+      .post(`${API_URL}/api/members/signup`, form)
+      .then((res) => {
+        setIsOpen((prev) => !prev);
+        document.body.style.overflow = 'hidden';
+      })
+      .catch((err) => alert('회원가입에 실패하였습니다.'));
+  };
+
+  const handleLogin = () => {
+    navigate(`/login`);
+    document.body.style.overflow = 'unset';
+  };
 
   return (
     <Wrap className="card big">
@@ -88,8 +101,8 @@ const Signup = () => {
           <input
             type="text"
             placeholder="4~16자의 영문, 숫자의 아이디를 입력하세요"
-            onChange={(e) => handleInputValue("identifier", e)}
-            className={isError.identifier ? "error" : ""}
+            onChange={(e) => handleInputValue('identifier', e)}
+            className={isError.identifier ? 'error' : ''}
           />
           {isError.identifier ? (
             <div className="error_caption">
@@ -102,8 +115,8 @@ const Signup = () => {
           <input
             type="password"
             placeholder="비밀번호를 입력하세요"
-            onChange={(e) => handleInputValue("password", e)}
-            className={isError.password ? "error" : ""}
+            onChange={(e) => handleInputValue('password', e)}
+            className={isError.password ? 'error' : ''}
             autoComplete="on"
           />
           {isError.password ? (
@@ -118,8 +131,8 @@ const Signup = () => {
           <input
             type="text"
             placeholder="2~8자의 영문, 한글, 숫자로 된 닉네임을 입력하세요"
-            onChange={(e) => handleInputValue("nickname", e)}
-            className={isError.nickname ? "error" : ""}
+            onChange={(e) => handleInputValue('nickname', e)}
+            className={isError.nickname ? 'error' : ''}
           />
           {isError.nickname ? (
             <div className="error_caption">
@@ -131,6 +144,13 @@ const Signup = () => {
           회원가입
         </button>
       </form>
+      <Popup
+        isOpen={isOpen}
+        title="회원가입"
+        content="가입을 환영합니다!"
+        button1="로그인"
+        handleBtn1={handleLogin}
+      />
     </Wrap>
   );
 };

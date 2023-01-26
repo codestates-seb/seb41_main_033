@@ -26,38 +26,38 @@ public class LikeService
     private final CommentService commentService;
 
 
-    public boolean changeBoardLike(Member member, long boardId)
+    public boolean changeBoardLike(Member user, long boardId)
     {
         UserBoard userBoard = boardService.findUserBoard(boardId);
 
-        boolean findLike = checkLikedBoard(member.getId(), boardId);
+        boolean findLike = checkLikedBoard(user.getId(), boardId);
 
         if(findLike)
         {
-            boardLikeRepository.save(new Like(member, userBoard));
+            boardLikeRepository.save(new Like(user, userBoard));
             return true;
         }
         else
         {
-            boardLikeRepository.deleteByMemberAndUserBoard(member, userBoard);
+            boardLikeRepository.deleteByMemberAndUserBoard(user, userBoard);
             return false;
         }
     }
 
-    public boolean changeCommentLike(Member member, long commentId)
+    public boolean changeCommentLike(Member user, long commentId)
     {
         Comment comment = commentService.findComment(commentId);
-        boolean findLike = checkLikedComment(member.getId(), comment.getId());
+        boolean findLike = checkLikedComment(user.getId(), comment.getId());
 
         if(findLike)
         {
-            boardLikeRepository.save(new Like(member, comment));
+            boardLikeRepository.save(new Like(user, comment));
             return true;
         }
 
         else
         {
-            boardLikeRepository.deleteByMemberAndComment(member, comment);
+            boardLikeRepository.deleteByMemberAndComment(user, comment);
             return false;
         }
     }
@@ -65,7 +65,7 @@ public class LikeService
     //좋아요 했는지 여부 검사
     private boolean checkLikedComment(long memberId, long commentId)
     {
-        Member member = memberService.findVerifiedMember(memberId);
+        Member member = memberService.findMember(memberId);
         Comment comment = commentService.findComment(commentId);
 
         return boardLikeRepository.findByMemberAndComment(member, comment)
@@ -74,7 +74,7 @@ public class LikeService
 
     private boolean checkLikedBoard(long memberId, long boardId)
     {
-        Member member = memberService.findVerifiedMember(memberId);
+        Member member = memberService.findMember(memberId);
         UserBoard board = boardService.findUserBoard(boardId);
 
         //비어 있으면 좋아요를 안한 것 true 리턴

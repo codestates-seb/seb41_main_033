@@ -1,12 +1,16 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeartIcon from "./../assets/heart_sprite.svg";
 import SinglePofileWrap from "./SingleProfileWrap";
 import StoryBtn from "./StoryBtn";
+import displayedAt from "../util/displayedAt";
+import axios from "axios";
+import { API_URL } from "../data/apiUrl";
 
 const Wrap = styled.div`
 	display: flex;
 	align-items: center;
+	margin-bottom: 16px;
 
 	.comment_body {
 		flex: 1;
@@ -59,46 +63,132 @@ const BtnWrap = styled.div`
 `;
 
 const CommentLike = styled.div`
-	width: 24px;
-	height: 24px;
-	input[type="checkbox"] {
-		appearance: none;
-		width: 100%;
-		height: 100%;
-		margin: 0;
+	flex: none;
+	display: flex;
+	align-items: stretch;
+	.heart {
+		display: block;
+		width: 24px;
+		height: 24px;
+		margin: 0 6px 0 0;
 		background-image: url(${HeartIcon});
 		background-repeat: no-repeat;
 		background-position: 0 0;
+		font-size: 0;
+		overflow: hidden;
 		cursor: pointer;
 	}
-	input[type="checkbox"]:checked {
+	.heart.selected {
 		background-position: 0 -24px;
+	}
+	.likeCount {
+		font-size: var(--caption-size);
+		color: var(--strong-color);
 	}
 `;
 
-const StoryComment = () => {
-	const [isMe, setIsMe] = useState(true);
-	const [isEdit, setIsEdit] = useState(true);
+const StoryComment = ({
+	memberId,
+	data,
+	accessToken,
+	handleEdit,
+	handleDelete,
+}) => {
+	const [isMe, setIsMe] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
+	const [content, setContent] = useState(data.content);
+	const [commentLike, setCommentLike] = useState({
+		status: data.likeStatus,
+		count: data.likeCount,
+	});
+
+	useEffect(() => {
+		if (data.memberId === memberId) setIsMe(true);
+	}, []);
+
+	//수정 버튼 클릭
+	const handleChangeEditClick = () => {
+		setIsEdit(true);
+	};
+
+	//수정 내용 입력
+	const handleEditContentChange = (e) => {
+		setContent(e.currentTarget.value);
+	};
+
+	//댓글 좋아요
+	const handleCommentLikeClick = () => {
+		axios
+			.post(
+				`${API_URL}/api/boards/comments/${data.id}/likes`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				let countValue = 0;
+				if (res.data) countValue = 1;
+				else countValue = -1;
+				setCommentLike({
+					status: res.data,
+					count: commentLike.count + countValue,
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	return (
 		<Wrap className="card sm">
 			<div className="comment_body">
-				<SinglePofileWrap className="profile_wrap" imgSize="small" name="맑게고인뜨악어" subInfo="3분전" />
+				<SinglePofileWrap
+					className="profile_wrap"
+					imgSize="small"
+					imgSrc={data.profileImage}
+					name={data.nickname}
+					subInfo={displayedAt(data.createdAt)}
+				/>
 				{isEdit ? (
 					<div className="content_wrap edit">
-						<textarea placeholder="내용을 입력하세요" minLength="5"></textarea>
+						<textarea
+							placeholder="내용을 입력하세요"
+							minLength="5"
+							defaultValue={content}
+							onChange={(e) => handleEditContentChange(e)}
+						></textarea>
 					</div>
 				) : (
-					<div className="content_wrap">안녕하세요 저는 뜨악어에요 뜨거운 관심 캄사합니다</div>
+					<div className="content_wrap">{content}</div>
 				)}
 				{isMe ? (
 					<BtnWrap>
-						<StoryBtn type="edit" />
-						<StoryBtn type="delete" />
+						{isEdit ? (
+							<StoryBtn
+								type="editComplete"
+								clickHandler={() => {
+									handleEdit(data.id, content);
+									setIsEdit(false);
+								}}
+							/>
+						) : (
+							<StoryBtn type="edit" clickHandler={handleChangeEditClick} />
+						)}
+						<StoryBtn
+							type="delete"
+							clickHandler={() => handleDelete(data.id)}
+						/>
 					</BtnWrap>
 				) : null}
 			</div>
-			<CommentLike>
-				<input type="checkbox" title="commentLikes" />
+			<CommentLike onClick={handleCommentLikeClick}>
+				<span className={commentLike.status ? "heart selected" : "heart"}>
+					이 댓글에 좋아요
+				</span>
+				<span className="likeCount">{commentLike.count}</span>
 			</CommentLike>
 		</Wrap>
 	);

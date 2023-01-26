@@ -36,7 +36,7 @@ public class AuthController {
         TokenDto tokenDto = authService.login(loginDto);
 
         response.addHeader("Authorization", tokenDto.getAccessToken());
-        response.addHeader("refreshToken", tokenDto.getRefreshToken());
+        response.addHeader("RefreshToken", tokenDto.getRefreshToken());
 
         ResponseDto responseDto = loginMapper.loginDtoToResponse(loginDto);
 

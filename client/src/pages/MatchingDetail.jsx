@@ -17,13 +17,12 @@ const MatchingDetail = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/matches/${boardid}`, {
-        headers: { "ngrok-skip-browser-warning": "69420" },
-      })
+      .get(`${API_URL}/api/matches/${boardid}`)
       .then((res) => {
         setInfo(res.data.data);
         dispatch(gameInfo(res.data.data));
-      });
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (

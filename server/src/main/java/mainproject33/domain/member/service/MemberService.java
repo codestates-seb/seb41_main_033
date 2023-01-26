@@ -7,12 +7,14 @@ import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import mainproject33.global.security.redis.RedisDao;
 import mainproject33.global.security.utils.CustomAuthorityUtils;
+import mainproject33.global.service.VerificationService;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,11 +31,10 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils customAuthorityUtils;
 
-    private final RedisDao redisDao;
-
+    private final VerificationService verify;
 
     public Member createMember(Member member) {
-        verifyExistsIdentifier(member.getIdentifier());
+        verify.existIdentifier(member.getIdentifier());
 
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
@@ -49,39 +50,25 @@ public class MemberService {
 
     public void deleteMember(Long memberId, Member user) {
 
-        Member member = findVerifiedMember(memberId);
-        verifyMember(member.getId(), user.getId());
+        Member member = findMember(memberId);
+        verify.userIsMember(member.getId(), user.getId());
 
 
         List<Follow> followList = followRepository.findByAllFollowList(member.getId());
         List<MemberLikes> likeList = memberLikesRepository.findByAllMemberLikeList(member.getId());
         List<Block> blockList = blockRepository.findByAllBlockList(member.getId());
 
-        if(!followList.isEmpty()) {
-            for(Follow follow : followList) {
-                followRepository.delete(follow);
-            }
-        }
-
-        if(!likeList.isEmpty()) {
-            for(MemberLikes memberLikes : likeList) {
-                memberLikesRepository.delete(memberLikes);
-            }
-        }
-
-        if(!blockList.isEmpty()) {
-            for(Block block : blockList) {
-                blockRepository.delete(block);
-            }
-        }
+        deleteData(followList, followRepository);
+        deleteData(likeList, memberLikesRepository);
+        deleteData(blockList, blockRepository);
 
         memberRepository.delete(member);
     }
 
     public Member updateProfile(Long memberId, Member patch, Member user, MultipartFile file) {
 
-        Member findMember = findVerifiedMember(memberId);
-        verifyMember(findMember.getId(), user.getId());
+        Member findMember = findMember(memberId);
+        verify.userIsMember(findMember.getId(), user.getId());
 
         if (patch != null) {
             Optional.ofNullable(patch.getNickname())
@@ -97,16 +84,11 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
-    public Member findProfile(Long memberId) {
-
-        return findVerifiedMember(memberId);
-    }
-
     public boolean follow(Long memberId, Member user) {
-        verifyFollow(user.getId(), memberId);
+        verify.userSelfFollows(user.getId(), memberId);
 
-        Member follower = findVerifiedMember(user.getId()); // 팔로우를 하는 사람
-        Member followed = findVerifiedMember(memberId); // 팔로우를 받는 사람
+        Member follower = findMember(user.getId()); // 팔로우를 하는 사람
+        Member followed = findMember(memberId); // 팔로우를 받는 사람
 
         Follow follow = new Follow();
         follow.setFollower(follower);
@@ -129,17 +111,16 @@ public class MemberService {
     }
 
     public boolean like(Long memberId, Member user) {
-        verifyLike(user.getId(), memberId);
+        verify.userSelfLikes(user.getId(), memberId);
 
-        Member liker = findVerifiedMember(user.getId());
-        Member liked = findVerifiedMember(memberId);
+        Member liker = findMember(user.getId());
+        Member liked = findMember(memberId);
 
         MemberLikes likes = new MemberLikes();
         likes.setLiker(liker);
         likes.setLiked(liked);
 
         Optional<MemberLikes> optionalLikes = memberLikesRepository.findByMemberLikes(liker.getId(), liked.getId());
-
         Optional<Block> optionalBlock = blockRepository.findByBlock(liker.getId(), liked.getId());
 
         if(optionalBlock.isPresent()) {
@@ -156,19 +137,17 @@ public class MemberService {
     }
 
     public boolean block(Long memberId, Member user) {
-        verifyBlock(user.getId(), memberId);
+        verify.userSelfBlocks(user.getId(), memberId);
 
-        Member blocker = findVerifiedMember(user.getId());
-        Member blocked = findVerifiedMember(memberId);
+        Member blocker = findMember(user.getId());
+        Member blocked = findMember(memberId);
 
         Block block = new Block();
         block.setBlocker(blocker);
         block.setBlocked(blocked);
 
         Optional<Block> optionalBlock = blockRepository.findByBlock(blocker.getId(), blocked.getId());
-
         Optional<Follow> optionalFollow = followRepository.findByFollow(blocker.getId(), blocked.getId());
-
         Optional<MemberLikes> optionalLike = memberLikesRepository.findByMemberLikes(blocker.getId(), blocked.getId());
 
         if(optionalBlock.isEmpty()) {
@@ -186,22 +165,16 @@ public class MemberService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<Block> findBlockList(Long memberId, Member user) {
 
-        verifyMember(memberId, user.getId());
+        verify.userIsMember(memberId, user.getId());
 
         return blockRepository.findByBlockList(memberId);
     }
 
-    public void verifyMember(Long memberId, Long userId) {
-
-        if(!Objects.equals(memberId, userId)) {
-            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
-        }
-
-    }
-
-    public Member findVerifiedMember(Long memberId) {
+    @Transactional(readOnly = true)
+    public Member findMember(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember = optionalMember.orElseThrow(
                 () -> new BusinessLogicException(ExceptionMessage.MEMBER_NOT_FOUND));
@@ -209,36 +182,20 @@ public class MemberService {
         return findMember;
     }
 
-    public void verifyExistsIdentifier(String identifier) {
-        Optional<Member> member = memberRepository.findByIdentifier(identifier);
-        if (member.isPresent())
-            throw new BusinessLogicException(ExceptionMessage.MEMBER_EXISTS);
-    }
-
-    private void verifyFollow(Long followerId, Long followedId) {
-        if (followerId == followedId) {
-            throw new BusinessLogicException(ExceptionMessage.SELF_FOLLOW_NOT_ALLOWED);
-        }
-    }
-
-    private void verifyLike(Long likerId, Long likedId) {
-        if(likerId == likedId) {
-            throw new BusinessLogicException(ExceptionMessage.SELF_LIKE_NOT_ALLOWED);
-        }
-    }
-
-    private void verifyBlock(Long blockerId, Long blockedId) {
-        if(blockerId == blockedId) {
-            throw new BusinessLogicException(ExceptionMessage.SELF_BLOCK_NOT_ALLOWED);
-        }
-    }
-
-    public Profile createProfile() {
+    private Profile createProfile() {
 
         Profile profile = new Profile();
         imageService.createDefaultProfileImage(profile);
         profile.setIntroduction("소개문을 작성해주세요");
 
         return profileRepository.save(profile);
+    }
+
+    private <T> void deleteData(List<T> list, JpaRepository repository) {
+        if(!list.isEmpty()) {
+            for(T data : list) {
+                repository.delete(data);
+            }
+        }
     }
 }

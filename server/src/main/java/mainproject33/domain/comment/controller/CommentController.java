@@ -11,6 +11,7 @@ import mainproject33.domain.member.entity.Member;
 import mainproject33.domain.member.service.MemberService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
+import mainproject33.global.service.VerificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,17 +33,18 @@ public class CommentController
     private final CommentService commentService;
     private final MemberService memberService;
     private final CommentMapper mapper;
+    private final VerificationService verify;
 
     @PostMapping("/{board-id}/comments")
     public ResponseEntity postComment(@PathVariable("board-id") @Positive long boardId,
                                       @Valid @RequestBody CommentPostDto request,
-                                      @AuthenticationPrincipal Member member)
+                                      @AuthenticationPrincipal Member user)
     {
-        Member findMember = memberService.findVerifiedMember(member.getId());
+        Member findMember = memberService.findMember(user.getId());
 
         Comment comment = commentService.postComment(boardId, mapper.commentPostToComment(request), findMember);
 
-        CommentResponseDto response = mapper.commentToResponse(comment, member);
+        CommentResponseDto response = mapper.commentToResponse(comment, user);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
@@ -50,25 +52,25 @@ public class CommentController
     @PatchMapping("/comments/{comment-id}")
     public ResponseEntity patchComment(@PathVariable("comment-id") @Positive long commentId,
                                        @Valid@RequestBody CommentPatchDto request,
-                                       @AuthenticationPrincipal Member member)
+                                       @AuthenticationPrincipal Member user)
     {
-        commentService.verifyMember(member, commentId);
+        verify.userIsCommentator(user, commentId);
 
         request.setId(commentId);
         Comment comment = commentService.updateComment(mapper.commentPatchToComment(request));
 
-        CommentResponseDto response = mapper.commentToResponse(comment, member);
+        CommentResponseDto response = mapper.commentToResponse(comment, user);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping("/comments/{comment-id}")
     public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId,
-                                     @AuthenticationPrincipal Member member)
+                                     @AuthenticationPrincipal Member user)
     {
         Comment comment = commentService.findComment(commentId);
 
-        CommentResponseDto response = mapper.commentToResponse(comment, member);
+        CommentResponseDto response = mapper.commentToResponse(comment, user);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
@@ -76,21 +78,21 @@ public class CommentController
     @GetMapping("/{board-id}/comments")
     public ResponseEntity getComments(@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC)Pageable pageable,
                                       @PathVariable("board-id") @Positive long boardId,
-                                      @AuthenticationPrincipal Member member)
+                                      @AuthenticationPrincipal Member user)
     {
-        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable.previousOrFirst(), boardId, member);
+        Page<Comment> pageComments = commentService.findAllCommentsByBoardId(pageable.previousOrFirst(), boardId, user);
         List<Comment> comments = pageComments.getContent();
 
-        List<CommentResponseDto> responses = mapper.commentToResponses(comments, member);
+        List<CommentResponseDto> responses = mapper.commentToResponses(comments, user);
 
         return new ResponseEntity(new MultiResponseDto<>(responses, pageComments), HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId,
-                                        @AuthenticationPrincipal Member member)
+                                        @AuthenticationPrincipal Member user)
     {
-        commentService.verifyMember(member, commentId);
+        verify.userIsCommentator(user, commentId);
         commentService.deleteComment(commentId);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);

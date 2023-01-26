@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import { ReactComponent as ProfileImg } from "./../assets/defaultImg.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { API_URL } from "../data/apiUrl";
+import { logout } from "../redux/slice/loginstate";
+import { userInfo } from "../redux/slice/userInfo";
+import { login } from "../redux/slice/loginstate";
 
 const HeaderWrap = styled.header`
 	position: absolute;
@@ -15,10 +22,12 @@ const HeaderWrap = styled.header`
 `;
 
 const ProfileWrap = styled.div`
-	flex: none;
-	display: flex;
-	align-items: center;
-	margin-left: 32px;
+	a {
+		flex: none;
+		display: flex;
+		align-items: center;
+		margin-left: 32px;
+	}
 	.alert {
 		display: block;
 		width: 6px;
@@ -37,13 +46,19 @@ const ProfileWrap = styled.div`
 	.user_img {
 		width: 48px;
 		height: 48px;
+		border-radius: 50%;
+		overflow: hidden;
+		img {
+			width: 100%;
+			height: 100%;
+		}
 	}
 `;
 
 const BtnWrap = styled.div`
 	flex: none;
 	display: flex;
-	margin-left: 16px;
+	margin-left: 48px;
 	a {
 		display: block;
 		padding: 6px 16px;
@@ -54,28 +69,121 @@ const BtnWrap = styled.div`
 	a.active {
 		color: var(--primary-color);
 	}
+	button {
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		font-size: var(--font-caption-size);
+	}
 `;
 
 const Header = () => {
-	return (
-		<HeaderWrap>
-			<ProfileWrap>
-				<span className="alert">알림</span>
-				<span className="user_nickname">맑게고인신나현</span>
-				<div className="user_img">
-					<ProfileImg />
-				</div>
-			</ProfileWrap>
-			<BtnWrap>
-				<NavLink to="/signup" className={({ isActive }) => (isActive ? "active" : "")}>
-					회원가입
-				</NavLink>
-				<NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
-					로그인
-				</NavLink>
-			</BtnWrap>
-		</HeaderWrap>
-	);
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const [user, setUser] = useState({});
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (loginInfo?.isLogin) {
+			axios.get(`${API_URL}/api/members/${loginInfo?.memberId}`).then((res) => {
+				setUser(res.data.data);
+				dispatch(userInfo(res.data.data));
+			});
+		}
+	}, [loginInfo?.isLogin, loginInfo?.memberId]);
+
+
+  const handleLogout = () => {
+    axios
+      .post(
+        `${API_URL}/api/members/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${loginInfo.accessToken}`,
+          },
+        }
+      )
+      .then(() => {
+        localStorage.clear();
+        dispatch(logout({ accessToken: null, memberId: null, isLogin: false }));
+        navigate("/");
+      });
+  };
+
+  useEffect(() => {
+    if (loginInfo?.isLogin && Date.now() >= loginInfo?.expire) {
+      const memberId = loginInfo.memberId;
+      const expire = Date.now() + 1000 * 60 * 20;
+      console.log(loginInfo.refreshtoken);
+      axios
+        .get(
+          `${API_URL}/api/members/${loginInfo?.memberId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${loginInfo.accessToken}`,
+              refreshToken: `Bearer ${loginInfo.refreshtoken}`,
+            },
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          const refreshtoken = res.headers.refreshtoken;
+          const accessToken = res.headers.authorization;
+          setNickname(res.data.data.nickname);
+          dispatch(userInfo(res.data.data));
+          dispatch(
+            login({
+              accessToken,
+              memberId,
+              isLogin: true,
+              expire,
+              refreshtoken,
+            })
+          );
+        })
+        .catch((err) => console.log(err));
+    }
+  });
+  return (
+    <HeaderWrap>
+      {userInform && loginInfo?.isLogin ? (
+        <>
+          <ProfileWrap>
+            <a href={`/profile/`}>
+              <span className="alert">알림</span>
+              <span className="user_nickname">{nickname}</span>
+              <div className="user_img">
+                {userInform.profileImage ? (
+                  <img src={userInform.profileImage} alt="프로필이미지" />
+                ) : (
+                  <ProfileImg />
+                )}
+              </div>
+            </a>
+          </ProfileWrap>
+          <BtnWrap>
+            <button onClick={handleLogout}>로그아웃</button>
+          </BtnWrap>
+        </>
+      ) : (
+        <BtnWrap>
+          <NavLink
+            to="/signup"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            회원가입
+          </NavLink>
+          <NavLink
+            to="/login"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            로그인
+          </NavLink>
+        </BtnWrap>
+      )}
+    </HeaderWrap>
+  );
+
 };
 
 export default Header;

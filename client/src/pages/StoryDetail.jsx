@@ -8,7 +8,7 @@ import { API_URL } from "../data/apiUrl";
 import axios from "axios";
 import displayedAt from "../util/displayedAt";
 import SinglePofileWrap from "../components/SingleProfileWrap";
-import StoryComment from "../components/StoryComment";
+import StoryComments from "../components/StoryComments";
 import StoryBtn from "../components/StoryBtn";
 import StoryFileView from "./../components/StoryFileView";
 
@@ -108,69 +108,90 @@ const CommentsCountTag = styled.div`
 	}
 `;
 
-const CommentWriteWrap = styled.div`
-	margin-bottom: 24px;
-	text-align: right;
-	.title {
-		width: 100%;
-		margin-bottom: 16px;
-		text-align: left;
-		font-size: var(--font-body1-size);
-		color: var(--strong-color);
-	}
-	textarea {
-		margin-bottom: 16px;
-	}
-	button.normal {
-		border-radius: var(--border-radius-sm);
-	}
-`;
-
 const StoryDetail = () => {
 	const navigate = useNavigate();
 	let params = useParams();
-	const isLogin = useSelector((state) => state.islogin);
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const accessToken = loginInfo.accessToken;
+	const memberId = loginInfo.memberId;
 	const [isMe, setIsMe] = useState(false);
 	const [storyData, setStoryData] = useState({});
-	//const [isBoardLike, setIsBoardLike] = useState(storyData.likeStatus);
+	const [commentsList, setCommentsList] = useState([]);
+	const [storyLike, setStoryLike] = useState({
+		status: false,
+		likeCount: 0,
+	});
 	useEffect(() => {
 		axios
 			.get(`${API_URL}/api/boards/${params.boardid}`, {
 				headers: {
 					//"ngrok-skip-browser-warning": "69420",
-					Authorization: `Bearer ${isLogin.accessToken}`,
+					Authorization: `Bearer ${accessToken}`,
 				},
 			})
 			.then((res) => {
 				setStoryData(res.data.data);
-				if (res.data.data.memberId === Number(isLogin.memberId)) setIsMe(true);
+				setStoryLike({
+					status: res.data.data.likeStatus,
+					likeCount: res.data.data.likeCount,
+				});
+				if (res.data.data.memberId === Number(memberId)) setIsMe(true);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-	});
+	}, []);
 	let type = "";
 	if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
+	//스토리 좋아요
 	const handleStoryLikeClick = () => {
-		//23.1.21. 좋아요 기능 중단
-		// axios
-		// 	.post(
-		// 		`${API_URL}/api/boards/${params.boardid}/likes`,
-		// 		{},
-		// 		{
-		// 			headers: {
-		// 				Authorization: `Bearer ${isLogin.accessToken}`,
-		// 			},
-		// 		}
-		// 	)
-		// 	.then((res) => {
-		// 		//setIsBoardLike(res);
-		// 		console.log(res);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err);
-		// 	});
+		axios
+			.post(
+				`${API_URL}/api/boards/${params.boardid}/likes`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${loginInfo?.accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				let countValue = 0;
+				if (res.data) countValue = 1;
+				else countValue = -1;
+				setStoryLike({
+					status: res,
+					likeCount: storyLike.likeCount + countValue,
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+	//수정
+	const handleStoryEditClick = () => {
+		navigate(`/story/${params.userid}/${params.boardid}/edit`);
+	};
+
+	//삭제
+	const handleStoryDeleteClick = () => {
+		axios
+			.delete(`${API_URL}/api/boards/${params.boardid}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			})
+			.then((res) => {
+				//삭세하시겠습니까? 팝업 호출 필요
+				alert("게시물이 삭제됩니다.");
+				navigate("/story");
+			})
+			.catch((err) => {
+				console.log(err);
+				alert("게시물 삭제에 실패하였습니다.");
+			});
 	};
 
 	return (
@@ -178,18 +199,37 @@ const StoryDetail = () => {
 			<Title>스토리</Title>
 			<div className="card big">
 				<StoryHead>
-					<a href={`/profile/${params.userid}`} title="유저 프로필로 이동" className="profile_wrap">
-						<SinglePofileWrap imgSize="big" imgSrc={storyData.profileImage} name={storyData.nickname} subInfo={displayedAt(storyData.createdAt)} />
+					<a
+						href={`/profile/${params.userid}`}
+						title="유저 프로필로 이동"
+						className="profile_wrap"
+					>
+						<SinglePofileWrap
+							imgSize="big"
+							imgSrc={storyData.profileImage}
+							name={storyData.nickname}
+							subInfo={displayedAt(storyData.createdAt)}
+						/>
 					</a>
 					{storyData.likeStatus !== undefined ? (
-						<StoryLike onClick={handleStoryLikeClick}>
-							<input type="checkbox" id="storyLikes" name="storyLikes" defaultChecked={storyData.likeStatus ? true : null} />
-							<label htmlFor="storyLikes">{storyData.likeCount}</label>
+						<StoryLike>
+							<input
+								type="checkbox"
+								id="storyLikes"
+								name="storyLikes"
+								defaultChecked={storyLike.status ? true : null}
+								onClick={handleStoryLikeClick}
+							/>
+							<label htmlFor="storyLikes">{storyLike.likeCount}</label>
 						</StoryLike>
 					) : null}
 				</StoryHead>
 				<StoryBody>
-					<StoryFileView size="big" fileName={storyData.uploadFileName} contentType={storyData.contentType} />
+					<StoryFileView
+						size="big"
+						fileName={storyData.uploadFileName}
+						contentType={storyData.contentType}
+					/>
 					<div className="content_wrap">{storyData.content}</div>
 				</StoryBody>
 				{storyData.commentCount ? (
@@ -200,18 +240,21 @@ const StoryDetail = () => {
 				) : null}
 				{isMe ? (
 					<BtnWrap>
-						<StoryBtn size="big" type="edit" />
-						<StoryBtn size="big" type="delete" />
+						<StoryBtn
+							size="big"
+							type="edit"
+							clickHandler={handleStoryEditClick}
+						/>
+						<StoryBtn
+							size="big"
+							type="delete"
+							clickHandler={handleStoryDeleteClick}
+						/>
 					</BtnWrap>
 				) : null}
 			</div>
 			<Title>댓글</Title>
-			<CommentWriteWrap className="card sm">
-				<div className="title">댓글 작성</div>
-				<textarea placeholder="댓글을 입력하세요"></textarea>
-				<button className="normal">댓글 입력</button>
-			</CommentWriteWrap>
-			<StoryComment />
+			<StoryComments boardId={params.boardid} />
 		</>
 	);
 };

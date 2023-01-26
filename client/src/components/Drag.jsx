@@ -9,7 +9,15 @@ import RandomRolling from "../components/RandomRolling";
 import axios from "axios";
 import { API_URL } from "../data/apiUrl";
 import matchGame from "../util/matchGame";
+const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Icon = styled.div`
+  cursor: pointer;
+  touch-action: pan-y;
   div {
     animation: vibration 0.4s infinite;
     transition: 1s;
@@ -32,9 +40,15 @@ const Title = styled.div`
   text-align: center;
   margin-top: 20px;
 `;
+const ImgBox = styled.div`
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+`;
 const GameImg = styled.img`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `;
 const Drag = () => {
   const [DnD, setDnD] = useState({ dragEnd: false, isDragging: false });
@@ -61,15 +75,14 @@ const Drag = () => {
     setPass(true);
   };
   const onDragLeave = (e) => {
+    e.preventDefault();
     axios
-      .get(`${API_URL}/api/games/random`, {
-        headers: { "ngrok-skip-browser-warning": "69420" },
-      })
+      .get(`${API_URL}/api/games/random`)
       .then((res) => {
         setGameInfo(res.data.data);
-        setPlaying(true);
         setDrag(true);
         setRecommend(false);
+        setPlaying(true);
         setPass(false);
         setDnD({
           isDragging: false,
@@ -86,8 +99,41 @@ const Drag = () => {
       );
   };
 
+  const [tochedY, setTochedY] = useState(0);
+  const onTouchStart = (e) => {
+    setTochedY(e.changedTouches[0].pageY);
+  };
+
+  const onTouchEnd = (e) => {
+    const distanceY = tochedY - e.changedTouches[0].pageY;
+    if (distanceY <= -40) {
+      axios
+        .get(`${API_URL}/api/games/random`)
+        .then((res) => {
+          setGameInfo(res.data.data);
+          setPlaying(true);
+          setDrag(true);
+          setRecommend(false);
+          setPass(false);
+          setDnD({
+            isDragging: false,
+            dragEnd: true,
+          });
+        })
+        .then(
+          setTimeout(() => {
+            setDnD({
+              isDragging: false,
+              dragEnd: false,
+            });
+            setPlaying(false);
+          }, 5000)
+        );
+    }
+  };
+
   return (
-    <div>
+    <Wrap>
       <div>{isDrag && play && <Confetti />}</div>
       <Random>{recommend && !DnD.dragEnd && <RandomRolling />}</Random>
       <Icon
@@ -95,15 +141,19 @@ const Drag = () => {
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragEnd={onDragLeave}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
       >
         <div>{!DnD.dragEnd && !recommend && <Game />}</div>
       </Icon>
       {DnD.dragEnd && (
-        <GameImg src={matchGame(gameInfo).image} alt="게임아이콘" />
+        <ImgBox>
+          <GameImg src={matchGame(gameInfo).image} alt="게임아이콘" />
+        </ImgBox>
       )}
-      {DnD.dragEnd && <Title>{gameInfo.korTitle}</Title>}
+      {DnD.dragEnd && <Title>{gameInfo.korTitle} 고 ?</Title>}
       {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
-    </div>
+    </Wrap>
   );
 };
 

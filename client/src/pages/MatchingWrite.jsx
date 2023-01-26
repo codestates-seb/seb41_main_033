@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
 import PostPatch from "../components/PostPatch";
+import validity from "../util/validity";
 const MatchContainer = styled.form`
   .user_info {
     display: flex;
@@ -24,6 +25,10 @@ const MatchContainer = styled.form`
     padding: 16px;
     color: var(--strong-color);
     resize: none;
+    white-space: pre-wrap;
+    ::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -68,7 +73,6 @@ const TagsInput = styled.div`
       background: var(--black);
       border: 1px solid var(--grey);
       border-radius: 30px;
-      cursor: pointer;
       .tag_title {
         font-weight: 500;
         font-size: 12px;
@@ -114,9 +118,10 @@ const MatchingWrite = () => {
     setTags(newTag);
   };
   const loginInfo = useSelector((state) => state.islogin.login);
-  console.log(loginInfo);
+  const userInfo = useSelector((state) => state.userInfo.userInfo);
   const addTags = (event) => {
-    const newTag = event.target.value.replace(/ /g, "").substring(0, 6);
+    const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
+    const newTag = event.target.value.replace(reg, "").substring(0, 5);
     if (
       !tags.includes(newTag) &&
       event.key === "Enter" &&
@@ -137,18 +142,21 @@ const MatchingWrite = () => {
   };
   const { title, team, content } = info;
   const submitBtn = (e) => {
+    const data = { title, game, team, tags, content };
+    validity(data);
     const isEmpty = (object) =>
       !Object.values(object).every((el) => el !== null && el.length !== 0);
-
-    const data = { title, game, team, tags, content };
-    if (!isEmpty(data) && content.length >= 5) {
+    if (!isEmpty(data) && content.length >= 5 && game !== "게임을 선택하세요") {
       axios
         .post(`${API_URL}/api/matches`, data, {
           headers: {
             Authorization: `Bearer ${loginInfo.accessToken}`,
           },
         })
-        .then(navigate("/"))
+        .then((res) => {
+          alert("게시물 작성이 완료 되었습니다");
+          navigate("/match");
+        })
         .catch((err) => console(err));
     }
   };
@@ -157,11 +165,11 @@ const MatchingWrite = () => {
   return (
     <PostPatch
       onsubmit="return false"
-      image={""}
-      nickname={"아직몰름"}
-      identifier={"아직모름"}
+      image={userInfo?.profileImage}
+      nickname={userInfo?.nickname}
+      identifier={userInfo?.identifier}
       button1="작성완료"
-      link2="/"
+      link={-1}
       button2="취소"
       handleSubmit={submitBtn}
     >
@@ -175,7 +183,7 @@ const MatchingWrite = () => {
               id="title"
               maxLength="30"
               minLength="5"
-              placeholder="제목을 입력하세요"
+              placeholder="제목을 입력하세요(최소 5자)"
               onChange={changeValue}
             />
           </div>
@@ -225,10 +233,10 @@ const MatchingWrite = () => {
             />
           </TagsInput>
           <div>
-            <Label htmlFor="content">상세 설명</Label>
+            <Label htmlFor="content">내용</Label>
             <textarea
               name="content"
-              placeholder="상세설명을 입력하세요"
+              placeholder="상세설명을 입력하세요(최소 5자)"
               onChange={changeValue}
               maxLength="500"
               minLength="5"

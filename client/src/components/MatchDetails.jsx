@@ -32,10 +32,16 @@ const Detail = styled.div`
 const Div = styled.div`
   display: flex;
   margin-bottom: 16px;
-
-  > img {
-    width: 80px;
-    height: 80px;
+`;
+const ImgWrap = styled.div`
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 50%;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 const Span = styled.span`
@@ -93,6 +99,7 @@ const Description = styled.div`
   color: var(--white);
   overflow: scroll;
   -ms-overflow-style: none;
+  white-space: pre-wrap;
 `;
 const MatchDetails = ({ data, boardId }) => {
   const [same, setSame] = useState(false);
@@ -106,14 +113,18 @@ const MatchDetails = ({ data, boardId }) => {
   }, []);
 
   const deleteBtn = () => {
-    axios
-      .delete(`${API_URL}/api/matches/${boardId}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-          Authorization: `Bearer ${localStorage.getItem("key")}`,
-        },
-      })
-      .then((res) => navigate("/"));
+    if (window.confirm("게시물을 삭제 하시겠습니까?")) {
+      axios
+        .delete(`${API_URL}/api/matches/${boardId}`, {
+          headers: {
+            Authorization: `Bearer ${loginInfo.accessToken}`,
+          },
+        })
+        .then((res) => {
+          alert("게시물이 삭제 되었습니다");
+          navigate("/match");
+        });
+    }
   };
 
   return (
@@ -123,7 +134,9 @@ const MatchDetails = ({ data, boardId }) => {
           <div className="title">{data.title}</div>
           <div className="game">{data.game.korTitle}</div>
         </Info>
-        <img src={matchGame(data.game).image} alt="게임아이콘" />
+        <ImgWrap>
+          <img src={matchGame(data.game).image} alt="게임아이콘" />
+        </ImgWrap>
       </Div>
       <Div>
         <span>팀원수</span>
@@ -142,7 +155,7 @@ const MatchDetails = ({ data, boardId }) => {
       </Div>
       {same && (
         <Div>
-          <EmLink className="em" to={`/${boardId}/edit`}>
+          <EmLink className="em" to={`/match/${boardId}/edit`}>
             수정하기
           </EmLink>
 

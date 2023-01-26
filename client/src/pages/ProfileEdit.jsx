@@ -7,8 +7,8 @@ import gameList from '../data/gameList.json';
 import axios from 'axios';
 import { API_URL } from '../data/apiUrl';
 import { useNavigate, useParams } from 'react-router-dom';
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { userInfo } from '../redux/slice/userInfo';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -39,9 +39,7 @@ const ProfileWrap = styled.div`
       background: var(--input-color);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
-
-
-      input[type="file"] {
+      input[type='file'] {
         position: absolute;
         left: 0;
         top: 0;
@@ -84,7 +82,7 @@ const GameWrap = styled.div`
   .game {
     margin-top: 8px;
   }
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     display: none;
   }
   .game_title {
@@ -95,14 +93,14 @@ const GameWrap = styled.div`
     font-size: var(--font-caption-size);
     cursor: pointer;
   }
-  input[type="checkbox"]:checked + .game_title {
+  input[type='checkbox']:checked + .game_title {
     background: var(--bg-color);
     color: var(--yellow);
   }
 `;
 
 const BioWrap = styled.div`
-  margin: 24px 0 16px 0;
+  margin: 16px 0;
   textarea {
     resize: none;
     width: 100%;
@@ -116,18 +114,26 @@ const BioWrap = styled.div`
   }
 `;
 
+const BlockWrap = styled.div`
+  .block_button {
+    border-radius: 8px;
+  }
+`;
+
 const ProfileEdit = () => {
   const { userid } = useParams();
-  const [user, setUser] = useState(null);
-  const [nickname, setNickname] = useState("");
-  const [fileName, setFileName] = useState("이미지 파일을 선택하세요");
-  const [file, setFile] = useState("");
+  const [nickname, setNickname] = useState('');
+  const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
+  const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
-  const ACCESS_TOKEN = localStorage.getItem("key");
+  const [bio, setBio] = useState('');
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const userInform = useSelector((state) => state.userInfo.userInfo);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNickname = (e) => {
-    setUser({ ...user, nickname: e.target.value });
+    setNickname(e.target.value);
   };
 
   const handleOnChange = (e) => {
@@ -141,7 +147,7 @@ const ProfileEdit = () => {
         if (checkedGame.length < 5) {
           setCheckedGame((prev) => [...prev, item]);
         } else {
-          alert("5개까지만 선택 가능합니다.");
+          alert('5개까지만 선택 가능합니다.');
           e.target.checked = null;
         }
       } else {
@@ -152,58 +158,58 @@ const ProfileEdit = () => {
   );
 
   const handleBio = (e) => {
-    setUser({ ...user, introduction: e.target.value });
+    setBio(e.target.value);
   };
 
   const handlePatch = () => {
     const formData = new FormData();
     const data = {
-      nickname: user.nickname,
-      introduction: user.introduction,
+      nickname,
+      introduction: bio,
       games: checkedGame,
     };
 
     formData.append(
-      "data",
+      'data',
       new Blob([JSON.stringify(data)], {
-        type: "application/json",
+        type: 'application/json',
       })
     );
     if (file) {
-      formData.append("image", file);
+      formData.append('image', file);
     }
 
     axios
       .patch(`${API_URL}/api/members/${userid}`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${loginInfo?.accessToken}`,
         },
       })
-      .then(() => navigate(-1));
+      .then((res) => {
+        dispatch(userInfo(res.data.data));
+        navigate(`/profile/${userid}`, { replace: true });
+      });
   };
 
   useEffect(() => {
     axios
       .get(`${API_URL}/api/members/${userid}`, {
-        // ngrok get cors 해결용
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-        },
+        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
       })
       .then((res) => {
-        setUser(res.data.data);
         setNickname(res.data.data.nickname);
-        setCheckedGame(res.data.data.games.map((game) => game.korTitle));
+        setBio(res.data.data.introduction);
       });
+    setCheckedGame(userInform.games.map((game) => game.korTitle));
   }, []);
 
-  if (user) {
+  if (userInform) {
     return (
       <PostPatch
-        image={user.profileImage}
-        nickname={nickname}
-        identifier={user.identifier}
+        image={userInform.profileImage}
+        nickname={userInform.nickname}
+        identifier={userInform.identifier}
         button1="수정완료"
         button2="탈퇴하기"
         link="/quit"
@@ -215,7 +221,7 @@ const ProfileEdit = () => {
             <InputWrap
               type="text"
               name="nickname"
-              value={user.nickname || ""}
+              value={nickname || ''}
               onChange={handleNickname}
             />
           </NicknameWrap>
@@ -249,7 +255,7 @@ const ProfileEdit = () => {
                       handleCheckbox(e, e.target.checked, e.target.id);
                     }}
                     defaultChecked={
-                      user.games.filter(
+                      userInform.games.filter(
                         (games) => games.korTitle === game.title
                       ).length > 0
                         ? true
@@ -267,11 +273,20 @@ const ProfileEdit = () => {
             <label htmlFor="bio">자기소개 수정</label>
             <textarea
               id="bio"
-              value={user.introduction || ""}
+              value={bio || ''}
               placeholder="내용을 입력하세요"
               onChange={handleBio}
             />
           </BioWrap>
+          <BlockWrap>
+            <label>차단한 유저 편집</label>
+            <button
+              className="normal block_button"
+              onClick={() => navigate(`/profile/${userid}/block`)}
+            >
+              차단한 유저 목록 보기
+            </button>
+          </BlockWrap>
         </ContentWrap>
       </PostPatch>
     );

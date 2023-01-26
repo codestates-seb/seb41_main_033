@@ -10,6 +10,7 @@ const Background = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 100;
 `;
 
 const PopupWrap = styled.div`
@@ -52,6 +53,7 @@ const ButtonWrap = styled.div`
 
 const Popup = ({
   isOpen,
+  setIsOpen,
   title,
   content,
   button1,
@@ -59,9 +61,13 @@ const Popup = ({
   handleBtn1,
   handleBtn2,
 }) => {
+  const handlePopup = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   if (isOpen) {
     return (
-      <Background>
+      <Background onClick={handlePopup}>
         <PopupWrap className="card big">
           <Title>
             <div className="title">{title}</div>

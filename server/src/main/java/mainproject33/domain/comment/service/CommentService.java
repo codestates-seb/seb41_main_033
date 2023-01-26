@@ -60,7 +60,6 @@ public class CommentService
 
         Comment comment = findComment.orElseThrow(() -> new BusinessLogicException(ExceptionMessage.COMMENT_NOT_FOUND));
 
-
         return comment;
     }
 
@@ -71,8 +70,10 @@ public class CommentService
             return getPagedComments(commentRepository.findAllByUserBoardId(userBoardId), pageable);
 
         List<Long> blockList = getBlockList(user.getId());
+        List<Long> blockerList = getBlockerList(user.getId());
+
         List<Comment> comments = commentRepository.findAllByUserBoardId(userBoardId);
-        List<Comment> filteredComments = filterComments(blockList, comments);
+        List<Comment> filteredComments = filterComments(blockList, comments, blockerList);
 
         return getPagedComments(filteredComments, pageable);
     }
@@ -92,6 +93,11 @@ public class CommentService
         return blockList;
     }
 
+    public List<Long> getBlockerList(Long blockedId)
+    {
+        return blockRepository.findBlockerIdByBlockedId(blockedId);
+    }
+
     private Page<Comment> getPagedComments(List<Comment> comments, Pageable pageable)
     {
         int start = (int)pageable.getOffset();
@@ -101,10 +107,11 @@ public class CommentService
         return page;
     }
 
-    public List<Comment> filterComments(List<Long> blockList, List<Comment> comments)
+    public List<Comment> filterComments(List<Long> blockList, List<Comment> comments, List<Long> blockerList)
     {
         return comments.stream()
                 .filter(comment -> !blockList.contains(comment.getMember().getId()))
+                .filter(comment -> !blockerList.contains(comment.getMember().getId()))
                 .collect(Collectors.toList());
     }
 }

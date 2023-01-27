@@ -6,7 +6,6 @@ import { ReactComponent as Comment } from '../assets/sms.svg';
 import { ReactComponent as Video } from '../assets/videoIcon.svg';
 import ProfilePagination from './ProfilePagination';
 import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
 import matchGame from '../util/matchGame';
 import Popup from './Popup';
 import { useSelector } from 'react-redux';
@@ -96,6 +95,7 @@ const ProfileContentList = ({ isMatch, isStory }) => {
   const [storyPage, setStoryPage] = useState(1);
   const [matchPageInfo, setMatchPageInfo] = useState(null);
   const [storyPageInfo, setStoryPageInfo] = useState(null);
+
   const navigate = useNavigate();
 
   const handleMatchNavigate = (id) => {
@@ -125,7 +125,9 @@ const ProfileContentList = ({ isMatch, isStory }) => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}/matches?page=${matchPage}`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/members/${userid}/matches?page=${matchPage}`
+      )
       .then((res) => {
         setMatch(res.data.data);
         setMatchPageInfo(res.data.pageInfo);
@@ -137,7 +139,9 @@ const ProfileContentList = ({ isMatch, isStory }) => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}/boards?page=${storyPage}`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/members/${userid}/boards?page=${storyPage}`
+      )
       .then((res) => {
         setStory(res.data.data);
         setStoryPageInfo(res.data.pageInfo);

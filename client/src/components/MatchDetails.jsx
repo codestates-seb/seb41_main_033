@@ -1,13 +1,12 @@
-import styled from 'styled-components';
-import displayedAt from '../util/displayedAt';
-import { useState, useEffect } from 'react';
-import { API_URL } from '../data/apiUrl';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import matchGame from '../util/matchGame';
-import { MOBILE_POINT } from '../data/breakpoint';
-import Popup from '../components/Popup';
+import styled from "styled-components";
+import displayedAt from "../util/displayedAt";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import matchGame from "../util/matchGame";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from "../components/Popup";
 
 const Detail = styled.div`
   width: var(--col-9);
@@ -146,26 +145,26 @@ const MatchDetails = ({ data, boardId }) => {
 
   const deleteBtn = () => {
     axios
-      .delete(`${API_URL}/api/matches/${boardId}`, {
+      .delete(`${process.env.REACT_APP_API_URL}/api/matches/${boardId}`, {
         headers: {
           Authorization: `Bearer ${loginInfo.accessToken}`,
         },
       })
       .then((res) => {
         setIsOpen((prev) => !prev);
-        navigate('/match');
-        document.body.style.overflow = 'unset';
+        navigate("/match");
+        document.body.style.overflow = "unset";
       });
   };
 
   const handleDelete = () => {
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const handleCancel = () => {
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   return (

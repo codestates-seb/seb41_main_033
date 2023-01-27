@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { ReactComponent as Heart } from "../assets/heartIcon.svg";
-import { ReactComponent as Comment } from "../assets/sms.svg";
-import { ReactComponent as Video } from "../assets/videoIcon.svg";
-import ProfilePagination from "./ProfilePagination";
-import axios from "axios";
-import matchGame from "../util/matchGame";
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { ReactComponent as Heart } from '../assets/heartIcon.svg';
+import { ReactComponent as Comment } from '../assets/sms.svg';
+import { ReactComponent as Video } from '../assets/videoIcon.svg';
+import ProfilePagination from './ProfilePagination';
+import axios from 'axios';
+import matchGame from '../util/matchGame';
+import Popup from './Popup';
+import { useSelector } from 'react-redux';
 
 const ListWrap = styled.div`
   li {
@@ -38,6 +40,7 @@ const ListWrap = styled.div`
     .content_title {
       font-size: var(--font-body2-size);
       color: var(--white);
+      cursor: pointer;
     }
     .content_date {
       font-size: var(--font-caption-size);
@@ -84,12 +87,41 @@ const ListWrap = styled.div`
 
 const ProfileContentList = ({ isMatch, isStory }) => {
   const { userid } = useParams();
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const [isOpen, setIsOpen] = useState(false);
   const [match, setMatch] = useState(null);
   const [story, setStory] = useState(null);
   const [matchPage, setMatchPage] = useState(1);
   const [storyPage, setStoryPage] = useState(1);
   const [matchPageInfo, setMatchPageInfo] = useState(null);
   const [storyPageInfo, setStoryPageInfo] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleMatchNavigate = (id) => {
+    navigate(`/match/${id}/detail`);
+  };
+
+  const handleStoryNavigate = (id) => {
+    if (loginInfo?.isLogin) {
+      navigate(`/story/${userid}/${id}`);
+    } else {
+      setIsOpen((prev) => !prev);
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const handleLogin = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
+    navigate(`/login`);
+  };
+
+  const handleSignup = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
+    navigate(`/signup`);
+  };
 
   useEffect(() => {
     axios
@@ -136,9 +168,12 @@ const ProfileContentList = ({ isMatch, isStory }) => {
                       />
                     </div>
                     <div className="content_container match">
-                      <a href={`/match/${match.id}/detail`}>
-                        <div className="content_title">{match.title}</div>
-                      </a>
+                      <div
+                        className="content_title"
+                        onClick={() => handleMatchNavigate(match.id)}
+                      >
+                        {match.title}
+                      </div>
                       <div className="content_date">
                         {new Date(match.createdAt).toLocaleString()}
                       </div>
@@ -158,9 +193,12 @@ const ProfileContentList = ({ isMatch, isStory }) => {
                 story.map((story) => (
                   <li key={story.id}>
                     <div className="content_container story">
-                      <a href={`/story/${userid}/${story.id}`}>
-                        <div className="content_title">{story.content}</div>
-                      </a>
+                      <div
+                        className="content_title"
+                        onClick={() => handleStoryNavigate(story.id)}
+                      >
+                        {story.content}
+                      </div>
                       <div className="content_date">
                         {new Date(story.createdAt).toLocaleString()}
                       </div>
@@ -181,7 +219,7 @@ const ProfileContentList = ({ isMatch, isStory }) => {
                     </div>
                     {story.uploadFileName ? (
                       <div className="image_container">
-                        {story.contentType.split("/")[0] === "image" ? (
+                        {story.contentType.split('/')[0] === 'image' ? (
                           <img
                             className="image_preview"
                             src={story.uploadFileName}
@@ -210,6 +248,16 @@ const ProfileContentList = ({ isMatch, isStory }) => {
           storyPage={storyPage}
           setStoryPage={setStoryPage}
           storyPageInfo={storyPageInfo}
+        />
+        <Popup
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          title="스토리 상세보기"
+          content="스토리 상세보기는 로그인 후 이용 가능합니다."
+          button1="로그인"
+          button2="회원가입"
+          handleBtn1={handleLogin}
+          handleBtn2={handleSignup}
         />
       </>
     );

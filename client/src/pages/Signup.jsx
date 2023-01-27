@@ -1,10 +1,9 @@
-import styled from 'styled-components';
-import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { MOBILE_POINT } from '../data/breakpoint';
-import Popup from '../components/Popup';
+import styled from "styled-components";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from "../components/Popup";
 
 const Wrap = styled.div`
   width: var(--col-6);
@@ -35,8 +34,8 @@ const InputWrap = styled.div`
     width: 100%;
     margin-bottom: 16px;
   }
-  input[type='text'],
-  input[type='password'] {
+  input[type="text"],
+  input[type="password"] {
     width: 100%;
   }
 
@@ -50,9 +49,9 @@ const Signup = () => {
   const [isOpen, setIsOpen] = useState(false);
   //회원가입 상태
   const [form, setForm] = useState({
-    identifier: '',
-    password: '',
-    nickname: '',
+    identifier: "",
+    password: "",
+    nickname: "",
   });
   const [isError, setIsError] = useState({
     identifier: false,
@@ -84,17 +83,17 @@ const Signup = () => {
       return;
     }
     return axios
-      .post(`${API_URL}/api/members/signup`, form)
+      .post(`${process.env.REACT_APP_API_URL}/api/members/signup`, form)
       .then((res) => {
         setIsOpen((prev) => !prev);
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = "hidden";
       })
-      .catch((err) => alert('회원가입에 실패하였습니다.'));
+      .catch((err) => alert("회원가입에 실패하였습니다."));
   };
 
   const handleLogin = () => {
     navigate(`/login`);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   return (
@@ -106,8 +105,8 @@ const Signup = () => {
           <input
             type="text"
             placeholder="4~16자의 영문, 숫자의 아이디를 입력하세요"
-            onChange={(e) => handleInputValue('identifier', e)}
-            className={isError.identifier ? 'error' : ''}
+            onChange={(e) => handleInputValue("identifier", e)}
+            className={isError.identifier ? "error" : ""}
           />
           {isError.identifier ? (
             <div className="error_caption">
@@ -120,8 +119,8 @@ const Signup = () => {
           <input
             type="password"
             placeholder="비밀번호를 입력하세요"
-            onChange={(e) => handleInputValue('password', e)}
-            className={isError.password ? 'error' : ''}
+            onChange={(e) => handleInputValue("password", e)}
+            className={isError.password ? "error" : ""}
             autoComplete="on"
           />
           {isError.password ? (
@@ -136,8 +135,8 @@ const Signup = () => {
           <input
             type="text"
             placeholder="2~8자의 영문, 한글, 숫자로 된 닉네임을 입력하세요"
-            onChange={(e) => handleInputValue('nickname', e)}
-            className={isError.nickname ? 'error' : ''}
+            onChange={(e) => handleInputValue("nickname", e)}
+            className={isError.nickname ? "error" : ""}
           />
           {isError.nickname ? (
             <div className="error_caption">

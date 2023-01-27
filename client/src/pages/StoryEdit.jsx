@@ -1,11 +1,10 @@
-import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import { API_URL } from '../data/apiUrl';
-import axios from 'axios';
-import PostPatch from '../components/PostPatch';
-import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import Popup from '../components/Popup';
+import styled from "styled-components";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import PostPatch from "../components/PostPatch";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import Popup from "../components/Popup";
 
 const TextArea = styled.div`
   margin: 24px 0 16px 0;
@@ -14,7 +13,7 @@ const TextArea = styled.div`
 const StoryEdit = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState({});
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const navigate = useNavigate();
   const params = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
@@ -22,7 +21,7 @@ const StoryEdit = () => {
   const accessToken = loginInfo.accessToken;
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${memberId}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/members/${memberId}`)
       .then((res) => {
         setUserData(res.data.data);
       })
@@ -31,7 +30,7 @@ const StoryEdit = () => {
       });
 
     axios
-      .get(`${API_URL}/api/boards/${params.boardid}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`)
       .then((res) => {
         setContent(res.data.data.content);
       })
@@ -47,13 +46,13 @@ const StoryEdit = () => {
   //제출
   const handlePatch = () => {
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const handleStoryEditSubmit = () => {
     axios
       .patch(
-        `${API_URL}/api/boards/${params.boardid}`,
+        `${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`,
         { content: content },
         {
           headers: {
@@ -63,8 +62,8 @@ const StoryEdit = () => {
       )
       .then((res) => {
         setIsOpen((prev) => !prev);
-        navigate('/story');
-        document.body.style.overflow = 'unset';
+        navigate("/story");
+        document.body.style.overflow = "unset";
       })
       .catch((err) => {
         console.log(err);

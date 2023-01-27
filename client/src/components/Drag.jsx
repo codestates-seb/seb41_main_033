@@ -7,7 +7,6 @@ import sound from "../assets/game.mp3";
 import drum from "../assets/drum.mp3";
 import RandomRolling from "../components/RandomRolling";
 import axios from "axios";
-import { API_URL } from "../data/apiUrl";
 import matchGame from "../util/matchGame";
 const Wrap = styled.div`
   display: flex;
@@ -77,7 +76,7 @@ const Drag = () => {
   const onDragLeave = (e) => {
     e.preventDefault();
     axios
-      .get(`${API_URL}/api/games/random`)
+      .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
       .then((res) => {
         setGameInfo(res.data.data);
         setDrag(true);
@@ -108,7 +107,7 @@ const Drag = () => {
     const distanceY = tochedY - e.changedTouches[0].pageY;
     if (distanceY <= -40) {
       axios
-        .get(`${API_URL}/api/games/random`)
+        .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
         .then((res) => {
           setGameInfo(res.data.data);
           setPlaying(true);

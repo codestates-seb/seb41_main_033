@@ -148,6 +148,7 @@ table {
 	--black: #000000;
 	--darkgrey1: #171717;
 	--darkgrey2: #202020;
+	--darkgrey3: #272727;
 	--grey: #4e4d4e;
 	--lightgrey: #6a6a6b;
 	--white: #ffffff;
@@ -163,7 +164,7 @@ table {
 	--bg-color: var(--black);
 	--bg-card-color: var(--darkgrey1);
 	--input-color: var(--darkgrey2);
-	--border-color: var(--grey);
+	--border-color: var(--darkgrey3);
 	--font-color: var(--lightgrey);
 	--strong-color: var(--white);
 	--error-color: var(--red);

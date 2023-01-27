@@ -39,6 +39,13 @@ public class VerificationService {
             throw new BusinessLogicException(ExceptionMessage.MEMBER_EXISTS);
     }
 
+    public void existEmail(String email)
+    {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if(member.isEmpty())
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_NOT_FOUND);
+    }
+
     public void existBoard(Long id)
     {
         Optional<UserBoard> findBoard = userBoardRepository.findById(id);

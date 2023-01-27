@@ -10,6 +10,7 @@ import mainproject33.global.validator.nickname.Nickname;
 import mainproject33.global.validator.notspace.NotSpace;
 import mainproject33.global.validator.password.Password;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -27,6 +28,10 @@ public class MemberDto {
         @NotBlank(message = "패스워드에는 공백이 올 수 없습니다.")
         @Password
         private String password;
+
+        @NotBlank(message = "이메일은 공백이 올 수 없습니다.")
+        @Email(message = "올바른 이메일 형식이 아닙니다.")
+        private String email;
 
         @NotBlank(message = "닉네임에는 공백이 포함될 수 없습니다.")
         @Nickname
@@ -87,4 +92,11 @@ public class MemberDto {
         private String profileImage;
     }
 
+    @Getter
+    public static class EmailPost
+    {
+        @NotBlank(message = "이메일은 공백이 올 수 없습니다.")
+        @Email(message = "올바른 이메일 형식이 아닙니다.")
+        private String email;
+    }
 }

@@ -40,5 +40,5 @@ public class UserBoardResponseDto
 
     private LocalDateTime modifiedAt;
 
-    private List<CommentResponseDto> comments = new ArrayList<>();
+    private List<CommentResponseDto> comments;
 }

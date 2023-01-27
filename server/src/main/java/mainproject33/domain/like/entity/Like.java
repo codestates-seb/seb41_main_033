@@ -1,5 +1,6 @@
 package mainproject33.domain.like.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mainproject33.domain.comment.entity.Comment;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "likes")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like
 {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

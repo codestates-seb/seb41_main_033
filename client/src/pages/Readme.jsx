@@ -7,8 +7,8 @@ const Wrap = styled.div`
 		font-size: var(--font-head2-size);
 		color: var(--strong-color);
 	}
-	.card{
-		border:1px solid var(--darkgrey3));
+	.card {
+		border: 1px solid var(--darkgrey3);
 	}
 `;
 
@@ -88,6 +88,9 @@ const TeamSumUpSection = styled.section`
 			border-radius: 8px;
 			padding: 24px 0;
 			text-align: center;
+			position: relative;
+			top: 0;
+			transition: all 0.3s;
 			.img_wrap {
 				display: block;
 				width: 80px;
@@ -102,6 +105,10 @@ const TeamSumUpSection = styled.section`
 				font-size: var(--font-body2-size);
 				color: var(--strong-color);
 			}
+		}
+		li:hover {
+			top: -6px;
+			box-shadow: 2px 2px 12px 6px rgb(0 0 0 / 80%);
 		}
 		li:nth-child(1) {
 			background-image: linear-gradient(to top, #547de7 0%, #7dffb5 100%);
@@ -125,6 +132,17 @@ const TeamSumUpSection = styled.section`
 	}
 	.desc {
 		margin-top: 16px;
+	}
+`;
+
+const SkillsStack = styled.div`
+	margin-bottom: 48px;
+	.img_wrap {
+		width: 100%;
+		overflow: hidden;
+		img {
+			width: 100%;
+		}
 	}
 `;
 
@@ -223,22 +241,42 @@ const WorkCard = styled.div`
 	}
 `;
 
-const SkillsStack = styled.div`
+const PageView = styled.section`
+	display: flex;
 	margin-bottom: 48px;
-	.img_wrap {
-		width: 100%;
-		overflow: hidden;
-		img {
-			width: 100%;
+	.pagelist_wrap {
+		flex: 3;
+		margin-right: 24px;
+		.title {
+			font-size: var(--font-body1-size);
+			margin-bottom: 0;
+			padding: 24px 16px;
+			border-bottom: 1px solid var(--darkgrey3);
+		}
+		.pagelist {
+			li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 8px 16px;
+				font-size: var(--font-caption-size);
+			}
+			button {
+				border: 1px solid var(--darkgrey3);
+				border-radius: var(--border-radius-btn);
+				padding: 6px 12px;
+				font-size: var(--font-caption-size);
+				width: 62px;
+				background: var(--black);
+			}
 		}
 	}
-`;
-
-const PageView = styled.section`
-	margin-bottom: 48px;
-	.page_title {
-		font-size: var(--font-head3-size);
-		color: var(--strong-color);
+	.page_wrap {
+		flex: 7;
+		min-height: 400px;
+		background: var(--black);
+		border-radius: var(--border-raidus-md);
+		border: 1px solid var(--darkgrey3);
 	}
 `;
 
@@ -303,24 +341,6 @@ const Readme = () => {
 				</p>
 			</Banner>
 
-			{/* 팀원 소개 및 개요 */}
-			<TeamSumUpSection className="card big">
-				<div className="title">
-					<h2>Our Team</h2>
-					<span>맑게고인 33조</span>
-				</div>
-				<ul className="team_list">
-					{name.map((el, idx) => {
-						return (
-							<li key={idx}>
-								<div className="img_wrap"></div>
-								<p className="name">{el}</p>
-							</li>
-						);
-					})}
-				</ul>
-			</TeamSumUpSection>
-
 			{/* <MusicZone>
 				<div className="content_wrap">
 					<iframe
@@ -349,14 +369,51 @@ const Readme = () => {
 
 			{/* 주요 페이지 뷰 */}
 			<PageView>
-				<h2>주요 페이지 뷰</h2>
-				<div>
-					<div className="card md">
-						<h3 className="page_title">로그인 페이지</h3>
-						주요 페이지 뷰 - 프론트에서 캡쳐(이미지? or gif?) -> 지금은 비워놓음
-					</div>
+				<div className="card pagelist_wrap">
+					<h2 className="title">주요 페이지 뷰</h2>
+					<ul className="pagelist">
+						<li>
+							<span>로그인 페이지</span>
+							<button className="btn_view">보기</button>
+						</li>
+						<li>
+							<span>회원가입 페이지</span>
+							<button className="btn_view">보기</button>
+						</li>
+						<li>
+							<span>매칭하기 페이지</span>
+							<button className="btn_view">보기</button>
+						</li>
+						<li>
+							<span>스토리 페이지</span>
+							<button className="btn_view">보기</button>
+						</li>
+						<li>
+							<span>프로필 페이지</span>
+							<button className="btn_view">보기</button>
+						</li>
+					</ul>
 				</div>
+				<div className="page_wrap"></div>
 			</PageView>
+
+			{/* 팀원 소개 및 개요 */}
+			<TeamSumUpSection className="card big">
+				<div className="title">
+					<h2>Our Team</h2>
+					<span>맑게고인 33조</span>
+				</div>
+				<ul className="team_list">
+					{name.map((el, idx) => {
+						return (
+							<li key={idx}>
+								<div className="img_wrap"></div>
+								<p className="name">{el}</p>
+							</li>
+						);
+					})}
+				</ul>
+			</TeamSumUpSection>
 
 			{/* 팀원소개 */}
 			<WorkLog>

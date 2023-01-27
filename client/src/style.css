@@ -104,7 +104,6 @@ textarea {
 	vertical-align: baseline;
 	box-sizing: border-box;
 	outline: none;
-	white-space: pre-wrap;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -213,6 +212,7 @@ body {
 	font-weight: var(--font-weight-normal);
 	font-size: var(--font-body1-size);
 	color: var(--font-color);
+	cursor: url(./assets/cursor_fill.png) 0 0, auto;
 }
 #root {
 	height: 100%;

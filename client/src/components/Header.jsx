@@ -169,7 +169,7 @@ const Header = () => {
   useEffect(() => {
     if (loginInfo?.isLogin && Date.now() >= loginInfo?.expire) {
       const memberId = loginInfo.memberId;
-      const expire = Date.now() + 1000 * 60 * 20;
+      const expire = Date.now() + 1000 * 60 * 60;
       axios
         .get(
           `${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`,

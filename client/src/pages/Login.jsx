@@ -84,7 +84,7 @@ const Login = () => {
         )
         .then((res) => {
           localStorage.clear();
-          const expire = Date.now() + 1000 * 60 * 20;
+          const expire = Date.now() + 1000 * 60 * 60;
           const refreshtoken = res.headers.refreshtoken;
           const accessToken = res.headers.authorization;
           const memberId = res.data.data.id;

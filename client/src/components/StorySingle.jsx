@@ -15,6 +15,9 @@ const StoryWrap = styled.div`
 	.storyMain {
 		display: flex;
 	}
+	.custom_profilewrap {
+		margin-bottom: 48px;
+	}
 	@media (max-width: ${MOBILE_POINT}) {
 		.storyMain {
 			flex-direction: column;
@@ -27,6 +30,7 @@ const TextArea = styled.div`
 	margin-right: 32px;
 
 	.content {
+		white-space: pre-wrap;
 		font-size: var(--font-body2-size);
 	}
 `;
@@ -95,6 +99,7 @@ const StorySingle = ({ data }) => {
 					<TextArea>
 						<div onClick={(e) => handleProfileClick(e, data.memberId)} title="">
 							<SinglePofileWrap
+								className="custom_profilewrap"
 								imgSrc={data.profileImage}
 								name={data.nickname}
 								subInfo={displayedAt(data.createdAt)}

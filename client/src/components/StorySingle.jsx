@@ -1,14 +1,14 @@
-import styled from 'styled-components';
-import { ReactComponent as BoardLikeIcon } from './../assets/heartIcon.svg';
-import { ReactComponent as BoardCommentIcon } from './../assets/sms.svg';
-import { Link, useNavigate } from 'react-router-dom';
-import displayedAt from '../util/displayedAt';
-import SinglePofileWrap from './SingleProfileWrap';
-import StoryFileView from './StoryFileView';
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import styled from "styled-components";
+import { ReactComponent as BoardLikeIcon } from "./../assets/heartIcon.svg";
+import { ReactComponent as BoardCommentIcon } from "./../assets/sms.svg";
+import { Link, useNavigate } from "react-router-dom";
+import displayedAt from "../util/displayedAt";
+import SinglePofileWrap from "./SingleProfileWrap";
+import StoryFileView from "./StoryFileView";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 import { MOBILE_POINT } from "../data/breakpoint";
-import Popup from './Popup';
+import Popup from "./Popup";
 
 const StoryWrap = styled.div`
   cursor: pointer;
@@ -16,13 +16,13 @@ const StoryWrap = styled.div`
     display: flex;
   }
   @media (max-width: ${MOBILE_POINT}) {
-		.storyMain {
-			flex-direction: column;
-		}
-		.story_list_flieview {
-			width: 100%;
-			margin-top: 16px;
-		}
+    .storyMain {
+      flex-direction: column;
+    }
+    .story_list_flieview {
+      width: 100%;
+      margin-top: 16px;
+    }
   }
 `;
 

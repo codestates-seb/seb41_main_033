@@ -1,14 +1,13 @@
-import styled from 'styled-components';
-import SearchBar from './../components/SearchBar';
-import StorySingle from '../components/StorySingle';
-import WriteFloatButton from '../components/WriteFloatButton';
-import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import Popup from '../components/Popup';
-import NoSearch from '../components/NoSearch';
+import styled from "styled-components";
+import SearchBar from "./../components/SearchBar";
+import StorySingle from "../components/StorySingle";
+import WriteFloatButton from "../components/WriteFloatButton";
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Popup from "../components/Popup";
+import NoSearch from "../components/NoSearch";
 
 const Wrap = styled.div`
   .loadingObserver {
@@ -62,20 +61,20 @@ const Story = () => {
   const isLogin = loginInfo.isLogin;
   const navigate = useNavigate();
   const [storyData, setStoryData] = useState([]);
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const [isNoSearch, setIsNoSearch] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogin = () => {
     navigate(`/login`);
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   const handleSignup = () => {
     navigate(`/signup`);
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   //페이지 로딩 state
@@ -91,7 +90,7 @@ const Story = () => {
   //페이지 요청 함수
   const requestPage = async (page) => {
     let config = {};
-    let url = '';
+    let url = "";
     if (isLogin) {
       config = {
         headers: {
@@ -100,9 +99,9 @@ const Story = () => {
       };
     }
 
-    if (keyword === '') {
+    if (keyword === "") {
       if (page === 1) setStoryData([]);
-      url = `${API_URL}/api/boards?page=${page}`;
+      url = `${process.env.REACT_APP_API_URL}/api/boards?page=${page}`;
       await axios
         .get(url, config)
         .then((res) => {
@@ -118,7 +117,7 @@ const Story = () => {
           console.log(err);
         });
     } else {
-      url = `${API_URL}/api/boards?page=${page}&keyword=${keyword}`;
+      url = `${process.env.REACT_APP_API_URL}/api/boards?page=${page}&keyword=${keyword}`;
       await axios
         .get(url, config)
         .then((res) => {
@@ -162,7 +161,7 @@ const Story = () => {
       navigate(`/story/storywrite`);
     } else {
       setIsOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 
@@ -179,7 +178,7 @@ const Story = () => {
           ? storyData.map((el, idx) => {
               return <StorySingle key={idx} data={el} />;
             })
-          : '작성된 스토리가 없습니다.'}
+          : "작성된 스토리가 없습니다."}
       </StoryBoardWrap>
       <WriteFloatButton click={handleWriteFBtnOnClick} />
       <Popup

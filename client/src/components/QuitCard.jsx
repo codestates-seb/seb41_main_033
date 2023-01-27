@@ -1,13 +1,12 @@
-import styled from 'styled-components';
-import { ReactComponent as Glummy } from '../assets/glummy.svg';
-import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { quit } from '../redux/slice/loginstate';
-import { MOBILE_POINT } from '../data/breakpoint';
-import Popup from './Popup';
+import styled from "styled-components";
+import { ReactComponent as Glummy } from "../assets/glummy.svg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { quit } from "../redux/slice/loginstate";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from "./Popup";
 
 const QuitWrap = styled.div`
   display: flex;
@@ -94,28 +93,34 @@ const QuitCard = () => {
 
   const handleClick = () => {
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const handleQuit = () => {
     axios
-      .delete(`${API_URL}/api/members/${loginInfo?.memberId}`, {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      })
+      .delete(
+        `${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`,
+        {
+          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+        }
+      )
       .then(() => {
         localStorage.clear();
         setIsOpen((prev) => !prev);
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = "unset";
         dispatch(quit({ accessToken: null, memberId: null, isLogin: false }));
-        navigate('/');
+        navigate("/");
       });
   };
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${loginInfo?.memberId}`, {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      })
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`,
+        {
+          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
+        }
+      )
       .then((res) => setUser(res.data.data));
   }, [loginInfo?.memberId, loginInfo?.accessToken]);
 

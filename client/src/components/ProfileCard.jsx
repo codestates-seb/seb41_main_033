@@ -1,16 +1,15 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import SinglePofileWrap from './SingleProfileWrap';
-import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
-import { ReactComponent as Heart } from '../assets/heartIcon.svg';
-import { ReactComponent as EmptyHeart } from '../assets/heartEmptyIcon.svg';
-import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
-import { useState, useEffect } from 'react';
-import { setProfile } from '../redux/slice/profileSlice';
-import { MOBILE_POINT } from '../data/breakpoint';
-import Popup from './Popup';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import SinglePofileWrap from "./SingleProfileWrap";
+import { ReactComponent as Setting } from "../assets/settingsIcon.svg";
+import { ReactComponent as Heart } from "../assets/heartIcon.svg";
+import { ReactComponent as EmptyHeart } from "../assets/heartEmptyIcon.svg";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { setProfile } from "../redux/slice/profileSlice";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from "./Popup";
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -115,7 +114,7 @@ const ProfileCard = () => {
     if (isBlockOpen) {
       setIsBlockOpen((prev) => !prev);
     }
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
     navigate(`/login`);
   };
 
@@ -129,7 +128,7 @@ const ProfileCard = () => {
     if (isBlockOpen) {
       setIsBlockOpen((prev) => !prev);
     }
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
     navigate(`/signup`);
   };
 
@@ -137,14 +136,14 @@ const ProfileCard = () => {
     if (loginInfo?.isLogin) {
       axios
         .post(
-          `${API_URL}/api/members/${userid}/follows`,
+          `${process.env.REACT_APP_API_URL}/api/members/${userid}/follows`,
           {},
           {
             headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
           }
         )
         .then((res) => {
-          if (res.data === '팔로우가 완료되었습니다.') {
+          if (res.data === "팔로우가 완료되었습니다.") {
             dispatch(
               setProfile({
                 ...userInfo,
@@ -164,7 +163,7 @@ const ProfileCard = () => {
         });
     } else {
       setIsFollowOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 
@@ -172,14 +171,14 @@ const ProfileCard = () => {
     if (loginInfo?.isLogin) {
       axios
         .post(
-          `${API_URL}/api/members/${userid}/likes`,
+          `${process.env.REACT_APP_API_URL}/api/members/${userid}/likes`,
           {},
           {
             headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
           }
         )
         .then((res) => {
-          if (res.data === '좋아요가 완료되었습니다.') {
+          if (res.data === "좋아요가 완료되었습니다.") {
             dispatch(
               setProfile({
                 ...userInfo,
@@ -199,7 +198,7 @@ const ProfileCard = () => {
         });
     } else {
       setIsLikeOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 
@@ -207,7 +206,7 @@ const ProfileCard = () => {
     if (loginInfo?.isLogin) {
       axios
         .post(
-          `${API_URL}/api/members/${userid}/blocks`,
+          `${process.env.REACT_APP_API_URL}/api/members/${userid}/blocks`,
           {},
           {
             headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
@@ -216,7 +215,7 @@ const ProfileCard = () => {
         .then((res) => {
           if (
             res.data ===
-            '해당 유저를 차단하셨습니다. 팔로우와 좋아요가 취소됩니다.'
+            "해당 유저를 차단하셨습니다. 팔로우와 좋아요가 취소됩니다."
           ) {
             dispatch(
               setProfile({
@@ -235,14 +234,14 @@ const ProfileCard = () => {
         });
     } else {
       setIsBlockOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 
   useEffect(() => {
     if (loginInfo?.accessToken) {
       axios
-        .get(`${API_URL}/api/members/${userid}`, {
+        .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`, {
           headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
         })
         .then((res) => {
@@ -250,10 +249,12 @@ const ProfileCard = () => {
           dispatch(setProfile(res.data.data));
         });
     } else {
-      axios.get(`${API_URL}/api/members/${userid}`).then((res) => {
-        setUser(res.data.data);
-        dispatch(setProfile(res.data.data));
-      });
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`)
+        .then((res) => {
+          setUser(res.data.data);
+          dispatch(setProfile(res.data.data));
+        });
     }
     Number(userid) === loginInfo?.memberId ? setIsMe(true) : setIsMe(false);
   }, [userid, loginInfo?.accessToken, loginInfo?.memberId, dispatch]);

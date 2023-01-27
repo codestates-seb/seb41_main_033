@@ -1,17 +1,16 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import HeartIcon from './../assets/heart_sprite.svg';
-import { ReactComponent as CommentIcon } from './../assets/sms.svg';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { API_URL } from '../data/apiUrl';
-import axios from 'axios';
-import displayedAt from '../util/displayedAt';
-import SinglePofileWrap from '../components/SingleProfileWrap';
-import StoryComments from '../components/StoryComments';
-import StoryBtn from '../components/StoryBtn';
-import StoryFileView from './../components/StoryFileView';
-import Popup from '../components/Popup';
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import HeartIcon from "./../assets/heart_sprite.svg";
+import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import displayedAt from "../util/displayedAt";
+import SinglePofileWrap from "../components/SingleProfileWrap";
+import StoryComments from "../components/StoryComments";
+import StoryBtn from "../components/StoryBtn";
+import StoryFileView from "./../components/StoryFileView";
+import Popup from "../components/Popup";
 
 const Title = styled.h4`
   margin-top: 24px;
@@ -47,7 +46,7 @@ const StoryLike = styled.div`
     color: var(--strong-color);
     cursor: pointer;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     appearance: none;
     position: absolute;
     left: 16px;
@@ -60,10 +59,10 @@ const StoryLike = styled.div`
     background-position: 0 0;
     cursor: pointer;
   }
-  input[type='checkbox']:checked {
+  input[type="checkbox"]:checked {
     background-position: 0 -24px;
   }
-  input[type='checkbox']:checked + label {
+  input[type="checkbox"]:checked + label {
     background: var(--border-color);
   }
 `;
@@ -82,16 +81,16 @@ const StoryBody = styled.div`
 `;
 
 const BtnWrap = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-top: 48px;
-	button {
-		margin-right: 12px;
-	}
-	button:last-child {
-		margin-right: 0;
-	}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 48px;
+  button {
+    margin-right: 12px;
+  }
+  button:last-child {
+    margin-right: 0;
+  }
 `;
 
 const CommentsCountTag = styled.div`
@@ -127,7 +126,7 @@ const StoryDetail = () => {
   });
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/boards/${params.boardid}`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
         headers: {
           //"ngrok-skip-browser-warning": "69420",
           Authorization: `Bearer ${accessToken}`,
@@ -145,14 +144,14 @@ const StoryDetail = () => {
         console.log(err);
       });
   }, []);
-  let type = '';
-  if (storyData.contentType) type = storyData.contentType.split('/')[0];
+  let type = "";
+  if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
   //스토리 좋아요
   const handleStoryLikeClick = () => {
     axios
       .post(
-        `${API_URL}/api/boards/${params.boardid}/likes`,
+        `${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}/likes`,
         {},
         {
           headers: {
@@ -182,27 +181,27 @@ const StoryDetail = () => {
   //삭제
   const handleDelete = () => {
     setIsDeleteOpen((prev) => !prev);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const handleCancel = () => {
     setIsDeleteOpen((prev) => !prev);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   const handleStoryDeleteClick = () => {
     axios
-      .delete(`${API_URL}/api/boards/${params.boardid}`, {
+      .delete(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => {
-        navigate('/story');
-        document.body.style.overflow = 'unset';
+        navigate("/story");
+        document.body.style.overflow = "unset";
       })
       .catch((err) => {
-        alert('스토리 삭제에 실패했습니다.');
+        alert("스토리 삭제에 실패했습니다.");
       });
   };
 

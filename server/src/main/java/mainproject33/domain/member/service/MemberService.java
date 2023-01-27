@@ -147,13 +147,15 @@ public class MemberService {
         block.setBlocked(blocked);
 
         Optional<Block> optionalBlock = blockRepository.findByBlock(blocker.getId(), blocked.getId());
-        Optional<Follow> optionalFollow = followRepository.findByFollow(blocker.getId(), blocked.getId());
+        Optional<Follow> optionalFollower = followRepository.findByFollow(blocker.getId(), blocked.getId());
+        Optional<Follow> optionalFollowed = followRepository.findByFollow(blocked.getId(), blocker.getId());
         Optional<MemberLikes> optionalLike = memberLikesRepository.findByMemberLikes(blocker.getId(), blocked.getId());
 
         if(optionalBlock.isEmpty()) {
             blockRepository.save(block);
 
-            optionalFollow.ifPresent(followRepository::delete);
+            optionalFollower.ifPresent(followRepository::delete);
+            optionalFollowed.ifPresent(followRepository::delete);
             optionalLike.ifPresent(memberLikesRepository::delete);
 
             return true;

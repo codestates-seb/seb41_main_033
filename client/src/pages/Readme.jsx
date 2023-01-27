@@ -7,6 +7,9 @@ const Wrap = styled.div`
 		font-size: var(--font-head2-size);
 		color: var(--strong-color);
 	}
+	.card{
+		border:1px solid var(--darkgrey3));
+	}
 `;
 
 const Banner = styled.div`
@@ -318,23 +321,21 @@ const Readme = () => {
 				</ul>
 			</TeamSumUpSection>
 
-			<MusicZone>
+			{/* <MusicZone>
 				<div className="content_wrap">
 					<iframe
 						width="1280"
 						height="720"
 						src="https://www.youtube.com/embed/fag6IcPqWBQ"
 						title="[BGM] Neon Merge Defense Portfolio"
-						frameborder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-						allowfullscreen
 					></iframe>
 				</div>
 				<div className="desc_wrap">
 					<h3>MUSIC</h3>
 					<p>이것은 BE의 다재다능 만능꾼 대경님이 직.접. 만든 음악입니다</p>
 				</div>
-			</MusicZone>
+			</MusicZone> */}
 
 			{/* 기술스택 */}
 			<SkillsStack>

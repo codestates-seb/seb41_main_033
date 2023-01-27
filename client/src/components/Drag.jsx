@@ -77,9 +77,7 @@ const Drag = () => {
   const onDragLeave = (e) => {
     e.preventDefault();
     axios
-      .get(`${API_URL}/api/games/random`, {
-        headers: { "ngrok-skip-browser-warning": "69420" },
-      })
+      .get(`${API_URL}/api/games/random`)
       .then((res) => {
         setGameInfo(res.data.data);
         setDrag(true);
@@ -110,9 +108,7 @@ const Drag = () => {
     const distanceY = tochedY - e.changedTouches[0].pageY;
     if (distanceY <= -40) {
       axios
-        .get(`${API_URL}/api/games/random`, {
-          headers: { "ngrok-skip-browser-warning": "69420" },
-        })
+        .get(`${API_URL}/api/games/random`)
         .then((res) => {
           setGameInfo(res.data.data);
           setPlaying(true);

@@ -1,101 +1,130 @@
 import styled from "styled-components";
 import displayedAt from "../util/displayedAt";
 import matchGame from "../util/matchGame";
-const Card = styled.div`
-  width: var(--col-6);
-  padding: 16px;
-  margin-bottom: 32px;
-`;
-const Title = styled.div`
-  margin: 16px;
-  max-width: 264px;
-  .game_title {
-    color: var(--white);
-    font-size: var(--font-head3-size);
-    margin-bottom: 5px;
-  }
-`;
-const Space = styled.div`
-  display: flex;
-  margin: 8px;
-  &.game_info {
-    justify-content: end;
-    align-items: flex-end;
-    .team_count {
-      display: flex;
-      align-items: center;
-      color: var(--strong-color);
-      span {
-        margin-right: 8px;
-      }
-    }
-    div {
-      margin-right: 10px;
-    }
+import { MOBILE_POINT } from "../data/breakpoint";
 
-    span {
-      display: block;
-      width: 6px;
-      height: 6px;
-      margin-right: 6px;
-      border-radius: 6px;
-      background: var(--primary-color);
-      font-size: 0;
-    }
-  }
+const Card = styled.div`
+	padding: 24px 32px;
+
+	.game_title_wrap {
+		display: flex;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.game_info {
+		display: flex;
+		justify-content: end;
+		align-items: flex-end;
+		margin-bottom: 8px;
+		.team_count {
+			display: flex;
+			align-items: center;
+			margin-right: 16px;
+			color: var(--strong-color);
+			span {
+				margin-right: 8px;
+			}
+		}
+
+		span {
+			display: block;
+			width: 6px;
+			height: 6px;
+			margin-right: 6px;
+			border-radius: 6px;
+			background: var(--primary-color);
+			font-size: 0;
+		}
+	}
+
+	.tags_wrap {
+		display: flex;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		padding: 24px;
+	}
 `;
 const ImgWrap = styled.div`
-  width: 80px;
-  height: 80px;
-  overflow: hidden;
-  border-radius: 100%;
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
-const Tag = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4px 12px;
-  margin-right: 6px;
-  height: 32px;
-  color: var(--white);
-  background: var(--black);
-  border: 1px solid var(--grey);
-  border-radius: 30px;
-  cursor: pointer;
-`;
-const MatchingCard = ({ data }) => {
-  return (
-    <Card className="card">
-      <Space>
-        <ImgWrap>
-          {data.game && (
-            <img src={matchGame(data.game).image} alt="게임아이콘" />
-          )}
-        </ImgWrap>
+	flex: none;
+	width: 80px;
+	height: 80px;
+	margin-right: 16px;
+	overflow: hidden;
+	border-radius: 100%;
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 
-        <Title>
-          <div className="game_title">{data.title}</div>
-          <div>{data.nickname}</div>
-        </Title>
-      </Space>
-      <Space className="game_info">
-        <div className="team_count">
-          <span></span>
-          {data.team}명
-        </div>
-        <div>{displayedAt(data.createdAt)}</div>
-      </Space>
-      <Space>
-        {data.tags.map((el, idx) => (
-          <Tag key={idx}>{el}</Tag>
-        ))}
-      </Space>
-    </Card>
-  );
+	@media (max-width: ${MOBILE_POINT}) {
+		width: 56px;
+		height: 56px;
+	}
+`;
+const Title = styled.div`
+	width: calc(100% - 96px);
+
+	.game_title {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		color: var(--white);
+		font-size: var(--font-head3-size);
+		margin-bottom: 5px;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		.game_title {
+			font-size: ;
+		}
+	}
+`;
+
+const Tag = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 6px 12px;
+	margin-right: 6px;
+	line-height: 20px;
+	background: var(--black);
+	border: 1px solid var(--grey);
+	border-radius: 30px;
+	color: var(--white);
+	font-size: var(--font-caption-size);
+	cursor: pointer;
+`;
+
+const MatchingCard = ({ data }) => {
+	return (
+		<Card className="card">
+			<div className="game_title_wrap">
+				<ImgWrap>
+					{data.game && (
+						<img src={matchGame(data.game).image} alt="게임아이콘" />
+					)}
+				</ImgWrap>
+				<Title>
+					<div className="game_title">{data.title}</div>
+					<div>{data.nickname}</div>
+				</Title>
+			</div>
+			<div className="game_info">
+				<div className="team_count">
+					<span></span>
+					{data.team}명
+				</div>
+				<div>{displayedAt(data.createdAt)}</div>
+			</div>
+			<div className="tags_wrap">
+				{data.tags.map((el, idx) => (
+					<Tag key={idx}>{el}</Tag>
+				))}
+			</div>
+		</Card>
+	);
 };
 export default MatchingCard;

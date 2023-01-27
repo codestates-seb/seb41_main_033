@@ -9,12 +9,17 @@ import { API_URL } from '../data/apiUrl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfo } from '../redux/slice/userInfo';
+import { MOBILE_POINT } from '../data/breakpoint';
+import Popup from '../components/Popup';
 
 const ContentWrap = styled.div`
   margin: 24px 0;
   label {
     font-size: var(--font-body1-size);
     margin-bottom: 8px;
+  }
+  .error_caption {
+    padding: 0 16px;
   }
 `;
 
@@ -52,6 +57,7 @@ const ProfileWrap = styled.div`
       flex: none;
       display: flex;
       align-items: center;
+      justify-content: center;
       padding: 8px 24px;
       margin: 0;
       background: var(--bg-color);
@@ -62,6 +68,20 @@ const ProfileWrap = styled.div`
         width: 24px;
         height: 24px;
         margin-right: 6px;
+      }
+    }
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 100%;
+    .custom_input_wrap {
+      flex-direction: column;
+      .custom_input {
+        width: 100%;
+        margin: 0 0 12px 0;
+      }
+      .custom_btn {
+        width: 100%;
       }
     }
   }
@@ -122,11 +142,13 @@ const BlockWrap = styled.div`
 
 const ProfileEdit = () => {
   const { userid } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
   const [nickname, setNickname] = useState('');
   const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
   const [file, setFile] = useState('');
   const [checkedGame, setCheckedGame] = useState([]);
   const [bio, setBio] = useState('');
+  const [isError, setIsError] = useState({ nickname: false });
   const loginInfo = useSelector((state) => state.islogin.login);
   const userInform = useSelector((state) => state.userInfo.userInfo);
   const navigate = useNavigate();
@@ -134,6 +156,12 @@ const ProfileEdit = () => {
 
   const handleNickname = (e) => {
     setNickname(e.target.value);
+    if (
+      !e.target.value ||
+      !/(?=.*\d)|(?=.*[a-zA-Z])|(?=.*[가-힣]).{2,8}/.test(e.target.value)
+    ) {
+      setIsError({ ...isError, nickname: true });
+    } else setIsError({ ...isError, nickname: false });
   };
 
   const handleOnChange = (e) => {
@@ -159,9 +187,17 @@ const ProfileEdit = () => {
 
   const handleBio = (e) => {
     setBio(e.target.value);
+    if (e.target.value.length > 500) {
+      setIsError({ ...isError, introduction: true });
+    } else setIsError({ ...isError, introduction: false });
   };
 
   const handlePatch = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handlePatchSubmit = () => {
     const formData = new FormData();
     const data = {
       nickname,
@@ -187,6 +223,8 @@ const ProfileEdit = () => {
         },
       })
       .then((res) => {
+        setIsOpen((prev) => !prev);
+        document.body.style.overflow = 'unset';
         dispatch(userInfo(res.data.data));
         navigate(`/profile/${userid}`, { replace: true });
       });
@@ -202,7 +240,7 @@ const ProfileEdit = () => {
         setBio(res.data.data.introduction);
       });
     setCheckedGame(userInform.games.map((game) => game.korTitle));
-  }, []);
+  }, [loginInfo?.accessToken, userInform.games, userid]);
 
   if (userInform) {
     return (
@@ -219,11 +257,17 @@ const ProfileEdit = () => {
           <NicknameWrap>
             <label htmlFor="nickname">닉네임 수정</label>
             <InputWrap
+              className={isError.nickname ? 'error' : null}
               type="text"
               name="nickname"
               value={nickname || ''}
               onChange={handleNickname}
             />
+            {isError.nickname ? (
+              <div className="error_caption">
+                닉네임은 2~8자의 영문, 한글, 숫자만 가능합니다.
+              </div>
+            ) : null}
           </NicknameWrap>
           <ProfileWrap>
             <div className="custom_label">프로필 이미지 수정</div>
@@ -272,11 +316,17 @@ const ProfileEdit = () => {
           <BioWrap>
             <label htmlFor="bio">자기소개 수정</label>
             <textarea
+              className={isError.introduction ? 'error' : null}
               id="bio"
               value={bio || ''}
               placeholder="내용을 입력하세요"
               onChange={handleBio}
             />
+            {isError.nickname ? (
+              <div className="error_caption">
+                자기소개는 500자 이하만 가능합니다.
+              </div>
+            ) : null}
           </BioWrap>
           <BlockWrap>
             <label>차단한 유저 편집</label>
@@ -288,6 +338,13 @@ const ProfileEdit = () => {
             </button>
           </BlockWrap>
         </ContentWrap>
+        <Popup
+          isOpen={isOpen}
+          title="프로필 수정"
+          content="프로필 수정이 완료되었습니다."
+          button1="확인"
+          handleBtn1={handlePatchSubmit}
+        />
       </PostPatch>
     );
   } else {

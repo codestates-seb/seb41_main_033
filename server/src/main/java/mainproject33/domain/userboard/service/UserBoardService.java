@@ -76,8 +76,9 @@ public class UserBoardService
 
         //멤버가 있을 경우 들
         List<Long> blackList = getBlackList(user.getId());
+        List<Long> blockerList = getBlackList(findBoard.getMember().getId());
 
-        if(blackList.contains(findBoard.getMember().getId()))
+        if(blackList.contains(findBoard.getMember().getId()) || blockerList.contains(user.getId()))
             throw new BusinessLogicException(ExceptionMessage.USER_BOARD_NOT_FOUND);
 
         return findBoard;
@@ -104,20 +105,19 @@ public class UserBoardService
         }
 
         //로그인 한 유저 일 경우
-
-        List<Long> blockList = getBlackList(user.getId());
-
+        List<Long> MyblackList = getBlackList(user.getId());   //내가 블랙한 사람의 리스트
+        List<Long> blockerList = getBlockerList(user.getId()); //나를 블랙한 사람의 리스트
         if(keyword == null)
         {
             List<UserBoard> boards = userBoardRepository.findAll();
-            List<UserBoard> filteredUserBoards = filterBlackList(blockList, boards);
+            List<UserBoard> filteredUserBoards = filterBlackList(MyblackList, boards, blockerList);
 
             return getPagedBoard(filteredUserBoards, pageable);
         }
 
         List<UserBoard> boards = userBoardRepository.findByKeyword(keyword);
 
-        List<UserBoard> filteredUserBoards = filterBlackList(blockList, boards);
+        List<UserBoard> filteredUserBoards = filterBlackList(MyblackList, boards, blockerList);
 
         Page<UserBoard> pagedBoard = getPagedBoard(filteredUserBoards, pageable);
 
@@ -179,6 +179,11 @@ public class UserBoardService
         return blockList;
     }
 
+    private List<Long> getBlockerList(Long blockedId)
+    {
+        return blockRepository.findBlockerIdByBlockedId(blockedId);
+    }
+
     private Page<UserBoard> getPagedBoard(List<UserBoard> boards, Pageable pageable)
     {
         int start = (int)pageable.getOffset();
@@ -188,10 +193,11 @@ public class UserBoardService
         return page;
     }
 
-    private List<UserBoard> filterBlackList(List<Long> blockList, List<UserBoard> boards)
+    private List<UserBoard> filterBlackList(List<Long> MyblackList, List<UserBoard> boards, List<Long> blockerList)
     {
         return boards.stream()
-                .filter(userBoard -> !blockList.contains(userBoard.getMember().getId()))
+                .filter(userBoard -> !MyblackList.contains(userBoard.getMember().getId()))
+                .filter(userBoard -> !blockerList.contains(userBoard.getMember().getId()))
                 .collect(Collectors.toList());
     }
 }

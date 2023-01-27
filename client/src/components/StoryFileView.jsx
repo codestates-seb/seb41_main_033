@@ -15,11 +15,22 @@ const ImgArea = styled.div`
     ${(props) => (props.size === "big" ? "" : "height: 100%;")}
 		${(props) => (props.size === "big" ? "" : "object-fit: cover;")}
 		${(props) => (props.size === "big" ? "max-width:100%;" : "")}
+<<<<<<< HEAD
   }
 
   @media (max-width: ${MOBILE_POINT}) {
     width: 100%;
   }
+=======
+		display: block;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		width: 100%;
+		height: auto;
+		margin-top: 16px;
+	}
+>>>>>>> 10b2ebeb156775d921871dedb31d6dafc5c9dd36
 `;
 
 const VideoArea = styled.div`
@@ -36,9 +47,16 @@ const VideoArea = styled.div`
     height: 100%;
   }
 
+<<<<<<< HEAD
   @media (max-width: ${MOBILE_POINT}) {
     width: 100%;
   }
+=======
+	@media (max-width: ${MOBILE_POINT}) {
+		width: 100%;
+		margin-top: 16px;
+	}
+>>>>>>> 10b2ebeb156775d921871dedb31d6dafc5c9dd36
 `;
 
 const StoryFileView = ({ size, fileName, contentType }) => {

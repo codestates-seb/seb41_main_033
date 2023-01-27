@@ -11,6 +11,7 @@ import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "./Popup";
 
 const StoryWrap = styled.div`
+<<<<<<< HEAD
   cursor: pointer;
   .storyMain {
     display: flex;
@@ -24,115 +25,130 @@ const StoryWrap = styled.div`
       margin-top: 16px;
     }
   }
+=======
+	cursor: pointer;
+	.storyMain {
+		display: flex;
+	}
+	@media (max-width: ${MOBILE_POINT}) {
+		.storyMain {
+			flex-direction: column;
+		}
+	}
+>>>>>>> 10b2ebeb156775d921871dedb31d6dafc5c9dd36
 `;
 
 const TextArea = styled.div`
-  flex: 1;
-  margin-right: 32px;
+	flex: 1;
+	margin-right: 32px;
 
-  .content {
-    font-size: var(--font-body2-size);
-  }
+	.content {
+		font-size: var(--font-body2-size);
+	}
 `;
 
 const InfoWrap = styled.ul`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
 
-  li {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    margin-top: 32px;
-    margin-right: 16px;
-    border-radius: 100px;
-    background: var(--grey);
-    color: var(--strong-color);
-    font-size: var(--font-body2-size);
+	li {
+		display: flex;
+		align-items: center;
+		padding: 10px 16px;
+		margin-top: 32px;
+		margin-right: 16px;
+		border-radius: 100px;
+		background: var(--grey);
+		color: var(--strong-color);
+		font-size: var(--font-body2-size);
 
-    svg {
-      width: 16px;
-      height: 16px;
-      margin-right: 8px;
-    }
-  }
-  li:last-child {
-    margin-right: 0;
-  }
+		svg {
+			width: 16px;
+			height: 16px;
+			margin-right: 8px;
+		}
+	}
+	li:last-child {
+		margin-right: 0;
+	}
 `;
 
 const StorySingle = ({ data }) => {
-  const navigate = useNavigate();
-  const loginInfo = useSelector((state) => state.islogin.login);
-  const [isOpen, setIsOpen] = useState(false);
+	const navigate = useNavigate();
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const [isOpen, setIsOpen] = useState(false);
 
-  const handleLogin = () => {
-    navigate(`/login`);
-  };
+	const handleLogin = () => {
+		navigate(`/login`);
+	};
 
-  const handleSignup = () => {
-    navigate(`/signup`);
-  };
+	const handleSignup = () => {
+		navigate(`/signup`);
+	};
 
-  const handleNaviOnClick = (e, memberId, boardId) => {
-    if (loginInfo?.isLogin) {
-      navigate(`/story/${memberId}/${boardId}`);
-    } else {
-      setIsOpen((prev) => !prev);
-    }
-  };
+	const handleNaviOnClick = (e, memberId, boardId) => {
+		if (loginInfo?.isLogin) {
+			navigate(`/story/${memberId}/${boardId}`);
+		} else {
+			setIsOpen((prev) => !prev);
+			document.body.style.overflow = "hidden";
+		}
+	};
 
-  const handleProfileClick = (e, memberId) => {
-    e.stopPropagation();
-    navigate(`/profile/${memberId}`);
-  };
+	const handleProfileClick = (e, memberId) => {
+		e.stopPropagation();
+		navigate(`/profile/${memberId}`);
+	};
 
-  return (
-    <StoryWrap
-      className="card md"
-      onClick={(e) => handleNaviOnClick(e, data.memberId, data.id)}
-    >
-      <div className="storyMain">
-        <TextArea>
-          <div onClick={(e) => handleProfileClick(e, data.memberId)} title="">
-            <SinglePofileWrap
-              imgSrc={data.profileImage}
-              name={data.nickname}
-              subInfo={displayedAt(data.createdAt)}
-            />
-          </div>
-          <div className="content">{data.content}</div>
-        </TextArea>
-        <StoryFileView
-          fileName={data.uploadFileName}
-          contentType={data.contentType}
-        />
-      </div>
-      <InfoWrap>
-        {data.likeCount ? (
-          <li>
-            <BoardLikeIcon />
-            <span>{data.likeCount}</span>
-          </li>
-        ) : null}
-        {data.commentCount ? (
-          <li>
-            <BoardCommentIcon />
-            <span>{data.commentCount}</span>
-          </li>
-        ) : null}
-      </InfoWrap>
-      <Popup
-        isOpen={isOpen}
-        title="스토리 상세보기"
-        content="스토리는 상세보기는 로그인 후 가능합니다."
-        button1="로그인"
-        button2="회원가입"
-        handleBtn1={handleLogin}
-        handleBtn2={handleSignup}
-      />
-    </StoryWrap>
-  );
+	return (
+		<>
+			<StoryWrap
+				className="card md"
+				onClick={(e) => handleNaviOnClick(e, data.memberId, data.id)}
+			>
+				<div className="storyMain">
+					<TextArea>
+						<div onClick={(e) => handleProfileClick(e, data.memberId)} title="">
+							<SinglePofileWrap
+								imgSrc={data.profileImage}
+								name={data.nickname}
+								subInfo={displayedAt(data.createdAt)}
+							/>
+						</div>
+						<div className="content">{data.content}</div>
+					</TextArea>
+					<StoryFileView
+						fileName={data.uploadFileName}
+						contentType={data.contentType}
+					/>
+				</div>
+				<InfoWrap>
+					{data.likeCount ? (
+						<li>
+							<BoardLikeIcon />
+							<span>{data.likeCount}</span>
+						</li>
+					) : null}
+					{data.commentCount ? (
+						<li>
+							<BoardCommentIcon />
+							<span>{data.commentCount}</span>
+						</li>
+					) : null}
+				</InfoWrap>
+			</StoryWrap>
+			<Popup
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				title="스토리 상세보기"
+				content="스토리는 상세보기는 로그인 후 가능합니다."
+				button1="로그인"
+				button2="회원가입"
+				handleBtn1={handleLogin}
+				handleBtn2={handleSignup}
+			/>
+		</>
+	);
 };
 export default StorySingle;

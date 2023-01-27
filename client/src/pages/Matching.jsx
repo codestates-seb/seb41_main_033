@@ -1,17 +1,16 @@
-import styled from 'styled-components';
-import MatchingCard from '../components/MatchingCard';
-import SearchBar from '../components/SearchBar';
-import WriteFloatButton from '../components/WriteFloatButton';
-import MatchPagination from '../components/MatchPagination';
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { API_URL } from '../data/apiUrl';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import NoSearch from '../components/NoSearch';
-import Loading from '../components/Loading';
-import { MOBILE_POINT } from '../data/breakpoint';
-import Popup from '../components/Popup';
+import styled from "styled-components";
+import MatchingCard from "../components/MatchingCard";
+import SearchBar from "../components/SearchBar";
+import WriteFloatButton from "../components/WriteFloatButton";
+import MatchPagination from "../components/MatchPagination";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import NoSearch from "../components/NoSearch";
+import Loading from "../components/Loading";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from "../components/Popup";
 
 const Wrap = styled.div``;
 
@@ -50,39 +49,42 @@ const Matching = () => {
   const [loading, setLoding] = useState(true);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
 
   const matchingBtn = () => {
     if (loginInfo?.isLogin) {
-      navigate('/match/matchwrite');
+      navigate("/match/matchwrite");
     } else {
       setIsOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 
   const handleLogin = () => {
     navigate(`/login`);
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   const handleSignup = () => {
     navigate(`/signup`);
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   useEffect(() => {
     if (loginInfo?.isLogin) {
       axios
-        .get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {
-          headers: {
-            Authorization: `Bearer ${loginInfo.accessToken}`,
-          },
-        })
+        .get(
+          `${process.env.REACT_APP_API_URL}/api/matches?page=${page}&keyword=${keyword}`,
+          {
+            headers: {
+              Authorization: `Bearer ${loginInfo.accessToken}`,
+            },
+          }
+        )
         .then((res) => {
           setMatchinglist(res.data.data);
           setTotal(res.data.pageInfo.totalPages);
@@ -91,7 +93,10 @@ const Matching = () => {
         .catch((err) => console.log(err));
     } else {
       axios
-        .get(`${API_URL}/api/matches?page=${page}&keyword=${keyword}`, {})
+        .get(
+          `${process.env.REACT_APP_API_URL}/api/matches?page=${page}&keyword=${keyword}`,
+          {}
+        )
         .then((res) => {
           setMatchinglist(res.data.data);
           setTotal(res.data.pageInfo.totalPages);

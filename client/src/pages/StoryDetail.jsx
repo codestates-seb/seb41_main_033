@@ -11,6 +11,7 @@ import SinglePofileWrap from "../components/SingleProfileWrap";
 import StoryComments from "../components/StoryComments";
 import StoryBtn from "../components/StoryBtn";
 import StoryFileView from "./../components/StoryFileView";
+import Popup from "../components/Popup";
 
 const Title = styled.h4`
 	margin-top: 24px;
@@ -88,6 +89,9 @@ const BtnWrap = styled.div`
 	button {
 		margin-right: 12px;
 	}
+	button:last-child {
+		margin-right: 0;
+	}
 `;
 
 const CommentsCountTag = styled.div`
@@ -114,9 +118,9 @@ const StoryDetail = () => {
 	const loginInfo = useSelector((state) => state.islogin.login);
 	const accessToken = loginInfo.accessToken;
 	const memberId = loginInfo.memberId;
+	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 	const [isMe, setIsMe] = useState(false);
 	const [storyData, setStoryData] = useState({});
-	const [commentsList, setCommentsList] = useState([]);
 	const [storyLike, setStoryLike] = useState({
 		status: false,
 		likeCount: 0,
@@ -176,6 +180,16 @@ const StoryDetail = () => {
 	};
 
 	//삭제
+	const handleDelete = () => {
+		setIsDeleteOpen((prev) => !prev);
+		document.body.style.overflow = "hidden";
+	};
+
+	const handleCancel = () => {
+		setIsDeleteOpen((prev) => !prev);
+		document.body.style.overflow = "unset";
+	};
+
 	const handleStoryDeleteClick = () => {
 		axios
 			.delete(`${API_URL}/api/boards/${params.boardid}`, {
@@ -184,13 +198,11 @@ const StoryDetail = () => {
 				},
 			})
 			.then((res) => {
-				//삭세하시겠습니까? 팝업 호출 필요
-				alert("게시물이 삭제됩니다.");
 				navigate("/story");
+				document.body.style.overflow = "unset";
 			})
 			.catch((err) => {
-				console.log(err);
-				alert("게시물 삭제에 실패하였습니다.");
+				alert("스토리 삭제에 실패했습니다.");
 			});
 	};
 
@@ -245,16 +257,22 @@ const StoryDetail = () => {
 							type="edit"
 							clickHandler={handleStoryEditClick}
 						/>
-						<StoryBtn
-							size="big"
-							type="delete"
-							clickHandler={handleStoryDeleteClick}
-						/>
+						<StoryBtn size="big" type="delete" clickHandler={handleDelete} />
 					</BtnWrap>
 				) : null}
 			</div>
 			<Title>댓글</Title>
 			<StoryComments boardId={params.boardid} />
+			<Popup
+				isOpen={isDeleteOpen}
+				setIsOpen={setIsDeleteOpen}
+				title="스토리 삭제"
+				content="스토리를 삭제하시겠습니까?"
+				button1="삭제하기"
+				button2="취소"
+				handleBtn1={handleStoryDeleteClick}
+				handleBtn2={handleCancel}
+			/>
 		</>
 	);
 };

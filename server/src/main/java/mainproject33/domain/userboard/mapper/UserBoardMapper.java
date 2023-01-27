@@ -134,7 +134,8 @@ public class UserBoardMapper
     {
         if(member != null)
         {
-            List<Comment> comments = commentService.filterComments(commentService.getBlockList(member.getId()), entity.getComments());
+            List<Comment> comments = commentService.filterComments(commentService.getBlockList(member.getId()),
+                    entity.getComments(), commentService.getBlockerList(member.getId()));
             return commentMapper.commentToResponses(comments, member);
         }
 

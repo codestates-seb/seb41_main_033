@@ -57,9 +57,10 @@ public class MatchBoardService {
         if (user == null) { // 비회원
             return matchBoard;
         } else { // 회원
-            List<Long> blockedIdList = blockRepository.findBlockedIdByBlockerId(user.getId());
+            List<Long> blockedIdList = blockRepository.findBlockedIdByBlockerId(user.getId()); //내가 차단한 사람 블랙리스트
+            List<Long> blockerList = blockRepository.findBlockedIdByBlockerId(matchBoard.getMember().getId()); //나를 차단한 사람의 블랙리스트
 
-            boolean checkBlock = blockedIdList.contains(matchBoard.getMember().getId()); // 유저가 해당 게시물을 작성한 회원의 block 여부
+            boolean checkBlock = blockedIdList.contains(matchBoard.getMember().getId()) || blockerList.contains(user.getId()); // 유저가 해당 게시물을 작성한 회원의 block 여부
 
             if (!checkBlock) return matchBoard;
             else throw new BusinessLogicException(ExceptionMessage.MATCH_BOARD_BLOCKED);
@@ -75,9 +76,10 @@ public class MatchBoardService {
             else list = matchBoardRepository.findByKeyword(keyword);
         } else { // 회원
             List<Long> blockedIdList = blockRepository.findBlockedIdByBlockerId(user.getId());
+            List<Long> blockerIdList = blockRepository.findBlockerIdByBlockedId(user.getId());
 
-            if (keyword == null) list = filterMatchBoards(blockedIdList, matchBoardRepository.findAll());
-            else list = filterMatchBoards(blockedIdList, matchBoardRepository.findByKeyword(keyword));
+            if (keyword == null) list = filterMatchBoards(blockedIdList, matchBoardRepository.findAll(), blockerIdList);
+            else list = filterMatchBoards(blockedIdList, matchBoardRepository.findByKeyword(keyword), blockerIdList);
         }
         return toPageImpl(pageable, list);
     }
@@ -102,9 +104,10 @@ public class MatchBoardService {
                 new BusinessLogicException(ExceptionMessage.MATCH_BOARD_NOT_FOUND));
     }
 
-    private List<MatchBoard> filterMatchBoards(List<Long> blockedIdList, List<MatchBoard> list) {
+    private List<MatchBoard> filterMatchBoards(List<Long> blockedIdList, List<MatchBoard> list, List<Long> blockerList) {
         return list.stream()
                 .filter(matchBoard -> !blockedIdList.contains(matchBoard.getMember().getId()))
+                .filter(matchBoard -> !blockerList.contains(matchBoard.getMember().getId()))
                 .collect(Collectors.toList());
     }
 

@@ -1,26 +1,50 @@
-import styled from "styled-components";
-import displayedAt from "../util/displayedAt";
-import { useState, useEffect } from "react";
-import { API_URL } from "../data/apiUrl";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import matchGame from "../util/matchGame";
+import styled from 'styled-components';
+import displayedAt from '../util/displayedAt';
+import { useState, useEffect } from 'react';
+import { API_URL } from '../data/apiUrl';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import matchGame from '../util/matchGame';
+import { MOBILE_POINT } from '../data/breakpoint';
+import Popup from '../components/Popup';
 
 const Detail = styled.div`
   width: var(--col-9);
   margin-right: 32px;
-  div :nth-child(1) {
-    > img {
-      align-content: flex-end;
+
+  .title_wrap {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .info_wrap {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    > div {
+      &:nth-child(1) {
+        margin-right: 16px;
+      }
+      span {
+        margin-right: 6px;
+      }
+      strong {
+        color: var(--strong-color);
+      }
     }
   }
-  .description {
+  .tag_wrap {
     display: flex;
-    flex-direction: column;
-    > ::-webkit-scrollbar {
-      display: none;
-      width: 0 !important;
+    margin-bottom: 16px;
+  }
+
+  .description {
+    margin-bottom: 48px;
+    .content {
+      margin-top: 12px;
+      color: var(--strong-color);
+      word-break: break-all;
     }
   }
   button,
@@ -28,12 +52,23 @@ const Detail = styled.div`
     width: 280px;
     margin-right: 16px;
   }
-`;
-const Div = styled.div`
-  display: flex;
-  margin-bottom: 16px;
+
+  .btn_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button:last-child {
+      margin-right: 0;
+    }
+  }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 100%;
+  }
 `;
 const ImgWrap = styled.div`
+  flex: none;
   width: 80px;
   height: 80px;
   overflow: hidden;
@@ -43,20 +78,22 @@ const ImgWrap = styled.div`
     height: 100%;
     object-fit: cover;
   }
-`;
-const Span = styled.span`
-  display: block;
-  margin: 0 8px;
-  color: var(--white);
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 56px;
+    height: 56px;
+  }
 `;
 const Info = styled.div`
   width: 100%;
   .title {
+    margin-bottom: 6px;
     font-size: var(--font-head2-size);
     color: var(--white);
-    line-height: 150%;
+    line-height: var(--line-height-lg);
   }
   .game {
+    line-height: var(--line-height-lg);
     color: var(--yellow);
   }
 `;
@@ -84,24 +121,19 @@ const Tag = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4px 12px;
+  padding: 6px 12px;
   margin-right: 6px;
-  height: 32px;
+  line-height: 20px;
+  font-size: var(--font-caption-size);
   color: var(--white);
   background: var(--black);
   border: 1px solid var(--grey);
   border-radius: 30px;
   cursor: pointer;
 `;
-const Description = styled.div`
-  margin-bottom: 32px;
-  margin-top: 12px;
-  color: var(--white);
-  overflow: scroll;
-  -ms-overflow-style: none;
-  white-space: pre-wrap;
-`;
+
 const MatchDetails = ({ data, boardId }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [same, setSame] = useState(false);
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
@@ -110,26 +142,35 @@ const MatchDetails = ({ data, boardId }) => {
     if (data.memberId === loginInfo?.memberId) {
       setSame(true);
     }
-  }, []);
+  }, [data.memberId, loginInfo?.memberId]);
 
   const deleteBtn = () => {
-    if (window.confirm("게시물을 삭제 하시겠습니까?")) {
-      axios
-        .delete(`${API_URL}/api/matches/${boardId}`, {
-          headers: {
-            Authorization: `Bearer ${loginInfo.accessToken}`,
-          },
-        })
-        .then((res) => {
-          alert("게시물이 삭제 되었습니다");
-          navigate("/match");
-        });
-    }
+    axios
+      .delete(`${API_URL}/api/matches/${boardId}`, {
+        headers: {
+          Authorization: `Bearer ${loginInfo.accessToken}`,
+        },
+      })
+      .then((res) => {
+        setIsOpen((prev) => !prev);
+        navigate('/match');
+        document.body.style.overflow = 'unset';
+      });
+  };
+
+  const handleDelete = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleCancel = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   return (
     <Detail className="card big">
-      <Div>
+      <div className="title_wrap">
         <Info>
           <div className="title">{data.title}</div>
           <div className="game">{data.game.korTitle}</div>
@@ -137,33 +178,46 @@ const MatchDetails = ({ data, boardId }) => {
         <ImgWrap>
           <img src={matchGame(data.game).image} alt="게임아이콘" />
         </ImgWrap>
-      </Div>
-      <Div>
-        <span>팀원수</span>
-        <Span>{data?.team} 명</Span>
-        <span>매칭생성시간</span>
-        <Span>{displayedAt(data?.createdAt)}</Span>
-      </Div>
-      <Div>
+      </div>
+      <div className="info_wrap">
+        <div>
+          <span>팀원수</span>
+          <strong>{data?.team} 명</strong>
+        </div>
+        <div>
+          <span>매칭생성시간</span>
+          <strong>{displayedAt(data?.createdAt)}</strong>
+        </div>
+      </div>
+      <div className="tag_wrap">
         {data?.tags.map((el, idx) => (
           <Tag key={idx}>{el}</Tag>
         ))}
-      </Div>
-      <Div className="description">
+      </div>
+      <div className="description">
         <div>상세설명</div>
-        <Description>{data?.content}</Description>
-      </Div>
+        <div className="content">{data?.content}</div>
+      </div>
       {same && (
-        <Div>
+        <div className="btn_wrap">
           <EmLink className="em" to={`/match/${boardId}/edit`}>
             수정하기
           </EmLink>
-
-          <button className="normal" onClick={deleteBtn}>
+          <button className="normal" onClick={handleDelete}>
             삭제하기
           </button>
-        </Div>
+        </div>
       )}
+      <Popup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title="매칭하기 삭제"
+        content="매칭하기를 삭제하시겠습니까?"
+        button1="삭제하기"
+        button2="취소"
+        handleBtn1={deleteBtn}
+        handleBtn2={handleCancel}
+      />
     </Detail>
   );
 };

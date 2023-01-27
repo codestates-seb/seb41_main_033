@@ -8,91 +8,102 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "../data/apiUrl";
 import { useSelector } from "react-redux";
 import validity from "../util/validity";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from '../components/Popup';
+
 const Label = styled.label`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 150%;
-  letter-spacing: -0.023em;
-  margin: 16px 0px;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 150%;
+	letter-spacing: -0.023em;
+	margin: 16px 0px;
 `;
 
 const TagsInput = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  background: var(--darkgrey2);
-  border: 1px solid var(--grey);
-  border-radius: 8px;
-  padding: 8px;
-  font-size: 14px;
-  color: var(--white);
-  margin: 8px 0px;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	background: var(--darkgrey2);
+	border: 1px solid var(--grey);
+	border-radius: 8px;
+	padding: 8px;
+	font-size: 14px;
+	color: var(--white);
+	margin: 8px 0px;
 
-  > ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+	> ul {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: center;
 
-    .tag {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 4px 12px;
-      margin-right: 6px;
-      height: 32px;
-      background: var(--black);
-      border: 1px solid var(--grey);
-      border-radius: 30px;
-      .tag_title {
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        letter-spacing: 0.1px;
-        margin-right: 8px;
-      }
-      .tag_close {
-        cursor: pointer;
-        color: var(--lightgrey);
-      }
-    }
-  }
-  input {
-    display: inline-flex;
-    border: none;
-    outline: none;
-    background: none;
-    width: auto;
-    color: var(--font-color);
-    padding: 6px 0;
-    &:focus {
-      outline: transparent;
-    }
-  }
+		.tag {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 4px 12px;
+			margin-right: 6px;
+			height: 32px;
+			background: var(--black);
+			border: 1px solid var(--grey);
+			border-radius: 30px;
+			.tag_title {
+				font-weight: 500;
+				font-size: 12px;
+				line-height: 20px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				letter-spacing: 0.1px;
+				margin-right: 8px;
+			}
+			.tag_close {
+				cursor: pointer;
+				color: var(--lightgrey);
+			}
+		}
+	}
+	input {
+		display: inline-flex;
+		border: none;
+		outline: none;
+		background: none;
+		width: auto;
+		color: var(--font-color);
+		padding: 6px;
+		&:focus {
+			outline: transparent;
+		}
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		flex-direction: column;
+		.tag {
+			margin-bottom: 6px;
+		}
+	}
 `;
 const TextArea = styled.textarea`
-  background-color: var(--input-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  width: 100%;
-  min-height: 112px;
-  padding: 16px;
-  color: var(--strong-color);
-  resize: none;
-  white-space: pre-wrap;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+	background-color: var(--input-color);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius-sm);
+	width: 100%;
+	min-height: 112px;
+	padding: 16px;
+	color: var(--strong-color);
+	resize: none;
+	white-space: pre-wrap;
+	::-webkit-scrollbar {
+		display: none;
+	}
 `;
 
 const MatchingEdit = () => {
   const gameInfo = useSelector((state) => state.games.gameInfo);
   const loginInfo = useSelector((state) => state.islogin.login);
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   const [info, setInfo] = useState({
     title: gameInfo?.title,
     team: gameInfo?.team,
@@ -101,24 +112,24 @@ const MatchingEdit = () => {
   const [tags, setTags] = useState(gameInfo?.tags);
   const [game, setGame] = useState(gameInfo?.game.korTitle);
 
-  const removeTags = (index) => {
-    const newTag = tags.filter((_, idx) => idx !== index);
-    setTags(newTag);
-  };
+	const removeTags = (index) => {
+		const newTag = tags.filter((_, idx) => idx !== index);
+		setTags(newTag);
+	};
 
   const addTags = (event) => {
     const reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/ ]/gim;
-    const newTag = event.target.value.replace(reg, "").substring(0, 5);
+    const newTag = event.target.value.replace(reg, '').substring(0, 5);
     if (
       !tags.includes(newTag) &&
-      event.key === "Enter" &&
+      event.key === 'Enter' &&
       tags.length < 3 &&
       newTag.length > 0
     ) {
       setTags([...tags, `#${newTag}`]);
-      event.target.value = "";
+      event.target.value = '';
     } else if (tags.length >= 3) {
-      event.target.value = "";
+      event.target.value = '';
     }
   };
   const changeValue = (e) => {
@@ -128,6 +139,12 @@ const MatchingEdit = () => {
     });
   };
   const { title, team, content } = info;
+
+  const handlePatch = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
+
   const submitBtn = (e) => {
     e.preventDefault();
     const data = { title, game, team, tags, content };
@@ -142,13 +159,13 @@ const MatchingEdit = () => {
           },
         })
         .then(() => {
-          alert("게시물이 수정 되었습니다");
-          navigate("/match");
+          setIsOpen((prev) => !prev);
+          document.body.style.overflow = 'unset';
+          navigate('/match');
         })
         .catch((err) => console.log(err));
     }
   };
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <PostPatch
@@ -158,7 +175,7 @@ const MatchingEdit = () => {
       button1="작성완료"
       link={-1}
       button2="취소"
-      handleSubmit={submitBtn}
+      handleSubmit={handlePatch}
     >
       <div>
         <Label htmlFor="title">제목</Label>
@@ -226,6 +243,13 @@ const MatchingEdit = () => {
           minLength="5"
         />
       </div>
+      <Popup
+        isOpen={isOpen}
+        title="매칭하기 수정"
+        content="매칭하기 수정이 완료되었습니다."
+        button1="확인"
+        handleBtn1={submitBtn}
+      />
     </PostPatch>
   );
 };

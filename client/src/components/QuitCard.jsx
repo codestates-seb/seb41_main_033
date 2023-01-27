@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { quit } from '../redux/slice/loginstate';
+import { MOBILE_POINT } from '../data/breakpoint';
+import Popup from './Popup';
 
 const QuitWrap = styled.div`
   display: flex;
@@ -13,6 +15,10 @@ const QuitWrap = styled.div`
   align-items: center;
   width: var(--col-8);
   margin: 0 auto;
+
+  @media (max-width: ${MOBILE_POINT}) {
+    width: 100%;
+  }
 `;
 
 const ImgWrap = styled.div`
@@ -69,6 +75,14 @@ const ButtonWrap = styled.div`
       background-position: right center;
     }
   }
+
+  @media (max-width: ${MOBILE_POINT}) {
+    flex-direction: column;
+    button {
+      width: 100%;
+      margin: 0 0 16px 0;
+    }
+  }
 `;
 
 const QuitCard = () => {
@@ -76,6 +90,12 @@ const QuitCard = () => {
   const dispatch = useDispatch();
   const loginInfo = useSelector((state) => state.islogin.login);
   const [user, setUser] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
 
   const handleQuit = () => {
     axios
@@ -84,6 +104,8 @@ const QuitCard = () => {
       })
       .then(() => {
         localStorage.clear();
+        setIsOpen((prev) => !prev);
+        document.body.style.overflow = 'unset';
         dispatch(quit({ accessToken: null, memberId: null, isLogin: false }));
         navigate('/');
       });
@@ -95,7 +117,7 @@ const QuitCard = () => {
         headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
       })
       .then((res) => setUser(res.data.data));
-  });
+  }, [loginInfo?.memberId, loginInfo?.accessToken]);
 
   if (user) {
     return (
@@ -138,12 +160,19 @@ const QuitCard = () => {
           </p>
         </Content>
         <ButtonWrap>
-          <button className="warning" onClick={handleQuit}>
+          <button className="warning" onClick={handleClick}>
             그래도 탈퇴하기🧨
           </button>
           <button className="normal" onClick={() => navigate(-1)}>
             💖취소하기💖
           </button>
+          <Popup
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            content={`${user.nickname}님 때문에 우리 서비스는 망했습니다`}
+            button1="그래도 사랑해요"
+            handleBtn1={handleQuit}
+          />
         </ButtonWrap>
       </QuitWrap>
     );

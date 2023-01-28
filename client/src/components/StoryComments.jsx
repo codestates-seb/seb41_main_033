@@ -105,7 +105,6 @@ const StoryComments = ({ boardId }) => {
         }
       )
       .then((res) => {
-        alert("댓글을 삭제합니다.");
         let newData = commentsList.filter((el) => el.id !== commentsId);
         setCommentsList(newData);
       })

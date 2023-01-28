@@ -1,5 +1,7 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as Joy } from "../assets/readme.svg";
+import { teamData, pageData, theme } from "../data/readme";
 
 const Wrap = styled.div`
 	h2 {
@@ -91,6 +93,10 @@ const TeamSumUpSection = styled.section`
 			position: relative;
 			top: 0;
 			transition: all 0.3s;
+
+			a {
+				display: block;
+			}
 			.img_wrap {
 				display: block;
 				width: 80px;
@@ -98,6 +104,12 @@ const TeamSumUpSection = styled.section`
 				margin: 0 auto 32px auto;
 				background: #fff;
 				border-radius: 50%;
+				overflow: hidden;
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
 			}
 			.name {
 				text-align: left;
@@ -174,7 +186,7 @@ const WorkCard = styled.div`
 		overflow: hidden;
 		.img_wrap {
 			width: 100%;
-			height: 240px;
+			height: 220px;
 			background: ${(props) => props.theme.color1};
 			overflow: hidden;
 			text-align: center;
@@ -249,68 +261,77 @@ const PageView = styled.section`
 		margin-right: 24px;
 		.title {
 			font-size: var(--font-body1-size);
-			margin-bottom: 0;
+			margin-bottom: 24px;
 			padding: 24px 16px;
 			border-bottom: 1px solid var(--darkgrey3);
 		}
 		.pagelist {
+			padding-bottom: 24px;
 			li {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 				padding: 8px 16px;
 				font-size: var(--font-caption-size);
+
+				button {
+					border: 1px solid var(--darkgrey3);
+					border-radius: var(--border-radius-btn);
+					padding: 4px 12px;
+					font-size: var(--font-caption-size);
+					background: var(--black);
+				}
 			}
+		}
+		li.selected {
+			color: var(--strong-color);
 			button {
-				border: 1px solid var(--darkgrey3);
-				border-radius: var(--border-radius-btn);
-				padding: 6px 12px;
-				font-size: var(--font-caption-size);
-				width: 62px;
-				background: var(--black);
+				background: var(--white);
+				color: var(--darkgrey1);
 			}
 		}
 	}
 	.page_wrap {
 		flex: 7;
-		min-height: 400px;
+		padding: 16px;
 		background: var(--black);
 		border-radius: var(--border-raidus-md);
 		border: 1px solid var(--darkgrey3);
 	}
 `;
 
-const Readme = () => {
-	const name = [
-		"FE 김소라",
-		"FE 손수빈",
-		"FE 신나현",
-		"BE 신대경",
-		"BE 양건모",
-		"BE 조대희",
-	];
+const BtnTop = styled.button`
+	position: fixed;
+	bottom: 56px;
+	right: 56px;
+	width: 56px;
+	height: 56px;
+	padding: 0;
+	border: 1px solid var(--border-color);
+	background: var(--black);
+	border-radius: 16px;
+	font-size: var(--font-caption-size);
+	color: var(--white);
+	box-shadow: 0px 6px 10px 4px rgb(0 0 0 / 15%), 0px 2px 3px rgb(0 0 0 / 30%);
+`;
 
-	const theme = {
-		blue: {
-			color1: "#547de7",
-			color2: "#7dffb5",
-		},
-		red: {
-			color1: "#ff5855",
-			color2: "#f97c6a",
-		},
-		pink: {
-			color1: "#7b56ee",
-			color2: "#ff7ec1",
-		},
-		yellow: {
-			color1: "#ffbc2d",
-			color2: "#ffd145",
-		},
+const Readme = () => {
+	const [currentTab, setCurrentTab] = useState(0);
+
+	const handleTabClick = (idx) => {
+		setCurrentTab(idx);
 	};
+
+	const handleScrollTopClick = () => {
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	};
+
 	return (
 		<Wrap>
-			{/* 소개 문구 */}
+			{/* key visual 소개 문구 */}
 			<VisualSection>
 				<div className="card big visual">
 					<div className="text_wrap">
@@ -341,22 +362,6 @@ const Readme = () => {
 				</p>
 			</Banner>
 
-			{/* <MusicZone>
-				<div className="content_wrap">
-					<iframe
-						width="1280"
-						height="720"
-						src="https://www.youtube.com/embed/fag6IcPqWBQ"
-						title="[BGM] Neon Merge Defense Portfolio"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-					></iframe>
-				</div>
-				<div className="desc_wrap">
-					<h3>MUSIC</h3>
-					<p>이것은 BE의 다재다능 만능꾼 대경님이 직.접. 만든 음악입니다</p>
-				</div>
-			</MusicZone> */}
-
 			{/* 기술스택 */}
 			<SkillsStack>
 				<h2>기술스택</h2>
@@ -372,29 +377,22 @@ const Readme = () => {
 				<div className="card pagelist_wrap">
 					<h2 className="title">주요 페이지 뷰</h2>
 					<ul className="pagelist">
-						<li>
-							<span>로그인 페이지</span>
-							<button className="btn_view">보기</button>
-						</li>
-						<li>
-							<span>회원가입 페이지</span>
-							<button className="btn_view">보기</button>
-						</li>
-						<li>
-							<span>매칭하기 페이지</span>
-							<button className="btn_view">보기</button>
-						</li>
-						<li>
-							<span>스토리 페이지</span>
-							<button className="btn_view">보기</button>
-						</li>
-						<li>
-							<span>프로필 페이지</span>
-							<button className="btn_view">보기</button>
-						</li>
+						{pageData.map((el, idx) => {
+							return (
+								<li key={idx} className={idx === currentTab ? "selected" : ""}>
+									<span>{el.pageName}</span>
+									<button
+										className="btn_view"
+										onClick={() => handleTabClick(idx)}
+									>
+										보기
+									</button>
+								</li>
+							);
+						})}
 					</ul>
 				</div>
-				<div className="page_wrap"></div>
+				<div className="page_wrap">{pageData[currentTab].pageName}</div>
 			</PageView>
 
 			{/* 팀원 소개 및 개요 */}
@@ -404,11 +402,15 @@ const Readme = () => {
 					<span>맑게고인 33조</span>
 				</div>
 				<ul className="team_list">
-					{name.map((el, idx) => {
+					{teamData.map((el, idx) => {
 						return (
 							<li key={idx}>
-								<div className="img_wrap"></div>
-								<p className="name">{el}</p>
+								<a href={`#member${idx}`}>
+									<div className="img_wrap">
+										<img src={el.imgSrc_sm} />
+									</div>
+									<p className="name">{`${el.position} ${el.name}`}</p>
+								</a>
 							</li>
 						);
 					})}
@@ -420,152 +422,35 @@ const Readme = () => {
 				<h2>Our Work Log</h2>
 				<div className="card_wrap">
 					{/* 김소라 */}
-					<WorkCard theme={theme.blue}>
-						<div className="worklog_card card">
-							<div className="img_wrap">
-								<img src="/images/readme/card_예시.png" />
-							</div>
-							<div className="desc_wrap">
-								<h4 className="title">소감</h4>
-								<h3 className="name">FE 김소라</h3>
-								<p>
-									메인 프로젝트 시작전에는 남들에 비해 못해서 많은 불안감이
-									있었지만 팀원들이 너무 좋고 으쌰으쌰하는 분위기라 항상까지는
-									아니지만 즐겁게 작업하고 있습니다 😀 리덕스 툴킷을 쓰면서 아직
-									어려운 부분도 있지만 비동기가 아닌 상태관리에서는 잘쓰고
-									있습니다 간단한 CRUD 부분만 맡았지만 막상 구현해보니
-									생각하지도 못한 부분에서 에러가 났지만 소통하여 같이 해결해
-									나가고 백엔드 쪽에서 실시간으로 어떤 에러가 뜨는지 실시간으로
-									알려 주실 정도로 협업이 잘되고 이게 진정한 협업이 아닐까 생각
-									합니다 맑고 고인물 즐겁다✨
-								</p>
-							</div>
-						</div>
-						<div className="worklog_list_wrap card">
-							<h4 className="title">work log</h4>
-							<ul className="worklog_list">
-								<li>로그인 페이지 뷰 구현 및 유효성검사</li>
-								<li>매칭하기 페이지 뷰 구현 및 페이지네이션 구현</li>
-								<li>매칭하기 작성하기,수정하기 페이지 뷰 구현</li>
-								<li>검색하기 기능 구현</li>
-								<li>게임추천하기 드래그앤 드롭 구현및 사운드 추가</li>
-								<li>
-									redux toolkit을 이용해 상태 업데이트와 persist 미들웨어를
-									사용해 로컬스토리지에 저장
-								</li>
-							</ul>
-						</div>
-					</WorkCard>
-					<WorkCard theme={theme.pink}>
-						<div className="worklog_card card">
-							<div className="img_wrap">
-								<img src="/images/readme/card_예시.png" />
-							</div>
-							<div className="desc_wrap">
-								<h4 className="title">소감</h4>
-								<h3 className="name">FE 김소라</h3>
-								<p>
-									메인 프로젝트 시작전에는 남들에 비해 못해서 많은 불안감이
-									있었지만 팀원들이 너무 좋고 으쌰으쌰하는 분위기라 항상까지는
-									아니지만 즐겁게 작업하고 있습니다 😀 리덕스 툴킷을 쓰면서 아직
-									어려운 부분도 있지만 비동기가 아닌 상태관리에서는 잘쓰고
-									있습니다 간단한 CRUD 부분만 맡았지만 막상 구현해보니
-									생각하지도 못한 부분에서 에러가 났지만 소통하여 같이 해결해
-									나가고 백엔드 쪽에서 실시간으로 어떤 에러가 뜨는지 실시간으로
-									알려 주실 정도로 협업이 잘되고 이게 진정한 협업이 아닐까 생각
-									합니다 맑고 고인물 즐겁다✨
-								</p>
-							</div>
-						</div>
-						<div className="worklog_list_wrap card">
-							<h4 className="title">work log</h4>
-							<ul className="worklog_list">
-								<li>로그인 페이지 뷰 구현 및 유효성검사</li>
-								<li>매칭하기 페이지 뷰 구현 및 페이지네이션 구현</li>
-								<li>매칭하기 작성하기,수정하기 페이지 뷰 구현</li>
-								<li>검색하기 기능 구현</li>
-								<li>게임추천하기 드래그앤 드롭 구현및 사운드 추가</li>
-								<li>
-									redux toolkit을 이용해 상태 업데이트와 persist 미들웨어를
-									사용해 로컬스토리지에 저장
-								</li>
-							</ul>
-						</div>
-					</WorkCard>
-					<WorkCard theme={theme.yellow}>
-						<div className="worklog_card card">
-							<div className="img_wrap">
-								<img src="/images/readme/card_예시.png" />
-							</div>
-							<div className="desc_wrap">
-								<h4 className="title">소감</h4>
-								<h3 className="name">FE 김소라</h3>
-								<p>
-									메인 프로젝트 시작전에는 남들에 비해 못해서 많은 불안감이
-									있었지만 팀원들이 너무 좋고 으쌰으쌰하는 분위기라 항상까지는
-									아니지만 즐겁게 작업하고 있습니다 😀 리덕스 툴킷을 쓰면서 아직
-									어려운 부분도 있지만 비동기가 아닌 상태관리에서는 잘쓰고
-									있습니다 간단한 CRUD 부분만 맡았지만 막상 구현해보니
-									생각하지도 못한 부분에서 에러가 났지만 소통하여 같이 해결해
-									나가고 백엔드 쪽에서 실시간으로 어떤 에러가 뜨는지 실시간으로
-									알려 주실 정도로 협업이 잘되고 이게 진정한 협업이 아닐까 생각
-									합니다 맑고 고인물 즐겁다✨
-								</p>
-							</div>
-						</div>
-						<div className="worklog_list_wrap card">
-							<h4 className="title">work log</h4>
-							<ul className="worklog_list">
-								<li>로그인 페이지 뷰 구현 및 유효성검사</li>
-								<li>매칭하기 페이지 뷰 구현 및 페이지네이션 구현</li>
-								<li>매칭하기 작성하기,수정하기 페이지 뷰 구현</li>
-								<li>검색하기 기능 구현</li>
-								<li>게임추천하기 드래그앤 드롭 구현및 사운드 추가</li>
-								<li>
-									redux toolkit을 이용해 상태 업데이트와 persist 미들웨어를
-									사용해 로컬스토리지에 저장
-								</li>
-							</ul>
-						</div>
-					</WorkCard>
-					<WorkCard theme={theme.red}>
-						<div className="worklog_card card">
-							<div className="img_wrap">
-								<img src="/images/readme/card_예시.png" />
-							</div>
-							<div className="desc_wrap">
-								<h4 className="title">소감</h4>
-								<h3 className="name">FE 김소라</h3>
-								<p>
-									메인 프로젝트 시작전에는 남들에 비해 못해서 많은 불안감이
-									있었지만 팀원들이 너무 좋고 으쌰으쌰하는 분위기라 항상까지는
-									아니지만 즐겁게 작업하고 있습니다 😀 리덕스 툴킷을 쓰면서 아직
-									어려운 부분도 있지만 비동기가 아닌 상태관리에서는 잘쓰고
-									있습니다 간단한 CRUD 부분만 맡았지만 막상 구현해보니
-									생각하지도 못한 부분에서 에러가 났지만 소통하여 같이 해결해
-									나가고 백엔드 쪽에서 실시간으로 어떤 에러가 뜨는지 실시간으로
-									알려 주실 정도로 협업이 잘되고 이게 진정한 협업이 아닐까 생각
-									합니다 맑고 고인물 즐겁다✨
-								</p>
-							</div>
-						</div>
-						<div className="worklog_list_wrap card">
-							<h4 className="title">work log</h4>
-							<ul className="worklog_list">
-								<li>로그인 페이지 뷰 구현 및 유효성검사</li>
-								<li>매칭하기 페이지 뷰 구현 및 페이지네이션 구현</li>
-								<li>매칭하기 작성하기,수정하기 페이지 뷰 구현</li>
-								<li>검색하기 기능 구현</li>
-								<li>게임추천하기 드래그앤 드롭 구현및 사운드 추가</li>
-								<li>
-									redux toolkit을 이용해 상태 업데이트와 persist 미들웨어를
-									사용해 로컬스토리지에 저장
-								</li>
-							</ul>
-						</div>
-					</WorkCard>
+					{teamData.map((el, idx) => {
+						return (
+							<WorkCard key={idx} theme={theme[el.theme]} id={`member${idx}`}>
+								<div className="worklog_card card">
+									<div className="img_wrap">
+										<img src={el.imgSrc_big} />
+									</div>
+									<div className="desc_wrap">
+										<h4 className="title">소감</h4>
+										<h3 className="name">{`${el.position} ${el.name}`}</h3>
+										<p>{el.thought}</p>
+									</div>
+								</div>
+								<div className="worklog_list_wrap card">
+									<h4 className="title">work log</h4>
+									<ul className="worklog_list">
+										{el.worklog.map((el, idx) => {
+											return <li key={idx}>{el}</li>;
+										})}
+									</ul>
+								</div>
+							</WorkCard>
+						);
+					})}
 				</div>
 			</WorkLog>
+
+			{/* Go To TOP 버튼 */}
+			<BtnTop onClick={handleScrollTopClick}>TOP</BtnTop>
 		</Wrap>
 	);
 };

@@ -108,6 +108,20 @@ public class UserBoardController
         return new ResponseEntity(new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);
     }
 
+    //쿼리문으로 조회하는 곳
+    @GetMapping("/following2")
+    public ResponseEntity getFollowerBoards2(@RequestParam(value = "keyword", required = false) String keyword,
+                                             @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                             @AuthenticationPrincipal Member member)
+    {
+        Page<UserBoard> followingBoards2 = boardService.findFollowingBoards2(keyword, pageable.previousOrFirst(), member);
+        List<UserBoard> content = followingBoards2.getContent();
+        List<UserBoardResponseDto> responses = mapper.userBoardToResponses(content, member);
+
+        return new ResponseEntity(new MultiResponseDto<>(responses, followingBoards2), HttpStatus.OK);
+    }
+
+
     @DeleteMapping("{board-id}")
     public ResponseEntity deleteBoard(@PathVariable("board-id") @Positive long boardId,
                                       @AuthenticationPrincipal Member user)

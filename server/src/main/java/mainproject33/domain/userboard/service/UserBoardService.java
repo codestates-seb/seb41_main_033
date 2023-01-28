@@ -1,5 +1,6 @@
 package mainproject33.domain.userboard.service;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import mainproject33.domain.boardfile.entity.UserBoardFile;
 import mainproject33.domain.boardfile.service.UserBoardFileService;
@@ -11,13 +12,13 @@ import mainproject33.domain.userboard.repository.UserBoardRepository;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import mainproject33.global.service.VerificationService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,12 @@ public class UserBoardService
 
     private final FollowRepository followRepository;
 
+    private final EntityManager em;
+
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager em){
+        return new JPAQueryFactory(em);
+    }
     public UserBoard postUserBoard(UserBoard request, Member user, MultipartFile file) throws IOException
     {
 
@@ -141,6 +148,18 @@ public class UserBoardService
         List<UserBoard> boards = userBoardRepository.findByKeyword(keyword);
 
         return getPagedBoard(filterFollowingList(filteredBoards, boards), pageable);
+    }
+
+    //쿼리문으로 조회
+    @Transactional(readOnly = true)
+    public Page<UserBoard> findFollowingBoards2(String keyword,
+                                                Pageable pageable,
+                                                Member member)
+    {
+        if(keyword == null)
+            return userBoardRepository.findByFollowerId(pageable, member.getId());
+
+        return userBoardRepository.findByFollowerIdWithKeyword(keyword, pageable, member.getId());
     }
 
     @Transactional(readOnly = true)

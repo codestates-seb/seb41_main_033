@@ -1,18 +1,20 @@
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
+import { MOBILE_POINT } from '../data/breakpoint';
 
 const Background = styled.div`
-  position: sticky;
-  left: 224px;
-  bottom: 24px;
+  position: fixed;
   width: fit-content;
+  margin: 0 auto;
+  left: 200px;
+  right: 0;
+  bottom: 24px;
   .music-container {
     background: var(--bg-card-color);
     border-radius: var(--border-radius-lg);
     box-shadow: 0 12px 12px 0 rgba(77, 78, 77, 0.4);
     display: flex;
     padding: 16px 32px;
-    margin-top: 96px;
     position: relative;
     z-index: 10;
   }
@@ -37,6 +39,10 @@ const Background = styled.div`
   .music-container.play .music-info {
     opacity: 1;
     transform: translateY(-100%);
+  }
+  @media (max-width: ${MOBILE_POINT}) {
+    left: 0;
+    bottom: 80px;
   }
 `;
 

@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { login } from "../redux/slice/loginstate";
-import axios from "axios";
-import { MOBILE_POINT } from "../data/breakpoint";
+import styled from 'styled-components';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/slice/loginstate';
+import axios from 'axios';
+import { MOBILE_POINT } from '../data/breakpoint';
 
 const Card = styled.div`
   display: flex;
@@ -53,8 +53,8 @@ const Label = styled.label`
 `;
 
 const Login = () => {
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [idError, setIdError] = useState(false);
   const [psdError, setPsdError] = useState(false);
   const idValid = /^[A-z0-9]{4,16}$/;
@@ -62,6 +62,7 @@ const Login = () => {
   const idValueCheck = idValid.test(identifier);
   const psdValueCheck = psdValid.test(password);
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const submitHandle = (e) => {
     e.preventDefault();
@@ -97,7 +98,9 @@ const Login = () => {
               refreshtoken,
             })
           );
-          navigate("/match");
+          if (location.state && location.state.from === 'signup') {
+            navigate('/match');
+          } else navigate(-1);
         });
     }
   };
@@ -109,7 +112,7 @@ const Login = () => {
         <Space>
           <Label htmlFor="id"> 아이디</Label>
           <LoginInput
-            className={idError && "error"}
+            className={idError && 'error'}
             placeholder="아이디를 입력하세요"
             id="id"
             type="text"
@@ -123,7 +126,7 @@ const Login = () => {
           <Label htmlFor="pwd">비밀번호</Label>
           <LoginInput
             autoComplete="on"
-            className={psdError && "error"}
+            className={psdError && 'error'}
             placeholder="비밀번호를 입력하세요"
             id="pwd"
             type="password"

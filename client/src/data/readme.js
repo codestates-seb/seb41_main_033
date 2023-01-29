@@ -109,36 +109,40 @@ export const teamData = [
 
 export const pageData = [
 	{
-		pageName: "매칭하기 목록 페이지",
-		src: "",
+		pageName: "매칭하기로 구하는 파티원",
+		src: "/images/readme/page_01.gif",
+		content: "같이 게임하고 싶은 매너 유저를 매칭하기를 통해 찾아보세요!",
 	},
 	{
-		pageName: "매칭하기 상세보기 페이지",
-		src: "",
+		pageName: "가볍고 자유로운 스토리",
+		src: "/images/readme/page_02.gif",
+		content: "내가 원하는 글, 이미지, 영상 모두 자유롭게 올려보세요!",
 	},
 	{
-		pageName: "스토리 목록 페이지",
-		src: "",
+		pageName: "스토리 댓글달기",
+		src: "/images/readme/page_03.gif",
+		content: "원하는 스토리에 원하는 댓글을 달아보세요!",
 	},
 	{
-		pageName: "스토리 상세보기 페이지",
-		src: "",
+		pageName: "유저 팔로우, 차단, 좋아요까지",
+		src: "/images/readme/page_04.gif",
+		content: "여러 유저를 팔로우하거나 차단할 수 있어요. 좋아요도 해보세요!",
 	},
 	{
-		pageName: "프로필 페이지",
-		src: "",
+		pageName: "한 눈에 보기쉬운 마이 프로필",
+		src: "/images/readme/page_05.gif",
+		content:
+			"주로하는 게임, 프로필 사진을 자유롭게 설정하세요. 내가 쓴 글도 한눈에 볼 수 있어요!",
 	},
 	{
-		pageName: "프로필 수정 페이지",
-		src: "",
+		pageName: "유저 차단하기",
+		src: "/images/readme/page_06.gif",
+		content: "비매너 유저는 차단하면 그만!",
 	},
 	{
-		pageName: "차단한 유저 목록 페이지",
-		src: "",
-	},
-	{
-		pageName: "게임 뭐하지 페이지",
-		src: "",
+		pageName: "오늘은 게임 뭐하지?",
+		src: "/images/readme/page_07.gif",
+		content: "오늘 어떤 게임을 할지 추천을 받아볼까? 한 번 시도해보세요!",
 	},
 ];
 

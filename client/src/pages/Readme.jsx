@@ -1,7 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as Joy } from "../assets/readme.svg";
+import { ReactComponent as CloseIcon } from "../assets/closeIcon.svg";
 import { teamData, pageData, theme } from "../data/readme";
+import { MOBILE_POINT } from "../data/breakpoint";
 
 const Wrap = styled.div`
 	h2 {
@@ -12,11 +14,19 @@ const Wrap = styled.div`
 	.card {
 		border: 1px solid var(--darkgrey3);
 	}
+	section {
+		margin-bottom: 48px;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		section {
+			margin-bottom: 24px;
+		}
+	}
 `;
 
-const Banner = styled.div`
+const Banner = styled.section`
 	padding: 48px;
-	margin-bottom: 48px;
 	background-image: linear-gradient(
 		to right,
 		rgba(255, 186, 41, 1) 0%,
@@ -24,6 +34,7 @@ const Banner = styled.div`
 	);
 	border-radius: 16px;
 	color: var(--strong-color);
+	word-break: keep-all;
 	.desc {
 		line-height: 22px;
 		color: rgba(255, 255, 255, 0.7);
@@ -34,10 +45,17 @@ const Banner = styled.div`
 			margin-bottom: 6px;
 		}
 	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		padding: 24px 32px;
+		font-size: 12px;
+		strong {
+			font-size: 14px;
+		}
+	}
 `;
 
 const VisualSection = styled.section`
-	margin-bottom: 48px;
 	.visual {
 		position: relative;
 		height: 480px;
@@ -66,6 +84,19 @@ const VisualSection = styled.section`
 			}
 		}
 	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		.visual {
+			padding-top: 48px;
+			height: auto;
+			.text_wrap {
+				position: relative;
+				left: auto;
+				bottom: auto;
+				word-break: keep-all;
+			}
+		}
+	}
 `;
 
 const TeamSumUpSection = styled.section`
@@ -80,7 +111,6 @@ const TeamSumUpSection = styled.section`
 			color: var(--strong-color);
 		}
 	}
-	margin-bottom: 48px;
 	.team_list {
 		display: flex;
 		margin-top: 24px;
@@ -147,8 +177,7 @@ const TeamSumUpSection = styled.section`
 	}
 `;
 
-const SkillsStack = styled.div`
-	margin-bottom: 48px;
+const SkillsStack = styled.section`
 	.img_wrap {
 		width: 100%;
 		overflow: hidden;
@@ -158,22 +187,9 @@ const SkillsStack = styled.div`
 	}
 `;
 
-const MusicZone = styled.div`
-	.content_wrap {
-		width: 100%;
-		iframe {
-			width: 100%;
-		}
-	}
-`;
-
 const WorkLog = styled.section`
-	margin-bottom: 48px;
 	h2 {
 		margin: 24px 0;
-	}
-
-	.card_wrap {
 	}
 `;
 
@@ -186,7 +202,7 @@ const WorkCard = styled.div`
 		overflow: hidden;
 		.img_wrap {
 			width: 100%;
-			height: 220px;
+			height: 240px;
 			background: ${(props) => props.theme.color1};
 			overflow: hidden;
 			text-align: center;
@@ -255,7 +271,6 @@ const WorkCard = styled.div`
 
 const PageView = styled.section`
 	display: flex;
-	margin-bottom: 48px;
 	.pagelist_wrap {
 		flex: 3;
 		margin-right: 24px;
@@ -293,10 +308,44 @@ const PageView = styled.section`
 	}
 	.page_wrap {
 		flex: 7;
-		padding: 16px;
+		padding: 32px 24px;
 		background: var(--black);
 		border-radius: var(--border-raidus-md);
 		border: 1px solid var(--darkgrey3);
+		.page_title {
+			color: var(--strong-color);
+			font-size: var(--font-head3-size);
+			margin-bottom: 12px;
+		}
+		p {
+			margin-bottom: 24px;
+		}
+		.page_img_wrap {
+			position: relative;
+			width: 100%;
+			img {
+				width: 100%;
+			}
+			.hover {
+				position: absolute;
+				left: 0;
+				top: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.85);
+				color: var(--white);
+				opacity: 0;
+				cursor: pointer;
+			}
+		}
+		.page_img_wrap:hover {
+			.hover {
+				opacity: 1;
+			}
+		}
 	}
 `;
 
@@ -315,18 +364,59 @@ const BtnTop = styled.button`
 	box-shadow: 0px 6px 10px 4px rgb(0 0 0 / 15%), 0px 2px 3px rgb(0 0 0 / 30%);
 `;
 
+const GalleryPopUp = styled.div`
+	position: fixed;
+	left: 0;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background: var(--bg-color);
+	padding: 56px 0;
+	overflow: hidden;
+
+	.btn_popup_close {
+		position: absolute;
+		right: 16px;
+		top: 16px;
+		width: 24px;
+		height: 24px;
+		padding: 0;
+	}
+	.img_wrap {
+		width: 100%;
+		img {
+			width: 100%;
+		}
+	}
+`;
+
 const Readme = () => {
 	const [currentTab, setCurrentTab] = useState(0);
+	const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
+	//탭 클릭
 	const handleTabClick = (idx) => {
 		setCurrentTab(idx);
 	};
 
+	//스크롤 탑
 	const handleScrollTopClick = () => {
 		window.scrollTo({
 			top: 0,
 			behavior: "smooth",
 		});
+	};
+
+	//이미지 팝업 열기
+	const handleOpenPopClick = () => {
+		setIsPopUpOpen(true);
+	};
+	//팝업 닫기
+	const handleClosePopClick = () => {
+		setIsPopUpOpen(false);
 	};
 
 	return (
@@ -375,7 +465,7 @@ const Readme = () => {
 			{/* 주요 페이지 뷰 */}
 			<PageView>
 				<div className="card pagelist_wrap">
-					<h2 className="title">주요 페이지 뷰</h2>
+					<h2 className="title">주요 기능 소개</h2>
 					<ul className="pagelist">
 						{pageData.map((el, idx) => {
 							return (
@@ -392,7 +482,16 @@ const Readme = () => {
 						})}
 					</ul>
 				</div>
-				<div className="page_wrap">{pageData[currentTab].pageName}</div>
+				<div className="page_wrap">
+					<h3 className="page_title">{pageData[currentTab].pageName}</h3>
+					<p>{pageData[currentTab].content}</p>
+					<div className="page_img_wrap">
+						<img src={pageData[currentTab].src} />
+						<div className="hover" onClick={handleOpenPopClick}>
+							자세히 보기
+						</div>
+					</div>
+				</div>
 			</PageView>
 
 			{/* 팀원 소개 및 개요 */}
@@ -451,6 +550,18 @@ const Readme = () => {
 
 			{/* Go To TOP 버튼 */}
 			<BtnTop onClick={handleScrollTopClick}>TOP</BtnTop>
+
+			{/* 이미지 팝업 */}
+			{isPopUpOpen ? (
+				<GalleryPopUp>
+					<button className="btn_popup_close" onClick={handleClosePopClick}>
+						<CloseIcon />
+					</button>
+					<div className="img_wrap">
+						<img src={pageData[currentTab].src} />
+					</div>
+				</GalleryPopUp>
+			) : null}
 		</Wrap>
 	);
 };

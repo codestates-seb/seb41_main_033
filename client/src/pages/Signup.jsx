@@ -65,7 +65,6 @@ const Signup = () => {
   //회원가입 API
   const handleSignup = () => {
     const { identifier, password, nickname } = form;
-    console.log(form);
     if (!identifier || !/(?=.*\d)|(?=.*[a-zA-Z]).{4,16}/.test(identifier)) {
       setIsError({ ...isError, identifier: true });
       return;

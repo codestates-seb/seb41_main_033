@@ -130,11 +130,15 @@ const MusicPlayer = () => {
     setIsPlaying((prev) => !prev);
     if (isPlaying) {
       audioRef.current.pause();
-    } else audioRef.current.play();
+    } else {
+      audioRef.current.play();
+      audioRef.current.volume = 0.4;
+    }
   };
 
   const handleEndSong = () => {
-    setIsPlaying((prev) => !prev);
+    audioRef.current.play();
+    audioRef.current.volume = 0.4;
   };
 
   return (

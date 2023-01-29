@@ -1,10 +1,11 @@
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import HeartIcon from "./../assets/heart_sprite.svg";
-import SinglePofileWrap from "./SingleProfileWrap";
-import StoryBtn from "./StoryBtn";
-import displayedAt from "../util/displayedAt";
-import axios from "axios";
+import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import HeartIcon from './../assets/heart_sprite.svg';
+import SinglePofileWrap from './SingleProfileWrap';
+import StoryBtn from './StoryBtn';
+import displayedAt from '../util/displayedAt';
+import axios from 'axios';
+import Popup from './Popup';
 
 const Wrap = styled.div`
   display: flex;
@@ -93,6 +94,7 @@ const StoryComment = ({
   handleEdit,
   handleDelete,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [isMe, setIsMe] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [content, setContent] = useState(data.content);
@@ -100,6 +102,16 @@ const StoryComment = ({
     status: data.likeStatus,
     count: data.likeCount,
   });
+
+  const handlePopup = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleCancel = () => {
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
+  };
 
   useEffect(() => {
     if (data.memberId === memberId) setIsMe(true);
@@ -176,19 +188,30 @@ const StoryComment = ({
             ) : (
               <StoryBtn type="edit" clickHandler={handleChangeEditClick} />
             )}
-            <StoryBtn
-              type="delete"
-              clickHandler={() => handleDelete(data.id)}
-            />
+            <StoryBtn type="delete" clickHandler={handlePopup} />
           </BtnWrap>
         ) : null}
       </div>
       <CommentLike onClick={handleCommentLikeClick}>
-        <span className={commentLike.status ? "heart selected" : "heart"}>
+        <span className={commentLike.status ? 'heart selected' : 'heart'}>
           이 댓글에 좋아요
         </span>
         <span className="likeCount">{commentLike.count}</span>
       </CommentLike>
+      <Popup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title="댓글 삭제"
+        content="댓글을 삭제하시겠습니까?"
+        button1="삭제하기"
+        button2="취소"
+        handleBtn1={() => {
+          handleDelete(data.id);
+          setIsOpen((prev) => !prev);
+          document.body.style.overflow = 'unset';
+        }}
+        handleBtn2={handleCancel}
+      />
     </Wrap>
   );
 };

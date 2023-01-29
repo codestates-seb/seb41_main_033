@@ -68,7 +68,7 @@ const ImgWrap = styled.div`
     left: 50%;
     bottom: 50%;
     border-radius: 50%;
-    transform: translate(-50%, 0%);
+    transform: translate(-50%, -15%);
   }
   img {
     width: inherit;

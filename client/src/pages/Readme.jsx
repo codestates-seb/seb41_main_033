@@ -440,7 +440,7 @@ const GalleryPopUp = styled.div`
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	background: var(--bg-color);
+	background: var(--darkgrey2);
 	padding: 56px 0;
 	overflow: hidden;
 
@@ -451,11 +451,17 @@ const GalleryPopUp = styled.div`
 		width: 24px;
 		height: 24px;
 		padding: 0;
+		svg path {
+			fill: var(--white);
+		}
 	}
 	.img_wrap {
 		width: 100%;
+		background: var(--black);
+		text-align: center;
 		img {
-			width: 100%;
+			max-width: 100%;
+			height: 100%;
 		}
 	}
 `;

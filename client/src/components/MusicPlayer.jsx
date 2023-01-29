@@ -2,16 +2,17 @@ import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const Background = styled.div`
-  position: fixed;
+  position: sticky;
   left: 224px;
   bottom: 24px;
+  width: fit-content;
   .music-container {
     background: var(--bg-card-color);
     border-radius: var(--border-radius-lg);
     box-shadow: 0 12px 12px 0 rgba(77, 78, 77, 0.4);
     display: flex;
     padding: 16px 32px;
-    margin: 100px 0;
+    margin-top: 96px;
     position: relative;
     z-index: 10;
   }

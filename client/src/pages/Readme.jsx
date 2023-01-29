@@ -19,8 +19,53 @@ const Wrap = styled.div`
 	}
 
 	@media (max-width: ${MOBILE_POINT}) {
-		section {
-			margin-bottom: 24px;
+		h2 {
+			margin: 32px 0 16px 0;
+		}
+	}
+`;
+
+const VisualSection = styled.section`
+	position: relative;
+	height: 480px;
+	margin-bottom: 48px;
+	background: url(/images/readme/visual_img.jpg);
+	background-position: center;
+	background-size: cover;
+	.text_wrap {
+		position: absolute;
+		left: 48px;
+		bottom: 48px;
+		.point {
+			color: var(--primary-color);
+			font-size: var(--font-body2-size);
+		}
+		p {
+			margin-bottom: 32px;
+			strong {
+				display: block;
+				font-size: var(--font-head1-size);
+				color: var(--strong-color);
+				margin-bottom: 8px;
+			}
+			span {
+				display: block;
+				margin-top: 6px;
+			}
+		}
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		&.card.big {
+			padding-top: 48px;
+			margin-bottom: 16px;
+			height: auto;
+		}
+		.text_wrap {
+			position: relative;
+			left: auto;
+			bottom: auto;
+			word-break: keep-all;
 		}
 	}
 `;
@@ -55,45 +100,93 @@ const Banner = styled.section`
 	}
 `;
 
-const VisualSection = styled.section`
-	.visual {
-		position: relative;
-		height: 480px;
-		background: url(/images/readme/visual_img.jpg);
-		background-size: cover;
-		.text_wrap {
-			position: absolute;
-			left: 48px;
-			bottom: 48px;
-			.point {
-				color: var(--primary-color);
-				font-size: var(--font-body2-size);
+const PageView = styled.section`
+	display: flex;
+	.pagelist_wrap {
+		flex: 3;
+		margin-right: 24px;
+		.title {
+			font-size: var(--font-body1-size);
+			margin-bottom: 24px;
+			padding: 24px 16px;
+			border-bottom: 1px solid var(--darkgrey3);
+		}
+		.pagelist {
+			padding-bottom: 24px;
+			li {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 8px 16px;
+				font-size: var(--font-caption-size);
+
+				button {
+					border: 1px solid var(--darkgrey3);
+					border-radius: var(--border-radius-btn);
+					padding: 4px 12px;
+					font-size: var(--font-caption-size);
+					background: var(--black);
+				}
 			}
-			p {
-				margin-bottom: 32px;
-				strong {
-					display: block;
-					font-size: var(--font-head1-size);
-					color: var(--strong-color);
-					margin-bottom: 8px;
-				}
-				span {
-					display: block;
-					margin-top: 6px;
-				}
+		}
+		li.selected {
+			color: var(--strong-color);
+			button {
+				background: var(--white);
+				color: var(--darkgrey1);
+			}
+		}
+	}
+	.page_wrap {
+		flex: 7;
+		padding: 32px 24px;
+		background: var(--black);
+		border-radius: var(--border-raidus-md);
+		border: 1px solid var(--darkgrey3);
+		.page_title {
+			color: var(--strong-color);
+			font-size: var(--font-head3-size);
+			margin-bottom: 12px;
+		}
+		p {
+			margin-bottom: 24px;
+		}
+		.page_img_wrap {
+			position: relative;
+			width: 100%;
+			img {
+				width: 100%;
+			}
+			.hover {
+				position: absolute;
+				left: 0;
+				top: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.85);
+				color: var(--white);
+				opacity: 0;
+				cursor: pointer;
+			}
+		}
+		.page_img_wrap:hover {
+			.hover {
+				opacity: 1;
 			}
 		}
 	}
 
 	@media (max-width: ${MOBILE_POINT}) {
-		.visual {
-			padding-top: 48px;
-			height: auto;
-			.text_wrap {
-				position: relative;
-				left: auto;
-				bottom: auto;
-				word-break: keep-all;
+		flex-direction: column;
+		.pagelist_wrap {
+			margin-right: 0;
+			margin-bottom: 16px;
+			.title {
+				margin: 0;
+				font-size: var(--font-head2-size);
 			}
 		}
 	}
@@ -174,6 +267,27 @@ const TeamSumUpSection = styled.section`
 	}
 	.desc {
 		margin-top: 16px;
+	}
+
+	@media (max-width: ${MOBILE_POINT}) {
+		.team_list {
+			flex-direction: column;
+			li {
+				width: 100%;
+				padding: 12px 16px;
+				margin: 0 0 8px 0;
+				border-radius: 16px;
+				a {
+					display: flex;
+					align-items: center;
+					.img_wrap {
+						width: 56px;
+						height: 56px;
+						margin: 0 16px 0 0;
+					}
+				}
+			}
+		}
 	}
 `;
 
@@ -267,85 +381,33 @@ const WorkCard = styled.div`
 			}
 		}
 	}
-`;
 
-const PageView = styled.section`
-	display: flex;
-	.pagelist_wrap {
-		flex: 3;
-		margin-right: 24px;
-		.title {
-			font-size: var(--font-body1-size);
-			margin-bottom: 24px;
-			padding: 24px 16px;
-			border-bottom: 1px solid var(--darkgrey3);
+	@media (max-width: ${MOBILE_POINT}) {
+		flex-direction: column;
+		margin-bottom: 32px;
+		.worklog_card {
+			margin: 0 0 12px 0;
+			.desc_wrap {
+				padding: 24px 16px;
+			}
 		}
-		.pagelist {
-			padding-bottom: 24px;
-			li {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				padding: 8px 16px;
-				font-size: var(--font-caption-size);
-
-				button {
-					border: 1px solid var(--darkgrey3);
-					border-radius: var(--border-radius-btn);
-					padding: 4px 12px;
-					font-size: var(--font-caption-size);
-					background: var(--black);
+		.worklog_list_wrap {
+			.worklog_list {
+				li {
+					padding: 16px 16px 16px 32px;
+				}
+				li:before {
+					left: 16px;
 				}
 			}
 		}
-		li.selected {
-			color: var(--strong-color);
-			button {
-				background: var(--white);
-				color: var(--darkgrey1);
-			}
-		}
 	}
-	.page_wrap {
-		flex: 7;
-		padding: 32px 24px;
-		background: var(--black);
-		border-radius: var(--border-raidus-md);
-		border: 1px solid var(--darkgrey3);
-		.page_title {
-			color: var(--strong-color);
-			font-size: var(--font-head3-size);
-			margin-bottom: 12px;
-		}
-		p {
-			margin-bottom: 24px;
-		}
-		.page_img_wrap {
-			position: relative;
-			width: 100%;
-			img {
-				width: 100%;
-			}
-			.hover {
-				position: absolute;
-				left: 0;
-				top: 0;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				width: 100%;
-				height: 100%;
-				background: rgba(0, 0, 0, 0.85);
-				color: var(--white);
-				opacity: 0;
-				cursor: pointer;
-			}
-		}
-		.page_img_wrap:hover {
-			.hover {
-				opacity: 1;
-			}
-		}
+`;
+
+const JoyZone = styled.section`
+	width: 100%;
+	svg {
+		width: 100%;
 	}
 `;
 
@@ -362,6 +424,11 @@ const BtnTop = styled.button`
 	font-size: var(--font-caption-size);
 	color: var(--white);
 	box-shadow: 0px 6px 10px 4px rgb(0 0 0 / 15%), 0px 2px 3px rgb(0 0 0 / 30%);
+
+	@media (max-width: ${MOBILE_POINT}) {
+		right: 16px;
+		bottom: 68px;
+	}
 `;
 
 const GalleryPopUp = styled.div`
@@ -422,21 +489,19 @@ const Readme = () => {
 	return (
 		<Wrap>
 			{/* key visual 소개 문구 */}
-			<VisualSection>
-				<div className="card big visual">
-					<div className="text_wrap">
-						<p className="point">GAMETO | www.gameto.kr</p>
-						<p>
-							<strong>Play Together.</strong>
-							<strong>Share Together.</strong>
-						</p>
-						<p>
-							<span>
-								함께 게임을 플레이 할 유저를 '매칭하기' 에서 쉽게 찾으세요.
-							</span>
-							<span>'스토리'에서 당신의 게임 이야기를 공유하세요.</span>
-						</p>
-					</div>
+			<VisualSection className="card big visual">
+				<div className="text_wrap">
+					<p className="point">GAMETO | www.gameto.kr</p>
+					<p>
+						<strong>Play Together.</strong>
+						<strong>Share Together.</strong>
+					</p>
+					<p>
+						<span>
+							함께 게임을 플레이 할 유저를 '매칭하기' 에서 쉽게 찾으세요.
+						</span>
+						<span>'스토리'에서 당신의 게임 이야기를 공유하세요.</span>
+					</p>
 				</div>
 			</VisualSection>
 
@@ -550,6 +615,11 @@ const Readme = () => {
 
 			{/* Go To TOP 버튼 */}
 			<BtnTop onClick={handleScrollTopClick}>TOP</BtnTop>
+
+			{/* 즐겁다! */}
+			<JoyZone>
+				<Joy />
+			</JoyZone>
 
 			{/* 이미지 팝업 */}
 			{isPopUpOpen ? (

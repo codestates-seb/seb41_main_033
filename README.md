@@ -177,6 +177,7 @@ AWS S3를 이용한 MultipartFile 관리, 게시물 검색, 차단 필터링, �
 <details>
 <summary>가볍고 자유로운 스토리</summary>
 
+![page_02](https://user-images.githubusercontent.com/110885981/215440663-a39c92d3-4c25-4f1f-b2b1-cd817029bc1a.gif)
 
 </details>
 

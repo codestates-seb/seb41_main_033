@@ -4,18 +4,14 @@
 
 ## 소개문
 
-### Play Together.</br>
-함께 게임을 플레이 할 유저를 '매칭하기' 에서 쉽게 찾으세요.</br>
-### Share Together.</br>
-'스토리'에서 당신의 게임 이야기를 공유하세요.</br>
-
-비매너 비켜!😠 트롤 비켜!👊🏻 매너있게 같이 게임할 사람 없나요?!ㅜㅜ</br>
-복잡하고 보기 불편한 기존 게임 커뮤니티 대신에 같이 게임할 유저를 찾고,</br>
-가볍게 게임 추천도 받을 수 있는 🕹️게이머🕹️를 위한 소셜서비스 입니다.</br>
+![image](https://user-images.githubusercontent.com/110885981/215445088-c01268d2-0d3f-403c-9d07-217bc7393eda.png)</br>
+![image](https://user-images.githubusercontent.com/110885981/215445186-a0a24c51-59e1-4056-90d1-88e3a0a7905e.png)
 
 ## 팀원소개
 
-### FE\_김소라
+<img src="https://user-images.githubusercontent.com/110885981/215442916-9a93b855-98aa-4393-9b01-66fe676081ab.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215443206-68d62057-3612-4ac6-8cfe-6fef6c7d6af6.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215443087-93c83162-682e-4289-99df-677b2b2f9760.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215442791-f15c67e9-9929-4128-bd2c-a2e2798cce86.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215441108-d59792fa-2658-4973-8de8-60f5e743a8e4.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215442510-4e9c8590-8b5a-421f-9c24-75fe26611b0d.png" width = 16% height = 16%>
+
+### FE 김소라
 <details>
 <summary>work log</summary>
 
@@ -27,7 +23,6 @@
 - `redux toolkit`을 이용해 상태 업데이트와 persist 미들웨어를 사용해 로컬스토리지에 저장  
 </details>
 
-
 <details>
 <summary>소감</summary>
 
@@ -35,8 +30,7 @@
   리덕스 툴킷을 쓰면서 아직 어려운 부분도 있지만 비동기가 아닌 상태관리에서는 잘쓰고 있습니다 간단한 CRUD 부분만 맡았지만 막상 구현해보니 생각하지도 못한 부분에서 에러가 났지만 소통하여 같이 해결해 나가고 백엔드 쪽에서 실시간으로 어떤 에러가 뜨는지 실시간으로 알려 주실 정도로 협업이 잘되고 이게 진정한 협업이 아닐까 생각 합니다 맑고 고인물 즐겁다✨
 </details>
 
-### FE\_신나현
-
+### FE 신나현
 <details>
 <summary>work log</summary>
 
@@ -60,8 +54,7 @@ CRUD 도 스토리, 댓글 이렇게 2번 정도 해보니 감이 좀 잡혀서 
 이렇게 좋은 분위기에 다들 열심히 하고 즐겁게 작업할 수 있게 해주었던 우리 33조 맑은 고인물 선생님들 정말 최고입니다! 내가 많이 아껴여 고생많았습니다!!!
 </details>
 
-### FE\_손수빈
-
+### FE 손수빈
 <details>
 <summary>work log</summary>
 
@@ -87,8 +80,7 @@ CRUD 도 스토리, 댓글 이렇게 2번 정도 해보니 감이 좀 잡혀서 
 비록 스스로 구현하지는 못했더라도 작성해주신 코드를 보면서 또 한 번 공부할 수 있는 귀한 시간이었습니다! 감사해요 맑게고인물! 💖즐겁다💖!
 </details>
 
-### BE\_신대경
-
+### BE 신대경
 <details>
 <summary>work log</summary>
 
@@ -108,8 +100,7 @@ AWS S3를 이용한 MultipartFile 관리, 게시물 검색, 차단 필터링, �
 무엇보다 중요한 것은 프로젝트를 통해 '협업'을 해보았다는 것입니다. 실무 협업은 프로젝트 협업과는 또 느낌이 많이 다를 수 있겠지만 일단 경험해 보았다는 사실이 중요하고, 해 보았기 때문에 실무 협업에 대한 막연한 안개가 조금이나마 걷히고 잘 할 수 있을거라는 자신감을 얻은 것 같습니다.
 </details>
 
-### BE\_양건모  
-
+### BE 양건모
 <details>
 <summary>work log</summary>
 
@@ -132,8 +123,7 @@ AWS S3를 이용한 MultipartFile 관리, 게시물 검색, 차단 필터링, �
 소통과 분위기가 너무 잘되고 좋은 팀원들 덕분에 프로젝트를 잘 마무리 할 수 있었습니다.
 </details> 
 
-### BE\_조대희
-
+### BE 조대희
 <details>
 <summary>work log</summary>
 

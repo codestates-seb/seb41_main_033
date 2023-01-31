@@ -70,6 +70,8 @@ const StoryEdit = () => {
 				document.body.style.overflow = "unset";
 			})
 			.catch((err) => {
+				setIsLoading(false);
+				alert("스토리 수정에 실패했습니다.");
 				console.log(err);
 			});
 	};

@@ -130,6 +130,8 @@ const StoryWrite = () => {
 				navigate("/story");
 			})
 			.catch((err) => {
+				setIsLoading(false);
+				alert("스토리 작성에 실패했습니다.");
 				console.log(err);
 			});
 	};

@@ -156,13 +156,19 @@ const StoryComment = ({
   return (
     <Wrap className="card sm">
       <div className="comment_body">
-        <SinglePofileWrap
+        <a
+          href={`/profile/${data.memberId}`}
+          title="유저 프로필로 이동"
           className="profile_wrap"
-          imgSize="small"
-          imgSrc={data.profileImage}
-          name={data.nickname}
-          subInfo={displayedAt(data.createdAt)}
-        />
+        >
+          <SinglePofileWrap
+            className="profile_wrap"
+            imgSize="small"
+            imgSrc={data.profileImage}
+            name={data.nickname}
+            subInfo={displayedAt(data.createdAt)}
+          />
+        </a>
         {isEdit ? (
           <div className="content_wrap edit">
             <textarea

@@ -11,6 +11,7 @@ import StoryComments from "../components/StoryComments";
 import StoryBtn from "../components/StoryBtn";
 import StoryFileView from "./../components/StoryFileView";
 import Popup from "../components/Popup";
+import viewSplitLine from "../util/hyfer";
 
 const Title = styled.h4`
   margin-top: 24px;
@@ -77,6 +78,9 @@ const StoryBody = styled.div`
   }
   .content_wrap {
     color: var(--strong-color);
+    a {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -241,7 +245,9 @@ const StoryDetail = () => {
             fileName={storyData.uploadFileName}
             contentType={storyData.contentType}
           />
-          <div className="content_wrap">{storyData.content}</div>
+          <div className="content_wrap">
+            {viewSplitLine(String(storyData.content))}
+          </div>
         </StoryBody>
         {storyData.commentCount ? (
           <CommentsCountTag>

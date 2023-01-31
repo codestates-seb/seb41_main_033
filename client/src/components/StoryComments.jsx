@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StoryComment from "../components/StoryComment";
 import { useSelector } from "react-redux";
-
+import viewSplitLine from "../util/hyfer";
 const CommentWriteWrap = styled.div`
   margin-bottom: 24px;
   text-align: right;

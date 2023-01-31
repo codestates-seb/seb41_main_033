@@ -5,6 +5,7 @@ import PostPatch from "../components/PostPatch";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Popup from "../components/Popup";
+import LoadingFull from "../components/LoadingFull";
 
 const TextArea = styled.div`
 	margin: 24px 0 16px 0;
@@ -14,6 +15,7 @@ const StoryEdit = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [userData, setUserData] = useState({});
 	const [content, setContent] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 	const params = useParams();
 	const loginInfo = useSelector((state) => state.islogin.login);
@@ -50,6 +52,7 @@ const StoryEdit = () => {
 	};
 
 	const handleStoryEditSubmit = () => {
+		setIsLoading(true);
 		axios
 			.patch(
 				`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`,
@@ -61,6 +64,7 @@ const StoryEdit = () => {
 				}
 			)
 			.then((res) => {
+				setIsLoading(false);
 				setIsOpen((prev) => !prev);
 				navigate("/story");
 				document.body.style.overflow = "unset";
@@ -71,31 +75,34 @@ const StoryEdit = () => {
 	};
 
 	return (
-		<PostPatch
-			image={userData.profileImage}
-			nickname={userData.nickname}
-			identifier={userData.identifier}
-			button1="수정완료"
-			button2="취소"
-			link={-1}
-			handleSubmit={handlePatch}
-		>
-			<TextArea>
-				<label>내용</label>
-				<textarea
-					placeholder="스토리 내용만 수정만 가능합니다"
-					onChange={(e) => handleContentOnChange(e)}
-					defaultValue={content}
-				></textarea>
-			</TextArea>
-			<Popup
-				isOpen={isOpen}
-				title="스토리 수정"
-				content="스토리 수정이 완료되었습니다."
-				button1="확인"
-				handleBtn1={handleStoryEditSubmit}
-			/>
-		</PostPatch>
+		<>
+			<PostPatch
+				image={userData.profileImage}
+				nickname={userData.nickname}
+				identifier={userData.identifier}
+				button1="수정완료"
+				button2="취소"
+				link={-1}
+				handleSubmit={handlePatch}
+			>
+				<TextArea>
+					<label>내용</label>
+					<textarea
+						placeholder="스토리 내용만 수정만 가능합니다"
+						onChange={(e) => handleContentOnChange(e)}
+						defaultValue={content}
+					></textarea>
+				</TextArea>
+				<Popup
+					isOpen={isOpen}
+					title="스토리 수정"
+					content="스토리 수정이 완료되었습니다."
+					button1="확인"
+					handleBtn1={handleStoryEditSubmit}
+				/>
+			</PostPatch>
+			{isLoading ? <LoadingFull /> : null}
+		</>
 	);
 };
 export default StoryEdit;

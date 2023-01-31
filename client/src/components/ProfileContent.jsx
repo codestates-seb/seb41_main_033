@@ -51,11 +51,20 @@ const TabWrap = styled.div`
   }
 `;
 
-const ProfileContent = () => {
+const ProfileContent = ({
+  match,
+  matchPage,
+  setMatchPage,
+  matchPageInfo,
+  story,
+  storyPage,
+  setStoryPage,
+  storyPageInfo,
+}) => {
   const userInfo = useSelector((state) => state.profile.user);
   const [isMatch, setIsMatch] = useState(true);
   const [isStory, setIsStory] = useState(false);
-  
+
   const handleMatch = () => {
     setIsMatch(true);
     setIsStory(false);
@@ -92,7 +101,18 @@ const ProfileContent = () => {
                 </li>
               </ul>
             </TabWrap>
-            <ProfileContentList isMatch={isMatch} isStory={isStory} />
+            <ProfileContentList
+              isMatch={isMatch}
+              isStory={isStory}
+              match={match}
+              matchPage={matchPage}
+              setMatchPage={setMatchPage}
+              matchPageInfo={matchPageInfo}
+              story={story}
+              storyPage={storyPage}
+              setStoryPage={setStoryPage}
+              storyPageInfo={storyPageInfo}
+            />
           </>
         )}
       </ContentWrap>

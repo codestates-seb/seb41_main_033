@@ -21,6 +21,12 @@ const ProfileWrap = styled.div`
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [isMe, setIsMe] = useState(false);
+  const [match, setMatch] = useState(null);
+  const [story, setStory] = useState(null);
+  const [matchPage, setMatchPage] = useState(1);
+  const [storyPage, setStoryPage] = useState(1);
+  const [matchPageInfo, setMatchPageInfo] = useState(null);
+  const [storyPageInfo, setStoryPageInfo] = useState(null);
   const { userid } = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
   const dispatch = useDispatch();
@@ -45,14 +51,54 @@ const Profile = () => {
           dispatch(setProfile(res.data.data));
         });
     }
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/members/${userid}/matches?page=${matchPage}`
+      )
+      .then((res) => {
+        setMatch(res.data.data);
+        setMatchPageInfo(res.data.pageInfo);
+      })
+      .then(() => {
+        if (matchPage > matchPageInfo?.totalPages) setMatchPage(1);
+      });
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/members/${userid}/boards?page=${storyPage}`
+      )
+      .then((res) => {
+        setStory(res.data.data);
+        setStoryPageInfo(res.data.pageInfo);
+      })
+      .then(() => {
+        if (storyPage > storyPageInfo?.totalPages) setStoryPage(1);
+      });
     Number(userid) === loginInfo?.memberId ? setIsMe(true) : setIsMe(false);
-  }, [userid, loginInfo?.accessToken, loginInfo?.memberId, dispatch]);
+  }, [
+    userid,
+    loginInfo?.accessToken,
+    loginInfo?.memberId,
+    matchPage,
+    matchPageInfo?.totalPages,
+    storyPage,
+    storyPageInfo?.totalPages,
+    dispatch,
+  ]);
 
-  if (user) {
+  if (user && match && story) {
     return (
       <ProfileWrap>
         <ProfileCard user={user} isMe={isMe} />
-        <ProfileContent />
+        <ProfileContent
+          match={match}
+          matchPage={matchPage}
+          setMatchPage={setMatchPage}
+          matchPageInfo={matchPageInfo}
+          story={story}
+          storyPage={storyPage}
+          setStoryPage={setStoryPage}
+          storyPageInfo={storyPageInfo}
+        />
       </ProfileWrap>
     );
   } else {

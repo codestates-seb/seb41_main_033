@@ -11,7 +11,7 @@ import StoryComments from "../components/StoryComments";
 import StoryBtn from "../components/StoryBtn";
 import StoryFileView from "./../components/StoryFileView";
 import Popup from "../components/Popup";
-import viewSplitLine from "../util/hyfer";
+import viewSplitLine from "../util/hyper";
 
 const Title = styled.h4`
   margin-top: 24px;
@@ -80,6 +80,7 @@ const StoryBody = styled.div`
     color: var(--strong-color);
     a {
       text-decoration: underline;
+      color: var(--white);
     }
   }
 `;

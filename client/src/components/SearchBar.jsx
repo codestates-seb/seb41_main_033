@@ -33,7 +33,6 @@ const SearchBar = ({ setKeyword, setPage }) => {
       setKeyword("");
     }
     if (e.key === "Enter") {
-      console.log(searchData);
       setKeyword(searchData);
       setPage(1);
     }

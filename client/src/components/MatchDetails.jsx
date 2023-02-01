@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import matchGame from "../util/matchGame";
 import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "../components/Popup";
-import viewSplitLine from "../util/hyfer";
+import viewSplitLine from "../util/hyper";
 
 const Detail = styled.div`
   width: var(--col-9);
@@ -48,6 +48,7 @@ const Detail = styled.div`
       white-space: pre-wrap;
       a {
         text-decoration: underline;
+        color: var(--white);
       }
     }
   }

@@ -15,9 +15,5 @@ export default function viewSplitLine(content) {
     return { __html: htmlArr.join("") };
   };
 
-  return (
-    <div>
-      <div dangerouslySetInnerHTML={replace(content)}></div>
-    </div>
-  );
+  return <div dangerouslySetInnerHTML={replace(content)}></div>;
 }

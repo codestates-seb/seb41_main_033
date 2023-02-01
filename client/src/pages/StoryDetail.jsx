@@ -78,8 +78,11 @@ const StoryBody = styled.div`
   }
   .content_wrap {
     color: var(--strong-color);
+    white-space: pre-wrap;
     a {
       text-decoration: underline;
+    }
+    a:hover {
       color: var(--white);
     }
   }

@@ -48,6 +48,8 @@ const Detail = styled.div`
       white-space: pre-wrap;
       a {
         text-decoration: underline;
+      }
+      a:hover {
         color: var(--white);
       }
     }

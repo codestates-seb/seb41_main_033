@@ -1,11 +1,11 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import HeartIcon from './../assets/heart_sprite.svg';
-import SinglePofileWrap from './SingleProfileWrap';
-import StoryBtn from './StoryBtn';
-import displayedAt from '../util/displayedAt';
-import axios from 'axios';
-import Popup from './Popup';
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import HeartIcon from "./../assets/heart_sprite.svg";
+import SinglePofileWrap from "./SingleProfileWrap";
+import StoryBtn from "./StoryBtn";
+import displayedAt from "../util/displayedAt";
+import axios from "axios";
+import Popup from "./Popup";
 
 const Wrap = styled.div`
   display: flex;
@@ -105,12 +105,12 @@ const StoryComment = ({
 
   const handlePopup = () => {
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const handleCancel = () => {
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   useEffect(() => {
@@ -199,7 +199,7 @@ const StoryComment = ({
         ) : null}
       </div>
       <CommentLike onClick={handleCommentLikeClick}>
-        <span className={commentLike.status ? 'heart selected' : 'heart'}>
+        <span className={commentLike.status ? "heart selected" : "heart"}>
           이 댓글에 좋아요
         </span>
         <span className="likeCount">{commentLike.count}</span>
@@ -214,7 +214,7 @@ const StoryComment = ({
         handleBtn1={() => {
           handleDelete(data.id);
           setIsOpen((prev) => !prev);
-          document.body.style.overflow = 'unset';
+          document.body.style.overflow = "unset";
         }}
         handleBtn2={handleCancel}
       />

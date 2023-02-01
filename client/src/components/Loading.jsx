@@ -25,10 +25,6 @@ const Spinner = styled.div`
   }
 `;
 
-// const Loading = forwardRef((props, ref) => {
-// 	return <Spinner ref={ref} />;
-// });
-
 const Loading = forwardRef((props, ref) => {
   return (
     <>

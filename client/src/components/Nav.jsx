@@ -204,7 +204,7 @@ const Nav = () => {
         ) : null}
         <MenuItem>
           <NavLink
-            to={`/curtaincall`}
+            to={`/`}
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
             <CurtainCall />

@@ -7,7 +7,6 @@ import sound from "../assets/game.mp3";
 import drum from "../assets/drum.mp3";
 import RandomRolling from "../components/RandomRolling";
 import axios from "axios";
-import { API_URL } from "../data/apiUrl";
 import matchGame from "../util/matchGame";
 const Wrap = styled.div`
   display: flex;
@@ -39,6 +38,25 @@ const Title = styled.div`
   font-size: var(--font-head2-size);
   text-align: center;
   margin-top: 20px;
+  a {
+    position: relative;
+    animation: fadeInUp 2s;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+  }
+  a:hover {
+    color: var(--yellow);
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translateZ(0);
+      }
+    }
+  }
 `;
 const ImgBox = styled.div`
   width: 120px;
@@ -77,7 +95,7 @@ const Drag = () => {
   const onDragLeave = (e) => {
     e.preventDefault();
     axios
-      .get(`${API_URL}/api/games/random`)
+      .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
       .then((res) => {
         setGameInfo(res.data.data);
         setDrag(true);
@@ -108,7 +126,7 @@ const Drag = () => {
     const distanceY = tochedY - e.changedTouches[0].pageY;
     if (distanceY <= -40) {
       axios
-        .get(`${API_URL}/api/games/random`)
+        .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
         .then((res) => {
           setGameInfo(res.data.data);
           setPlaying(true);
@@ -127,7 +145,7 @@ const Drag = () => {
               dragEnd: false,
             });
             setPlaying(false);
-          }, 5000)
+          }, 10000)
         );
     }
   };
@@ -151,7 +169,13 @@ const Drag = () => {
           <GameImg src={matchGame(gameInfo).image} alt="게임아이콘" />
         </ImgBox>
       )}
-      {DnD.dragEnd && <Title>{gameInfo.korTitle} 고 ?</Title>}
+      {DnD.dragEnd && (
+        <Title>
+          <a href={matchGame(gameInfo).url} target="blank">
+            {gameInfo.korTitle} 고 ?
+          </a>
+        </Title>
+      )}
       {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
     </Wrap>
   );

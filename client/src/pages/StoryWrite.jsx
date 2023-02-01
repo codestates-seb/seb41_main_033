@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../data/apiUrl";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import PostPatch from "../components/PostPatch";
 import { ReactComponent as ImgUploadIcon } from "./../assets/addPhoto.svg";
 import { MOBILE_POINT } from "../data/breakpoint";
+import LoadingFull from "../components/LoadingFull";
 
 const TextArea = styled.div`
 	margin: 24px 0 16px 0;
@@ -86,9 +86,10 @@ const StoryWrite = () => {
 	);
 	const [file, setFile] = useState(null);
 	const [content, setContent] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	useEffect(() => {
 		axios
-			.get(`${API_URL}/api/members/${memberId}`)
+			.get(`${process.env.REACT_APP_API_URL}/api/members/${memberId}`)
 			.then((res) => {
 				setUserData(res.data.data);
 			})
@@ -106,6 +107,7 @@ const StoryWrite = () => {
 	};
 	//제출
 	const handleWriteSubmit = (content, file) => {
+		setIsLoading(true);
 		const data = { content };
 		const formData = new FormData();
 		formData.append(
@@ -117,16 +119,19 @@ const StoryWrite = () => {
 		if (file) formData.append("file", file);
 
 		axios
-			.post(`${API_URL}/api/boards`, formData, {
+			.post(`${process.env.REACT_APP_API_URL}/api/boards`, formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 					Authorization: `Bearer ${accessToken}`,
 				},
 			})
 			.then((res) => {
+				setIsLoading(false);
 				navigate("/story");
 			})
 			.catch((err) => {
+				setIsLoading(false);
+				alert("스토리 작성에 실패했습니다.");
 				console.log(err);
 			});
 	};
@@ -134,40 +139,43 @@ const StoryWrite = () => {
 	//렌더링
 	if (userData) {
 		return (
-			<PostPatch
-				image={userData.profileImage}
-				nickname={userData.nickname}
-				identifier={userData.identifier}
-				button1="작성완료"
-				button2="취소"
-				link={-1}
-				handleSubmit={() => handleWriteSubmit(content, file)}
-			>
-				<TextArea>
-					<label>내용</label>
-					<textarea
-						placeholder="내용을 입력하세요"
-						onChange={(e) => handleContentOnChange(e)}
-					></textarea>
-				</TextArea>
-				<InputFile>
-					<div className="custom_label">파일 업로드</div>
-					<div className="custom_input_wrap">
-						<div className="custom_input">
-							{fileName}
-							<input
-								type="file"
-								onChange={(e) => handleFileOnChange(e)}
-								id="selectImg"
-							></input>
+			<>
+				<PostPatch
+					image={userData.profileImage}
+					nickname={userData.nickname}
+					identifier={userData.identifier}
+					button1="작성완료"
+					button2="취소"
+					link={-1}
+					handleSubmit={() => handleWriteSubmit(content, file)}
+				>
+					<TextArea>
+						<label>내용</label>
+						<textarea
+							placeholder="내용을 입력하세요"
+							onChange={(e) => handleContentOnChange(e)}
+						></textarea>
+					</TextArea>
+					<InputFile>
+						<div className="custom_label">파일 업로드</div>
+						<div className="custom_input_wrap">
+							<div className="custom_input">
+								{fileName}
+								<input
+									type="file"
+									onChange={(e) => handleFileOnChange(e)}
+									id="selectImg"
+								></input>
+							</div>
+							<label htmlFor="selectImg" className="custom_btn">
+								<ImgUploadIcon />
+								파일 업로드
+							</label>
 						</div>
-						<label htmlFor="selectImg" className="custom_btn">
-							<ImgUploadIcon />
-							파일 업로드
-						</label>
-					</div>
-				</InputFile>
-			</PostPatch>
+					</InputFile>
+				</PostPatch>
+				{isLoading ? <LoadingFull /> : null}
+			</>
 		);
 	} else {
 		return null;

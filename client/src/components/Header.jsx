@@ -7,7 +7,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL } from "../data/apiUrl";
 import { logout } from "../redux/slice/loginstate";
 import { userInfo } from "../redux/slice/userInfo";
 import { login } from "../redux/slice/loginstate";
@@ -143,9 +142,13 @@ const Header = () => {
 
 	useEffect(() => {
 		if (loginInfo?.isLogin) {
-			axios.get(`${API_URL}/api/members/${loginInfo?.memberId}`).then((res) => {
-				dispatch(userInfo(res.data.data));
-			});
+			axios
+				.get(
+					`${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`
+				)
+				.then((res) => {
+					dispatch(userInfo(res.data.data));
+				});
 		}
 	}, [loginInfo?.isLogin, loginInfo?.memberId, dispatch]);
 
@@ -162,7 +165,7 @@ const Header = () => {
 	const handleLogout = () => {
 		axios
 			.post(
-				`${API_URL}/api/members/logout`,
+				`${process.env.REACT_APP_API_URL}/api/members/logout`,
 				{},
 				{
 					headers: {
@@ -182,11 +185,11 @@ const Header = () => {
 	useEffect(() => {
 		if (loginInfo?.isLogin && Date.now() >= loginInfo?.expire) {
 			const memberId = loginInfo.memberId;
-			const expire = Date.now() + 1000 * 60 * 20;
+			const expire = Date.now() + 1000 * 60 * 60;
 			console.log(loginInfo.refreshtoken);
 			axios
 				.get(
-					`${API_URL}/api/members/${loginInfo?.memberId}`,
+					`${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`,
 					{
 						headers: {
 							Authorization: `Bearer ${loginInfo.accessToken}`,

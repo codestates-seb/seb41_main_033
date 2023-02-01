@@ -5,7 +5,6 @@ import PostPatch from '../components/PostPatch';
 import InputWrap from '../components/InputWrap';
 import gameList from '../data/gameList.json';
 import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfo } from '../redux/slice/userInfo';
@@ -216,12 +215,16 @@ const ProfileEdit = () => {
     }
 
     axios
-      .patch(`${API_URL}/api/members/${userid}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${loginInfo?.accessToken}`,
-        },
-      })
+      .patch(
+        `${process.env.REACT_APP_API_URL}/api/members/${userid}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${loginInfo?.accessToken}`,
+          },
+        }
+      )
       .then((res) => {
         setIsOpen((prev) => !prev);
         document.body.style.overflow = 'unset';
@@ -232,7 +235,7 @@ const ProfileEdit = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/members/${userid}`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`, {
         headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
       })
       .then((res) => {
@@ -262,6 +265,7 @@ const ProfileEdit = () => {
               name="nickname"
               value={nickname || ''}
               onChange={handleNickname}
+              maxLength="8"
             />
             {isError.nickname ? (
               <div className="error_caption">
@@ -322,7 +326,7 @@ const ProfileEdit = () => {
               placeholder="내용을 입력하세요"
               onChange={handleBio}
             />
-            {isError.nickname ? (
+            {isError.introduction ? (
               <div className="error_caption">
                 자기소개는 500자 이하만 가능합니다.
               </div>

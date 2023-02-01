@@ -4,7 +4,6 @@ import HeartIcon from "./../assets/heart_sprite.svg";
 import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { API_URL } from "../data/apiUrl";
 import axios from "axios";
 import displayedAt from "../util/displayedAt";
 import SinglePofileWrap from "../components/SingleProfileWrap";
@@ -12,6 +11,7 @@ import StoryComments from "../components/StoryComments";
 import StoryBtn from "../components/StoryBtn";
 import StoryFileView from "./../components/StoryFileView";
 import Popup from "../components/Popup";
+import viewSplitLine from "../util/hyper";
 
 const Title = styled.h4`
 	margin-top: 24px;
@@ -69,16 +69,25 @@ const StoryLike = styled.div`
 `;
 
 const StoryBody = styled.div`
-	.img_wrap {
-		width: 100%;
-		margin-bottom: 24px;
-		img {
-			max-width: 100%;
-		}
-	}
-	.content_wrap {
-		color: var(--strong-color);
-	}
+
+  .img_wrap {
+    width: 100%;
+    margin-bottom: 24px;
+    img {
+      max-width: 100%;
+    }
+  }
+  .content_wrap {
+    color: var(--strong-color);
+    white-space: pre-wrap;
+    a {
+      text-decoration: underline;
+    }
+    a:hover {
+      color: var(--white);
+    }
+  }
+
 `;
 
 const BtnWrap = styled.div`
@@ -127,7 +136,7 @@ const StoryDetail = () => {
 	});
 	useEffect(() => {
 		axios
-			.get(`${API_URL}/api/boards/${params.boardid}`, {
+			.get(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
 				headers: {
 					//"ngrok-skip-browser-warning": "69420",
 					Authorization: `Bearer ${accessToken}`,
@@ -152,7 +161,7 @@ const StoryDetail = () => {
 	const handleStoryLikeClick = () => {
 		axios
 			.post(
-				`${API_URL}/api/boards/${params.boardid}/likes`,
+				`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}/likes`,
 				{},
 				{
 					headers: {
@@ -192,7 +201,7 @@ const StoryDetail = () => {
 
 	const handleStoryDeleteClick = () => {
 		axios
-			.delete(`${API_URL}/api/boards/${params.boardid}`, {
+			.delete(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
@@ -206,74 +215,78 @@ const StoryDetail = () => {
 			});
 	};
 
-	return (
-		<>
-			<Title>스토리</Title>
-			<div className="card big">
-				<StoryHead>
-					<a
-						href={`/profile/${params.userid}`}
-						title="유저 프로필로 이동"
-						className="profile_wrap"
-					>
-						<SinglePofileWrap
-							imgSize="big"
-							imgSrc={storyData.profileImage}
-							name={storyData.nickname}
-							subInfo={displayedAt(storyData.createdAt)}
-						/>
-					</a>
-					{storyData.likeStatus !== undefined ? (
-						<StoryLike>
-							<input
-								type="checkbox"
-								id="storyLikes"
-								name="storyLikes"
-								defaultChecked={storyLike.status ? true : null}
-								onClick={handleStoryLikeClick}
-							/>
-							<label htmlFor="storyLikes">{storyLike.likeCount}</label>
-						</StoryLike>
-					) : null}
-				</StoryHead>
-				<StoryBody>
-					<StoryFileView
-						size="big"
-						fileName={storyData.uploadFileName}
-						contentType={storyData.contentType}
-					/>
-					<div className="content_wrap">{storyData.content}</div>
-				</StoryBody>
-				{storyData.commentCount ? (
-					<CommentsCountTag>
-						<CommentIcon />
-						{storyData.commentCount}
-					</CommentsCountTag>
-				) : null}
-				{isMe ? (
-					<BtnWrap>
-						<StoryBtn
-							size="big"
-							type="edit"
-							clickHandler={handleStoryEditClick}
-						/>
-						<StoryBtn size="big" type="delete" clickHandler={handleDelete} />
-					</BtnWrap>
-				) : null}
-			</div>
-			<Title>댓글</Title>
-			<StoryComments boardId={params.boardid} />
-			<Popup
-				isOpen={isDeleteOpen}
-				setIsOpen={setIsDeleteOpen}
-				title="스토리 삭제"
-				content="스토리를 삭제하시겠습니까?"
-				button1="삭제하기"
-				button2="취소"
-				handleBtn1={handleStoryDeleteClick}
-				handleBtn2={handleCancel}
-			/>
-		</>
-	);
+
+  return (
+    <>
+      <Title>스토리</Title>
+      <div className="card big">
+        <StoryHead>
+          <a
+            href={`/profile/${params.userid}`}
+            title="유저 프로필로 이동"
+            className="profile_wrap"
+          >
+            <SinglePofileWrap
+              imgSize="big"
+              imgSrc={storyData.profileImage}
+              name={storyData.nickname}
+              subInfo={displayedAt(storyData.createdAt)}
+            />
+          </a>
+          {storyData.likeStatus !== undefined ? (
+            <StoryLike>
+              <input
+                type="checkbox"
+                id="storyLikes"
+                name="storyLikes"
+                defaultChecked={storyLike.status ? true : null}
+                onClick={handleStoryLikeClick}
+              />
+              <label htmlFor="storyLikes">{storyLike.likeCount}</label>
+            </StoryLike>
+          ) : null}
+        </StoryHead>
+        <StoryBody>
+          <StoryFileView
+            size="big"
+            fileName={storyData.uploadFileName}
+            contentType={storyData.contentType}
+          />
+          <div className="content_wrap">
+            {viewSplitLine(String(storyData.content))}
+          </div>
+        </StoryBody>
+        {storyData.commentCount ? (
+          <CommentsCountTag>
+            <CommentIcon />
+            {storyData.commentCount}
+          </CommentsCountTag>
+        ) : null}
+        {isMe ? (
+          <BtnWrap>
+            <StoryBtn
+              size="big"
+              type="edit"
+              clickHandler={handleStoryEditClick}
+            />
+            <StoryBtn size="big" type="delete" clickHandler={handleDelete} />
+          </BtnWrap>
+        ) : null}
+      </div>
+      <Title>댓글</Title>
+      <StoryComments boardId={params.boardid} />
+      <Popup
+        isOpen={isDeleteOpen}
+        setIsOpen={setIsDeleteOpen}
+        title="스토리 삭제"
+        content="스토리를 삭제하시겠습니까?"
+        button1="삭제하기"
+        button2="취소"
+        handleBtn1={handleStoryDeleteClick}
+        handleBtn2={handleCancel}
+      />
+    </>
+  );
+
 };
 export default StoryDetail;

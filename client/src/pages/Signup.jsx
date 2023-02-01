@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import { API_URL } from '../data/apiUrl';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { MOBILE_POINT } from '../data/breakpoint';
@@ -66,7 +65,6 @@ const Signup = () => {
   //회원가입 API
   const handleSignup = () => {
     const { identifier, password, nickname } = form;
-    console.log(form);
     if (!identifier || !/(?=.*\d)|(?=.*[a-zA-Z]).{4,16}/.test(identifier)) {
       setIsError({ ...isError, identifier: true });
       return;
@@ -84,7 +82,7 @@ const Signup = () => {
       return;
     }
     return axios
-      .post(`${API_URL}/api/members/signup`, form)
+      .post(`${process.env.REACT_APP_API_URL}/api/members/signup`, form)
       .then((res) => {
         setIsOpen((prev) => !prev);
         document.body.style.overflow = 'hidden';
@@ -93,7 +91,7 @@ const Signup = () => {
   };
 
   const handleLogin = () => {
-    navigate(`/login`);
+    navigate(`/login`, { state: { from: 'signup' } });
     document.body.style.overflow = 'unset';
   };
 

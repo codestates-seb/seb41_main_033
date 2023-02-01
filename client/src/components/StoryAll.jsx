@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { API_URL } from "../data/apiUrl";
 import SearchBar from "./../components/SearchBar";
 import StorySingle from "../components/StorySingle";
 import NoSearch from "../components/NoSearch";
@@ -41,8 +40,9 @@ const StoryAll = ({ accessToken, isLogin }) => {
 		}
 
 		if (keyword === "") {
+			setIsNoSearch(false);
 			if (page === 1) setStoryData([]);
-			url = `${API_URL}/api/boards?page=${page}`;
+			url = `${process.env.REACT_APP_API_URL}/api/boards?page=${page}`;
 			await axios
 				.get(url, config)
 				.then((res) => {
@@ -55,10 +55,11 @@ const StoryAll = ({ accessToken, isLogin }) => {
 					}
 				})
 				.catch((err) => {
-					console.log(err);
+					//console.log(err);
 				});
 		} else {
-			url = `${API_URL}/api/boards?page=${page}&keyword=${keyword}`;
+			url = `${process.env.REACT_APP_API_URL}/api/boards?page=${page}&keyword=${keyword}`;
+			setIsNoSearch(false);
 			await axios
 				.get(url, config)
 				.then((res) => {

@@ -149,6 +149,7 @@ const MatchingWrite = () => {
     });
   };
   const { title, team, content } = info;
+
   const submitBtn = (e) => {
     const data = { title, game, team, tags, content };
     validity(data);

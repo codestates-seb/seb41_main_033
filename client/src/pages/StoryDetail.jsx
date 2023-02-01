@@ -14,61 +14,62 @@ import Popup from "../components/Popup";
 import viewSplitLine from "../util/hyper";
 
 const Title = styled.h4`
-  margin-top: 24px;
-  margin-bottom: 16px;
-  letter-spacing: -0.5px;
-  font-size: var(--font-head3-size);
+	margin-top: 24px;
+	margin-bottom: 16px;
+	letter-spacing: -0.5px;
+	font-size: var(--font-head3-size);
 
-  &:first-child {
-    margin-top: 0;
-  }
+	&:first-child {
+		margin-top: 0;
+	}
 `;
 
 const StoryHead = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 24px;
 
-  .profile_wrap {
-    flex: 1;
-    display: block;
-  }
+	.profile_wrap {
+		flex: 1;
+		display: block;
+	}
 `;
 
 const StoryLike = styled.div`
-  position: relative;
-  label {
-    box-sizing: content-box;
-    padding: 12px 16px 12px 48px;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-btn);
-    text-align: center;
-    color: var(--strong-color);
-    cursor: pointer;
-  }
-  input[type="checkbox"] {
-    appearance: none;
-    position: absolute;
-    left: 16px;
-    top: 12px;
-    width: 24px;
-    height: 24px;
-    margin: 0;
-    background-image: url(${HeartIcon});
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    cursor: pointer;
-  }
-  input[type="checkbox"]:checked {
-    background-position: 0 -24px;
-  }
-  input[type="checkbox"]:checked + label {
-    background: var(--border-color);
-  }
+	position: relative;
+	label {
+		box-sizing: content-box;
+		padding: 12px 16px 12px 48px;
+		background: var(--bg-color);
+		border: 1px solid var(--border-color);
+		border-radius: var(--border-radius-btn);
+		text-align: center;
+		color: var(--strong-color);
+		cursor: pointer;
+	}
+	input[type="checkbox"] {
+		appearance: none;
+		position: absolute;
+		left: 16px;
+		top: 12px;
+		width: 24px;
+		height: 24px;
+		margin: 0;
+		background-image: url(${HeartIcon});
+		background-repeat: no-repeat;
+		background-position: 0 0;
+		cursor: pointer;
+	}
+	input[type="checkbox"]:checked {
+		background-position: 0 -24px;
+	}
+	input[type="checkbox"]:checked + label {
+		background: var(--border-color);
+	}
 `;
 
 const StoryBody = styled.div`
+
   .img_wrap {
     width: 100%;
     margin-bottom: 24px;
@@ -86,132 +87,134 @@ const StoryBody = styled.div`
       color: var(--white);
     }
   }
+
 `;
 
 const BtnWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 48px;
-  button {
-    margin-right: 12px;
-  }
-  button:last-child {
-    margin-right: 0;
-  }
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 48px;
+	button {
+		margin-right: 12px;
+	}
+	button:last-child {
+		margin-right: 0;
+	}
 `;
 
 const CommentsCountTag = styled.div`
-  display: flex;
-  align-items: center;
-  width: fit-content;
-  padding: 6px 12px;
-  margin: 24px 0 0 auto;
-  background: var(--border-color);
-  border-radius: var(--border-radius-btn);
-  font-size: var(--font-caption-size);
-  color: var(--strong-color);
+	display: flex;
+	align-items: center;
+	width: fit-content;
+	padding: 6px 12px;
+	margin: 24px 0 0 auto;
+	background: var(--border-color);
+	border-radius: var(--border-radius-btn);
+	font-size: var(--font-caption-size);
+	color: var(--strong-color);
 
-  svg {
-    width: 12px;
-    height: 12px;
-    margin-right: 8px;
-  }
+	svg {
+		width: 12px;
+		height: 12px;
+		margin-right: 8px;
+	}
 `;
 
 const StoryDetail = () => {
-  const navigate = useNavigate();
-  let params = useParams();
-  const loginInfo = useSelector((state) => state.islogin.login);
-  const accessToken = loginInfo.accessToken;
-  const memberId = loginInfo.memberId;
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isMe, setIsMe] = useState(false);
-  const [storyData, setStoryData] = useState({});
-  const [storyLike, setStoryLike] = useState({
-    status: false,
-    likeCount: 0,
-  });
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
-        headers: {
-          //"ngrok-skip-browser-warning": "69420",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((res) => {
-        setStoryData(res.data.data);
-        setStoryLike({
-          status: res.data.data.likeStatus,
-          likeCount: res.data.data.likeCount,
-        });
-        if (res.data.data.memberId === Number(memberId)) setIsMe(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-  let type = "";
-  if (storyData.contentType) type = storyData.contentType.split("/")[0];
+	const navigate = useNavigate();
+	let params = useParams();
+	const loginInfo = useSelector((state) => state.islogin.login);
+	const accessToken = loginInfo.accessToken;
+	const memberId = loginInfo.memberId;
+	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+	const [isMe, setIsMe] = useState(false);
+	const [storyData, setStoryData] = useState({});
+	const [storyLike, setStoryLike] = useState({
+		status: false,
+		likeCount: 0,
+	});
+	useEffect(() => {
+		axios
+			.get(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
+				headers: {
+					//"ngrok-skip-browser-warning": "69420",
+					Authorization: `Bearer ${accessToken}`,
+				},
+			})
+			.then((res) => {
+				setStoryData(res.data.data);
+				setStoryLike({
+					status: res.data.data.likeStatus,
+					likeCount: res.data.data.likeCount,
+				});
+				if (res.data.data.memberId === Number(memberId)) setIsMe(true);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
+	let type = "";
+	if (storyData.contentType) type = storyData.contentType.split("/")[0];
 
-  //스토리 좋아요
-  const handleStoryLikeClick = () => {
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}/likes`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${loginInfo?.accessToken}`,
-          },
-        }
-      )
-      .then((res) => {
-        let countValue = 0;
-        if (res.data) countValue = 1;
-        else countValue = -1;
-        setStoryLike({
-          status: res,
-          likeCount: storyLike.likeCount + countValue,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+	//스토리 좋아요
+	const handleStoryLikeClick = () => {
+		axios
+			.post(
+				`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}/likes`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${loginInfo?.accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				let countValue = 0;
+				if (res.data) countValue = 1;
+				else countValue = -1;
+				setStoryLike({
+					status: res,
+					likeCount: storyLike.likeCount + countValue,
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
-  //수정
-  const handleStoryEditClick = () => {
-    navigate(`/story/${params.userid}/${params.boardid}/edit`);
-  };
+	//수정
+	const handleStoryEditClick = () => {
+		navigate(`/story/${params.userid}/${params.boardid}/edit`);
+	};
 
-  //삭제
-  const handleDelete = () => {
-    setIsDeleteOpen((prev) => !prev);
-    document.body.style.overflow = "hidden";
-  };
+	//삭제
+	const handleDelete = () => {
+		setIsDeleteOpen((prev) => !prev);
+		document.body.style.overflow = "hidden";
+	};
 
-  const handleCancel = () => {
-    setIsDeleteOpen((prev) => !prev);
-    document.body.style.overflow = "unset";
-  };
+	const handleCancel = () => {
+		setIsDeleteOpen((prev) => !prev);
+		document.body.style.overflow = "unset";
+	};
 
-  const handleStoryDeleteClick = () => {
-    axios
-      .delete(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((res) => {
-        navigate("/story");
-        document.body.style.overflow = "unset";
-      })
-      .catch((err) => {
-        alert("스토리 삭제에 실패했습니다.");
-      });
-  };
+	const handleStoryDeleteClick = () => {
+		axios
+			.delete(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			})
+			.then((res) => {
+				navigate("/story");
+				document.body.style.overflow = "unset";
+			})
+			.catch((err) => {
+				alert("스토리 삭제에 실패했습니다.");
+			});
+	};
+
 
   return (
     <>
@@ -284,5 +287,6 @@ const StoryDetail = () => {
       />
     </>
   );
+
 };
 export default StoryDetail;

@@ -38,6 +38,25 @@ const Title = styled.div`
   font-size: var(--font-head2-size);
   text-align: center;
   margin-top: 20px;
+  a {
+    position: relative;
+    animation: fadeInUp 2s;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+  }
+  a:hover {
+    color: var(--yellow);
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translateZ(0);
+      }
+    }
+  }
 `;
 const ImgBox = styled.div`
   width: 120px;
@@ -126,7 +145,7 @@ const Drag = () => {
               dragEnd: false,
             });
             setPlaying(false);
-          }, 5000)
+          }, 10000)
         );
     }
   };
@@ -150,7 +169,13 @@ const Drag = () => {
           <GameImg src={matchGame(gameInfo).image} alt="게임아이콘" />
         </ImgBox>
       )}
-      {DnD.dragEnd && <Title>{gameInfo.korTitle} 고 ?</Title>}
+      {DnD.dragEnd && (
+        <Title>
+          <a href={matchGame(gameInfo).url} target="blank">
+            {gameInfo.korTitle} 고 ?
+          </a>
+        </Title>
+      )}
       {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
     </Wrap>
   );

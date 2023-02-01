@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as Heart } from '../assets/heartIcon.svg';
 import { ReactComponent as Comment } from '../assets/sms.svg';
 import { ReactComponent as Video } from '../assets/videoIcon.svg';
 import ProfilePagination from './ProfilePagination';
-import axios from 'axios';
 import matchGame from '../util/matchGame';
 import Popup from './Popup';
 import { useSelector } from 'react-redux';
@@ -85,17 +84,21 @@ const ListWrap = styled.div`
   }
 `;
 
-const ProfileContentList = ({ isMatch, isStory }) => {
+const ProfileContentList = ({
+  isMatch,
+  isStory,
+  match,
+  matchPage,
+  setMatchPage,
+  matchPageInfo,
+  story,
+  storyPage,
+  setStoryPage,
+  storyPageInfo,
+}) => {
   const { userid } = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
   const [isOpen, setIsOpen] = useState(false);
-  const [match, setMatch] = useState(null);
-  const [story, setStory] = useState(null);
-  const [matchPage, setMatchPage] = useState(1);
-  const [storyPage, setStoryPage] = useState(1);
-  const [matchPageInfo, setMatchPageInfo] = useState(null);
-  const [storyPageInfo, setStoryPageInfo] = useState(null);
-
   const navigate = useNavigate();
 
   const handleMatchNavigate = (id) => {
@@ -123,145 +126,113 @@ const ProfileContentList = ({ isMatch, isStory }) => {
     navigate(`/signup`);
   };
 
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/members/${userid}/matches?page=${matchPage}`
-      )
-      .then((res) => {
-        setMatch(res.data.data);
-        setMatchPageInfo(res.data.pageInfo);
-      })
-      .then(() => {
-        if (matchPage > matchPageInfo?.totalPages) setMatchPage(1);
-      });
-  }, [matchPage, userid, matchPageInfo?.totalPages]);
-
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/members/${userid}/boards?page=${storyPage}`
-      )
-      .then((res) => {
-        setStory(res.data.data);
-        setStoryPageInfo(res.data.pageInfo);
-      })
-      .then(() => {
-        if (storyPage > storyPageInfo?.totalPages) setStoryPage(1);
-      });
-  }, [storyPage, userid, storyPageInfo?.totalPages]);
-
-  if (match && story) {
-    return (
-      <>
-        <ListWrap>
-          <ul>
-            {isMatch ? (
-              match.length > 0 ? (
-                match.map((match) => (
-                  <li key={match.id}>
-                    <div className="game_container">
-                      <img
-                        className="game_icon"
-                        src={matchGame(match.game).image}
-                        alt="게임 아이콘"
-                      />
+  return (
+    <>
+      <ListWrap>
+        <ul>
+          {isMatch ? (
+            match.length > 0 ? (
+              match.map((match) => (
+                <li key={match.id}>
+                  <div className="game_container">
+                    <img
+                      className="game_icon"
+                      src={matchGame(match.game).image}
+                      alt="게임 아이콘"
+                    />
+                  </div>
+                  <div className="content_container match">
+                    <div
+                      className="content_title"
+                      onClick={() => handleMatchNavigate(match.id)}
+                    >
+                      {match.title}
                     </div>
-                    <div className="content_container match">
-                      <div
-                        className="content_title"
-                        onClick={() => handleMatchNavigate(match.id)}
-                      >
-                        {match.title}
-                      </div>
-                      <div className="content_date">
-                        {new Date(match.createdAt).toLocaleString()}
-                      </div>
+                    <div className="content_date">
+                      {new Date(match.createdAt).toLocaleString()}
                     </div>
-                  </li>
-                ))
-              ) : (
-                <li>
-                  <div className="content_none">
-                    작성된 매칭하기가 없습니다.
                   </div>
                 </li>
-              )
-            ) : null}
-            {isStory ? (
-              story.length > 0 ? (
-                story.map((story) => (
-                  <li key={story.id}>
-                    <div className="content_container story">
-                      <div
-                        className="content_title"
-                        onClick={() => handleStoryNavigate(story.id)}
-                      >
-                        {story.content}
-                      </div>
-                      <div className="content_date">
-                        {new Date(story.createdAt).toLocaleString()}
-                      </div>
-                      <div className="content_count">
-                        {story.likeCount ? (
-                          <div className="content_like">
-                            <Heart width="10px" />
-                            <span>{story.likeCount}</span>
-                          </div>
-                        ) : null}
-                        {story.commentCount ? (
-                          <div className="content_comment">
-                            <Comment width="10px" />
-                            <span>{story.commentCount}</span>
-                          </div>
-                        ) : null}
-                      </div>
+              ))
+            ) : (
+              <li>
+                <div className="content_none">작성된 매칭하기가 없습니다.</div>
+              </li>
+            )
+          ) : null}
+          {isStory ? (
+            story.length > 0 ? (
+              story.map((story) => (
+                <li key={story.id}>
+                  <div className="content_container story">
+                    <div
+                      className="content_title"
+                      onClick={() => handleStoryNavigate(story.id)}
+                    >
+                      {story.content}
                     </div>
-                    {story.uploadFileName ? (
-                      <div className="image_container">
-                        {story.contentType.split('/')[0] === 'image' ? (
-                          <img
-                            className="image_preview"
-                            src={story.uploadFileName}
-                            alt="스토리 이미지"
-                          />
-                        ) : (
-                          <Video className="image_preview" />
-                        )}
-                      </div>
-                    ) : null}
-                  </li>
-                ))
-              ) : (
-                <li>
-                  <div className="content_none">작성된 스토리가 없습니다.</div>
+                    <div className="content_date">
+                      {new Date(story.createdAt).toLocaleString()}
+                    </div>
+                    <div className="content_count">
+                      {story.likeCount ? (
+                        <div className="content_like">
+                          <Heart width="10px" />
+                          <span>{story.likeCount}</span>
+                        </div>
+                      ) : null}
+                      {story.commentCount ? (
+                        <div className="content_comment">
+                          <Comment width="10px" />
+                          <span>{story.commentCount}</span>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                  {story.uploadFileName ? (
+                    <div className="image_container">
+                      {story.contentType.split('/')[0] === 'image' ? (
+                        <img
+                          className="image_preview"
+                          src={story.uploadFileName}
+                          alt="스토리 이미지"
+                        />
+                      ) : (
+                        <Video className="image_preview" />
+                      )}
+                    </div>
+                  ) : null}
                 </li>
-              )
-            ) : null}
-          </ul>
-        </ListWrap>
-        <ProfilePagination
-          isMatch={isMatch}
-          matchPage={matchPage}
-          setMatchPage={setMatchPage}
-          matchPageInfo={matchPageInfo}
-          storyPage={storyPage}
-          setStoryPage={setStoryPage}
-          storyPageInfo={storyPageInfo}
-        />
-        <Popup
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          title="스토리 상세보기"
-          content="스토리 상세보기는 로그인 후 이용 가능합니다."
-          button1="로그인"
-          button2="회원가입"
-          handleBtn1={handleLogin}
-          handleBtn2={handleSignup}
-        />
-      </>
-    );
-  } else return null;
+              ))
+            ) : (
+              <li>
+                <div className="content_none">작성된 스토리가 없습니다.</div>
+              </li>
+            )
+          ) : null}
+        </ul>
+      </ListWrap>
+      <ProfilePagination
+        isMatch={isMatch}
+        matchPage={matchPage}
+        setMatchPage={setMatchPage}
+        matchPageInfo={matchPageInfo}
+        storyPage={storyPage}
+        setStoryPage={setStoryPage}
+        storyPageInfo={storyPageInfo}
+      />
+      <Popup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title="스토리 상세보기"
+        content="스토리 상세보기는 로그인 후 이용 가능합니다."
+        button1="로그인"
+        button2="회원가입"
+        handleBtn1={handleLogin}
+        handleBtn2={handleSignup}
+      />
+    </>
+  );
 };
 
 export default ProfileContentList;

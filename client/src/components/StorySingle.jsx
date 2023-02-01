@@ -1,14 +1,14 @@
-import styled from "styled-components";
-import { ReactComponent as BoardLikeIcon } from "./../assets/heartIcon.svg";
-import { ReactComponent as BoardCommentIcon } from "./../assets/sms.svg";
-import { Link, useNavigate } from "react-router-dom";
-import displayedAt from "../util/displayedAt";
-import SinglePofileWrap from "./SingleProfileWrap";
-import StoryFileView from "./StoryFileView";
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import { MOBILE_POINT } from "../data/breakpoint";
-import Popup from "./Popup";
+import styled from 'styled-components';
+import { ReactComponent as BoardLikeIcon } from './../assets/heartIcon.svg';
+import { ReactComponent as BoardCommentIcon } from './../assets/sms.svg';
+import { Link, useNavigate } from 'react-router-dom';
+import displayedAt from '../util/displayedAt';
+import SinglePofileWrap from './SingleProfileWrap';
+import StoryFileView from './StoryFileView';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { MOBILE_POINT } from '../data/breakpoint';
+import Popup from './Popup';
 
 const StoryWrap = styled.div`
   cursor: pointer;
@@ -69,10 +69,14 @@ const StorySingle = ({ data }) => {
 
   const handleLogin = () => {
     navigate(`/login`);
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   const handleSignup = () => {
     navigate(`/signup`);
+    setIsOpen((prev) => !prev);
+    document.body.style.overflow = 'unset';
   };
 
   const handleNaviOnClick = (e, memberId, boardId) => {
@@ -80,7 +84,7 @@ const StorySingle = ({ data }) => {
       navigate(`/story/${memberId}/${boardId}`);
     } else {
       setIsOpen((prev) => !prev);
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
   };
 

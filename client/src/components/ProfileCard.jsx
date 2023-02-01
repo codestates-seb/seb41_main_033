@@ -1,15 +1,15 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import SinglePofileWrap from "./SingleProfileWrap";
-import { ReactComponent as Setting } from "../assets/settingsIcon.svg";
-import { ReactComponent as Heart } from "../assets/heartIcon.svg";
-import { ReactComponent as EmptyHeart } from "../assets/heartEmptyIcon.svg";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { setProfile } from "../redux/slice/profileSlice";
-import { MOBILE_POINT } from "../data/breakpoint";
-import Popup from "./Popup";
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
+import SinglePofileWrap from './SingleProfileWrap';
+import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
+import { ReactComponent as Heart } from '../assets/heartIcon.svg';
+import { ReactComponent as EmptyHeart } from '../assets/heartEmptyIcon.svg';
+import axios from 'axios';
+import { useState } from 'react';
+import { setProfile } from '../redux/slice/profileSlice';
+import { MOBILE_POINT } from '../data/breakpoint';
+import Popup from './Popup';
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -92,12 +92,10 @@ const GameWrap = styled.div`
   }
 `;
 
-const ProfileCard = () => {
+const ProfileCard = ({ user, isMe }) => {
   const [isLikeOpen, setIsLikeOpen] = useState(false);
   const [isFollowOpen, setIsFollowOpen] = useState(false);
   const [isBlockOpen, setIsBlockOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isMe, setIsMe] = useState(false);
   const { userid } = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
   const userInfo = useSelector((state) => state.profile.user);
@@ -114,7 +112,7 @@ const ProfileCard = () => {
     if (isBlockOpen) {
       setIsBlockOpen((prev) => !prev);
     }
-    document.body.style.overflow = "unset";
+    document.body.style.overflow = 'unset';
     navigate(`/login`);
   };
 
@@ -128,7 +126,7 @@ const ProfileCard = () => {
     if (isBlockOpen) {
       setIsBlockOpen((prev) => !prev);
     }
-    document.body.style.overflow = "unset";
+    document.body.style.overflow = 'unset';
     navigate(`/signup`);
   };
 
@@ -143,7 +141,7 @@ const ProfileCard = () => {
           }
         )
         .then((res) => {
-          if (res.data === "팔로우가 완료되었습니다.") {
+          if (res.data === '팔로우가 완료되었습니다.') {
             dispatch(
               setProfile({
                 ...userInfo,
@@ -163,7 +161,7 @@ const ProfileCard = () => {
         });
     } else {
       setIsFollowOpen((prev) => !prev);
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
   };
 
@@ -178,7 +176,7 @@ const ProfileCard = () => {
           }
         )
         .then((res) => {
-          if (res.data === "좋아요가 완료되었습니다.") {
+          if (res.data === '좋아요가 완료되었습니다.') {
             dispatch(
               setProfile({
                 ...userInfo,
@@ -198,7 +196,7 @@ const ProfileCard = () => {
         });
     } else {
       setIsLikeOpen((prev) => !prev);
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
   };
 
@@ -215,7 +213,7 @@ const ProfileCard = () => {
         .then((res) => {
           if (
             res.data ===
-            "해당 유저를 차단하셨습니다. 팔로우와 좋아요가 취소됩니다."
+            '해당 유저를 차단하셨습니다. 팔로우와 좋아요가 취소됩니다.'
           ) {
             dispatch(
               setProfile({
@@ -234,152 +232,129 @@ const ProfileCard = () => {
         });
     } else {
       setIsBlockOpen((prev) => !prev);
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
   };
 
-  useEffect(() => {
-    if (loginInfo?.accessToken) {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`, {
-          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-        })
-        .then((res) => {
-          setUser(res.data.data);
-          dispatch(setProfile(res.data.data));
-        });
-    } else {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`)
-        .then((res) => {
-          setUser(res.data.data);
-          dispatch(setProfile(res.data.data));
-        });
-    }
-    Number(userid) === loginInfo?.memberId ? setIsMe(true) : setIsMe(false);
-  }, [userid, loginInfo?.accessToken, loginInfo?.memberId, dispatch]);
-
-  if (user) {
-    return (
-      <div>
-        <ProfileWrap className="card sm">
-          <InformWrap>
-            <SinglePofileWrap
-              className="profile_container"
-              imgSize="big"
-              imgSrc={user.profileImage}
-              name={user.nickname}
-              subInfo={user.identifier}
-            />
-            {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
-            {isMe ? (
-              <div className="icon">
-                <Link to={`/profile/${userid}/edit`}>
-                  <Setting className="setting" />
-                </Link>
-              </div>
-            ) : (
-              <div className="icon">
-                {userInfo.blockStatus ? null : (
-                  <>
-                    {userInfo.likeStatus ? (
-                      <Heart className="likes" onClick={handleLike} />
-                    ) : (
-                      <EmptyHeart className="likes" onClick={handleLike} />
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-          </InformWrap>
-          <FollowWrap>
-            <Follow>
-              <div className="follow">팔로잉</div>
-              <div className="number">{userInfo.followingCount}</div>
-            </Follow>
-            <Follow>
-              <div className="follow">팔로워</div>
-              <div className="number">{userInfo.followerCount}</div>
-            </Follow>
-            <Follow>
-              <div className="follow">좋아요</div>
-              <div className="number">{userInfo.likeCount}</div>
-            </Follow>
-          </FollowWrap>
-          {!isMe ? (
-            <ButtonWrap>
+  return (
+    <div>
+      <ProfileWrap className="card sm">
+        <InformWrap>
+          <SinglePofileWrap
+            className="profile_container"
+            imgSize="big"
+            imgSrc={user.profileImage}
+            name={user.nickname}
+            subInfo={user.identifier}
+          />
+          {/* 자기 자신 여부에 따라 표시 아이콘 달라짐 */}
+          {isMe ? (
+            <div className="icon">
+              <Link to={`/profile/${userid}/edit`}>
+                <Setting className="setting" />
+              </Link>
+            </div>
+          ) : (
+            <div className="icon">
               {userInfo.blockStatus ? null : (
                 <>
-                  {userInfo.followStatus ? (
-                    <button className="em" onClick={handleFollow}>
-                      팔로우 해제하기
-                    </button>
+                  {userInfo.likeStatus ? (
+                    <Heart className="likes" onClick={handleLike} />
                   ) : (
-                    <button className="em" onClick={handleFollow}>
-                      팔로우하기
-                    </button>
+                    <EmptyHeart className="likes" onClick={handleLike} />
                   )}
-                  <button className="normal" onClick={handleBlock}>
-                    차단하기
-                  </button>
                 </>
               )}
-            </ButtonWrap>
-          ) : null}
-        </ProfileWrap>
-        {userInfo.blockStatus ? null : (
-          <>
-            <ProfileWrap className="card sm">
-              <div className="inform_title">주로하는 게임</div>
-              <GameWrap>
-                <ul>
-                  {user.games.map((game) => (
-                    <li key={game.id} className="normal game_title">
-                      {game.korTitle}
-                    </li>
-                  ))}
-                </ul>
-              </GameWrap>
-            </ProfileWrap>
-            <ProfileWrap className="card sm">
-              <div className="inform_title">자기 소개</div>
-              <div className="inform_content">{user.introduction}</div>
-            </ProfileWrap>
-          </>
-        )}
-        <Popup
-          isOpen={isLikeOpen}
-          setIsOpen={setIsLikeOpen}
-          title="좋아요"
-          content="좋아요는 로그인 후 이용 가능합니다."
-          button1="로그인"
-          button2="회원가입"
-          handleBtn1={handleLogin}
-          handleBtn2={handleSignup}
-        />
-        <Popup
-          isOpen={isFollowOpen}
-          setIsOpen={setIsFollowOpen}
-          title="팔로우"
-          content="팔로우는 로그인 후 이용 가능합니다."
-          button1="로그인"
-          button2="회원가입"
-          handleBtn1={handleLogin}
-          handleBtn2={handleSignup}
-        />
-        <Popup
-          isOpen={isBlockOpen}
-          setIsOpen={setIsBlockOpen}
-          title="차단"
-          content="차단은 로그인 후 이용 가능합니다."
-          button1="로그인"
-          button2="회원가입"
-          handleBtn1={handleLogin}
-          handleBtn2={handleSignup}
-        />
-      </div>
-    );
-  } else return null;
+            </div>
+          )}
+        </InformWrap>
+        <FollowWrap>
+          <Follow>
+            <div className="follow">팔로잉</div>
+            <div className="number">{userInfo.followingCount}</div>
+          </Follow>
+          <Follow>
+            <div className="follow">팔로워</div>
+            <div className="number">{userInfo.followerCount}</div>
+          </Follow>
+          <Follow>
+            <div className="follow">좋아요</div>
+            <div className="number">{userInfo.likeCount}</div>
+          </Follow>
+        </FollowWrap>
+        {!isMe ? (
+          <ButtonWrap>
+            {userInfo.blockStatus ? null : (
+              <>
+                {userInfo.followStatus ? (
+                  <button className="em" onClick={handleFollow}>
+                    팔로우 해제하기
+                  </button>
+                ) : (
+                  <button className="em" onClick={handleFollow}>
+                    팔로우하기
+                  </button>
+                )}
+                <button className="normal" onClick={handleBlock}>
+                  차단하기
+                </button>
+              </>
+            )}
+          </ButtonWrap>
+        ) : null}
+      </ProfileWrap>
+      {userInfo.blockStatus ? null : (
+        <>
+          <ProfileWrap className="card sm">
+            <div className="inform_title">주로하는 게임</div>
+            <GameWrap>
+              <ul>
+                {user.games.map((game) => (
+                  <li key={game.id} className="normal game_title">
+                    {game.korTitle}
+                  </li>
+                ))}
+              </ul>
+            </GameWrap>
+          </ProfileWrap>
+          <ProfileWrap className="card sm">
+            <div className="inform_title">자기 소개</div>
+            <div className="inform_content">{user.introduction}</div>
+          </ProfileWrap>
+        </>
+      )}
+      <Popup
+        isOpen={isLikeOpen}
+        setIsOpen={setIsLikeOpen}
+        title="좋아요"
+        content="좋아요는 로그인 후 이용 가능합니다."
+        button1="로그인"
+        button2="회원가입"
+        handleBtn1={handleLogin}
+        handleBtn2={handleSignup}
+      />
+      <Popup
+        isOpen={isFollowOpen}
+        setIsOpen={setIsFollowOpen}
+        title="팔로우"
+        content="팔로우는 로그인 후 이용 가능합니다."
+        button1="로그인"
+        button2="회원가입"
+        handleBtn1={handleLogin}
+        handleBtn2={handleSignup}
+      />
+      <Popup
+        isOpen={isBlockOpen}
+        setIsOpen={setIsBlockOpen}
+        title="차단"
+        content="차단은 로그인 후 이용 가능합니다."
+        button1="로그인"
+        button2="회원가입"
+        handleBtn1={handleLogin}
+        handleBtn2={handleSignup}
+      />
+    </div>
+  );
 };
 
 export default ProfileCard;

@@ -62,7 +62,7 @@ const App = () => {
           {/* 아래 main 안에 각 페이지가 들어갑니다. */}
           <main className="container">
             <Routes>
-              <Route path="/" element={<Matching />} />
+              {/* <Route path="/" element={<Matching />} /> */}
               <Route path="/match" element={<Matching />} />
               <Route
                 path="/match/:boardid/detail"
@@ -84,7 +84,7 @@ const App = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/quit" element={<Quit />} />
               <Route path="/game" element={<GameRecommend />} />
-              <Route path="/curtaincall" element={<Readme />} />
+              <Route path="/" element={<Readme />} />
             </Routes>
           </main>
         </MainWrap>

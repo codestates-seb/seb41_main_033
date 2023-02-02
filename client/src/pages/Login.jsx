@@ -154,7 +154,8 @@ const Login = () => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         title="올바른 정보를 입력해 주세요"
-        content={message}
+        content={"아이디 혹은 비밀번호를 확인해주세요"}
+
         button1="확인"
         handleBtn1={() => setIsOpen(false)}
       />

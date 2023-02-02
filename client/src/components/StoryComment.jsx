@@ -9,6 +9,7 @@ import Popup from "./Popup";
 import viewSplitLine from "../util/hyper";
 
 const Wrap = styled.div`
+
 	display: flex;
 	align-items: center;
 	margin-bottom: 16px;
@@ -57,6 +58,7 @@ const Wrap = styled.div`
 			height: fit-content;
 		}
 	}
+
 `;
 
 const BtnWrap = styled.div`

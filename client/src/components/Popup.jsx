@@ -48,10 +48,12 @@ const Content = styled.div`
 
 const ButtonWrap = styled.div`
   display: flex;
+  justify-content: center;
   width: 100%;
   button {
     width: 100%;
     margin-right: 0px;
+
     :last-child {
       margin-left: 24px;
     }

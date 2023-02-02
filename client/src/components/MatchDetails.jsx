@@ -48,6 +48,7 @@ const Detail = styled.div`
       white-space: pre-wrap;
       a {
         text-decoration: underline;
+        word-break: break-all;
       }
       a:hover {
         color: var(--white);

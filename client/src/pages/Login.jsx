@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/slice/loginstate";
 import axios from "axios";
 import { MOBILE_POINT } from "../data/breakpoint";
-
+import Popup from "../components/Popup";
 const Card = styled.div`
   display: flex;
   flex-direction: column;
@@ -57,6 +57,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [idError, setIdError] = useState(false);
   const [psdError, setPsdError] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const idValid = /^[A-z0-9]{4,16}$/;
   const psdValid = /^(?=.*[A-z])(?=.*\d)(?=.*[~!@])[A-z\d~!@]{8,20}$/;
   const idValueCheck = idValid.test(identifier);
@@ -102,7 +104,12 @@ const Login = () => {
             navigate("/match");
           } else navigate(-1);
         })
-        .catch((err) => console.log(err.response.data));
+        .catch((err) => {
+          if (err.response.data) {
+            setIsOpen(true);
+            setMessage(err.response.data.message);
+          }
+        });
     }
   };
 
@@ -143,6 +150,14 @@ const Login = () => {
           </LoginBtn>
         </Space>
       </Form>
+      <Popup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        title="올바른 정보를 입력해 주세요"
+        content={message}
+        button1="확인"
+        handleBtn1={() => setIsOpen(false)}
+      />
     </Card>
   );
 };

@@ -12,7 +12,7 @@ import viewSplitLine from "../util/hyper";
 const Detail = styled.div`
   width: var(--col-9);
   margin-right: 32px;
-
+  word-break: break-all;
   .title_wrap {
     display: flex;
     align-items: flex-start;

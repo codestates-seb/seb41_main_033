@@ -3,6 +3,7 @@
 ![gameto_og](https://user-images.githubusercontent.com/111413253/214849189-3abe2fbd-008c-42ee-b4d1-96f9164d7005.png)
 
 ## 소개문
+[GAMETO 배포서버 바로가기!](https://gameto.kr)
 
 ![image](https://user-images.githubusercontent.com/110885981/215445088-c01268d2-0d3f-403c-9d07-217bc7393eda.png)</br>
 ![image](https://user-images.githubusercontent.com/110885981/215445186-a0a24c51-59e1-4056-90d1-88e3a0a7905e.png)

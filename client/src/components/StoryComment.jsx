@@ -39,6 +39,8 @@ const Wrap = styled.div`
     flex: 1;
     padding-left: 52px;
     font-size: var(--font-body2-size);
+    word-break: break-word;
+    white-space: pre-wrap;
   }
   .content_wrap.edit {
     textarea {

@@ -27,7 +27,18 @@ const Img = styled.div`
   display: block;
   width: 56px;
   height: 56px;
+  svg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    object-fit: cover;
+  }
+  svg {
     width: 100%;
     height: 100%;
     border-radius: 100%;

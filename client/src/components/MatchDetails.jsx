@@ -12,7 +12,7 @@ import viewSplitLine from "../util/hyper";
 const Detail = styled.div`
   width: var(--col-9);
   margin-right: 32px;
-
+  word-break: break-all;
   .title_wrap {
     display: flex;
     align-items: flex-start;
@@ -48,6 +48,7 @@ const Detail = styled.div`
       white-space: pre-wrap;
       a {
         text-decoration: underline;
+        word-break: break-all;
       }
       a:hover {
         color: var(--white);

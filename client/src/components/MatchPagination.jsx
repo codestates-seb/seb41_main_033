@@ -40,7 +40,7 @@ const MatchPagination = ({ setPage, page, total }) => {
           }
           setPage(page - 1);
           setCurrPage(page - 2);
-          sessionStorage.removeItem("matchfix");
+          sessionStorage.setItem("matchfix", page - 1);
         }}
       >
         {total > 5 && <ArrowBack />}
@@ -67,7 +67,7 @@ const MatchPagination = ({ setPage, page, total }) => {
           }
           setPage(page + 1);
           setCurrPage(page);
-          sessionStorage.removeItem("matchfix");
+          sessionStorage.setItem("matchfix", page + 1);
         }}
       >
         {total > 5 && <ArrowForward />}

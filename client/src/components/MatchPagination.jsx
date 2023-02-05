@@ -53,7 +53,7 @@ const MatchPagination = ({ setPage, page, total }) => {
             aria-current={page === firstNum + i && "page"}
             onClick={() => {
               setPage(firstNum + i);
-              sessionStorage.removeItem("matchfix");
+              sessionStorage.setItem("matchfix", firstNum + i);
             }}
           >
             {firstNum + i}

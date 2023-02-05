@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import PostPatch from "../components/PostPatch";
 import validity from "../util/validity";
 import { MOBILE_POINT } from "../data/breakpoint";
-
+import { throttle } from "lodash";
 const MatchContainer = styled.form`
   .user_info {
     display: flex;
@@ -150,7 +150,7 @@ const MatchingWrite = () => {
   };
   const { title, team, content } = info;
 
-  const submitBtn = (e) => {
+  const submitBtn = throttle((e) => {
     const data = { title, game, team, tags, content };
     validity(data);
     const isEmpty = (object) =>
@@ -167,7 +167,7 @@ const MatchingWrite = () => {
         })
         .catch((err) => console(err));
     }
-  };
+  }, 10000);
   const [isOpen, setIsOpen] = useState(false);
 
   return (

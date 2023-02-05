@@ -1,15 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
-import { ReactComponent as ImgUploadIcon } from './../assets/addPhoto.svg';
-import PostPatch from '../components/PostPatch';
-import InputWrap from '../components/InputWrap';
-import gameList from '../data/gameList.json';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { userInfo } from '../redux/slice/userInfo';
-import { MOBILE_POINT } from '../data/breakpoint';
-import Popup from '../components/Popup';
+import { useState, useEffect, useCallback } from "react";
+import styled from "styled-components";
+import { ReactComponent as ImgUploadIcon } from "./../assets/addPhoto.svg";
+import PostPatch from "../components/PostPatch";
+import InputWrap from "../components/InputWrap";
+import gameList from "../data/gameList.json";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { userInfo } from "../redux/slice/userInfo";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from "../components/Popup";
+import { throttle } from "lodash";
 
 const ContentWrap = styled.div`
   margin: 24px 0;
@@ -43,7 +44,7 @@ const ProfileWrap = styled.div`
       background: var(--input-color);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
-      input[type='file'] {
+      input[type="file"] {
         position: absolute;
         left: 0;
         top: 0;
@@ -101,7 +102,7 @@ const GameWrap = styled.div`
   .game {
     margin-top: 8px;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     display: none;
   }
   .game_title {
@@ -112,7 +113,7 @@ const GameWrap = styled.div`
     font-size: var(--font-caption-size);
     cursor: pointer;
   }
-  input[type='checkbox']:checked + .game_title {
+  input[type="checkbox"]:checked + .game_title {
     background: var(--bg-color);
     color: var(--yellow);
   }
@@ -142,11 +143,11 @@ const BlockWrap = styled.div`
 const ProfileEdit = () => {
   const { userid } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const [nickname, setNickname] = useState('');
-  const [fileName, setFileName] = useState('이미지 파일을 선택하세요');
-  const [file, setFile] = useState('');
+  const [nickname, setNickname] = useState("");
+  const [fileName, setFileName] = useState("이미지 파일을 선택하세요");
+  const [file, setFile] = useState("");
   const [checkedGame, setCheckedGame] = useState([]);
-  const [bio, setBio] = useState('');
+  const [bio, setBio] = useState("");
   const [isError, setIsError] = useState({ nickname: false });
   const loginInfo = useSelector((state) => state.islogin.login);
   const userInform = useSelector((state) => state.userInfo.userInfo);
@@ -174,7 +175,7 @@ const ProfileEdit = () => {
         if (checkedGame.length < 5) {
           setCheckedGame((prev) => [...prev, item]);
         } else {
-          alert('5개까지만 선택 가능합니다.');
+          alert("5개까지만 선택 가능합니다.");
           e.target.checked = null;
         }
       } else {
@@ -193,10 +194,10 @@ const ProfileEdit = () => {
 
   const handlePatch = () => {
     setIsOpen((prev) => !prev);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
-  const handlePatchSubmit = () => {
+  const handlePatchSubmit = throttle(() => {
     const formData = new FormData();
     const data = {
       nickname,
@@ -205,13 +206,13 @@ const ProfileEdit = () => {
     };
 
     formData.append(
-      'data',
+      "data",
       new Blob([JSON.stringify(data)], {
-        type: 'application/json',
+        type: "application/json",
       })
     );
     if (file) {
-      formData.append('image', file);
+      formData.append("image", file);
     }
 
     axios
@@ -220,18 +221,18 @@ const ProfileEdit = () => {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${loginInfo?.accessToken}`,
           },
         }
       )
       .then((res) => {
         setIsOpen((prev) => !prev);
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = "unset";
         dispatch(userInfo(res.data.data));
         navigate(`/profile/${userid}`, { replace: true });
       });
-  };
+  }, 10000);
 
   useEffect(() => {
     axios
@@ -260,10 +261,10 @@ const ProfileEdit = () => {
           <NicknameWrap>
             <label htmlFor="nickname">닉네임 수정</label>
             <InputWrap
-              className={isError.nickname ? 'error' : null}
+              className={isError.nickname ? "error" : null}
               type="text"
               name="nickname"
-              value={nickname || ''}
+              value={nickname || ""}
               onChange={handleNickname}
               maxLength="8"
             />
@@ -320,9 +321,9 @@ const ProfileEdit = () => {
           <BioWrap>
             <label htmlFor="bio">자기소개 수정</label>
             <textarea
-              className={isError.introduction ? 'error' : null}
+              className={isError.introduction ? "error" : null}
               id="bio"
-              value={bio || ''}
+              value={bio || ""}
               placeholder="내용을 입력하세요"
               onChange={handleBio}
             />

@@ -141,7 +141,7 @@ const Drag = () => {
     }
   };
   const onDragLeave = (e) => {
-    if (count > 5) {
+    if (count > 7) {
       setDeadSound(true);
     }
     e.preventDefault();
@@ -213,11 +213,9 @@ const Drag = () => {
     setCount(count + 2);
   };
   useEffect(() => {
-    setCount(7);
+    setCount(1);
   }, []);
-  useEffect(() => {
-    setPass(false);
-  }, []);
+
   return (
     <>
       {count > 7 ? (

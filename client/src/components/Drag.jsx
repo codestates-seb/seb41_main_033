@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ReactComponent as Game } from "./../assets/mohagi.svg";
+import { ReactComponent as Dead } from "./../assets/deadIcon.svg";
 import styled from "styled-components";
 import Confetti from "./Confetti";
 import useAudio from "../hooks/useAudio";
 import sound from "../assets/game.mp3";
 import drum from "../assets/drum.mp3";
+import heaven from "../assets/heaven.mp3";
 import RandomRolling from "../components/RandomRolling";
 import axios from "axios";
 import matchGame from "../util/matchGame";
@@ -16,8 +18,17 @@ const Wrap = styled.div`
 `;
 const Icon = styled.div`
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
   touch-action: pan-y;
-  div {
+  > .dead {
+    > svg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  > div {
     animation: vibration 0.4s infinite;
     transition: 1s;
   }
@@ -57,6 +68,27 @@ const Title = styled.div`
       }
     }
   }
+  &.typing-demo {
+    width: 18ch;
+    margin-top: 20px;
+    animation: typing 5s steps(18), blink 1s step-end infinite alternate;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+    font-family: monospace;
+  }
+
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      border-color: transparent;
+    }
+  }
 `;
 const ImgBox = styled.div`
   width: 120px;
@@ -71,28 +103,47 @@ const GameImg = styled.img`
 const Drag = () => {
   const [DnD, setDnD] = useState({ dragEnd: false, isDragging: false });
   const [isDrag, setDrag] = useState(false);
+  const [count, setCount] = useState(0);
   const [play, setPlaying] = useAudio(sound);
   const [pass, setPass] = useAudio(drum);
+  const [deadSound, setDeadSound] = useAudio(heaven);
   const [recommend, setRecommend] = useState(false);
   const [gameInfo, setGameInfo] = useState("");
+
   const onDragStart = (e) => {
-    setDnD({
-      isDragging: true,
-      dragEnd: false,
-    });
-    setDrag(false);
+    if (count > 7) {
+      setPass(false);
+      setPlaying(false);
+      setDeadSound(true);
+    } else {
+      setDnD({
+        isDragging: true,
+        dragEnd: false,
+      });
+      setDrag(false);
+    }
   };
   const onDragOver = (e) => {
     e.preventDefault();
-    setDnD({
-      isDragging: true,
-      ...DnD,
-    });
-    setDrag(false);
-    setRecommend(true);
-    setPass(true);
+    if (count > 6) {
+      setPass(false);
+      setPlaying(false);
+      setDeadSound(true);
+    } else {
+      setCount(count + 1);
+      setDnD({
+        isDragging: true,
+        ...DnD,
+      });
+      setDrag(false);
+      setRecommend(true);
+      setPass(true);
+    }
   };
   const onDragLeave = (e) => {
+    if (count > 5) {
+      setDeadSound(true);
+    }
     e.preventDefault();
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
@@ -115,69 +166,101 @@ const Drag = () => {
           });
         }, 5000)
       );
+    setCount(count + 1);
   };
 
   const [tochedY, setTochedY] = useState(0);
+
   const onTouchStart = (e) => {
     setTochedY(e.changedTouches[0].pageY);
+    if (count > 7) {
+      setPlaying(false);
+      setDeadSound(true);
+    }
   };
 
   const onTouchEnd = (e) => {
     const distanceY = tochedY - e.changedTouches[0].pageY;
     if (distanceY <= -40) {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
-        .then((res) => {
-          setGameInfo(res.data.data);
-          setPlaying(true);
-          setDrag(true);
-          setRecommend(false);
-          setPass(false);
-          setDnD({
-            isDragging: false,
-            dragEnd: true,
-          });
-        })
-        .then(
-          setTimeout(() => {
+      if (count > 7) {
+        setPlaying(false);
+        setDeadSound(true);
+      } else {
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
+          .then((res) => {
+            setGameInfo(res.data.data);
+            setPlaying(true);
+            setDrag(true);
+            setRecommend(false);
+            setPass(false);
             setDnD({
               isDragging: false,
-              dragEnd: false,
+              dragEnd: true,
             });
-            setPlaying(false);
-          }, 10000)
-        );
+          })
+          .then(
+            setTimeout(() => {
+              setDnD({
+                isDragging: false,
+                dragEnd: false,
+              });
+              setPlaying(false);
+            }, 10000)
+          );
+      }
     }
+    setCount(count + 2);
   };
-
+  useEffect(() => {
+    setCount(7);
+  }, []);
+  useEffect(() => {
+    setPass(false);
+  }, []);
   return (
-    <Wrap>
-      <div>{isDrag && play && <Confetti />}</div>
-      <Random>{recommend && !DnD.dragEnd && <RandomRolling />}</Random>
-      <Icon
-        draggable
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDragEnd={onDragLeave}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        <div>{!DnD.dragEnd && !recommend && <Game />}</div>
-      </Icon>
-      {DnD.dragEnd && (
-        <ImgBox>
-          <GameImg src={matchGame(gameInfo).image} alt="게임아이콘" />
-        </ImgBox>
+    <>
+      {count > 7 ? (
+        <Wrap>
+          <Icon>
+            <div className="dead">
+              <Dead />
+            </div>
+          </Icon>
+          <Title className="typing-demo">이제.. 날 놓아줘...</Title>
+        </Wrap>
+      ) : (
+        <Wrap>
+          <div>{isDrag && play && <Confetti />}</div>
+          <Random>
+            {recommend && !DnD.dragEnd && count <= 7 && <RandomRolling />}
+          </Random>
+          <Icon
+            draggable
+            onDragStart={onDragStart}
+            onDragOver={onDragOver}
+            onDragEnd={onDragLeave}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
+            <div>{!DnD.dragEnd && !recommend && <Game />}</div>
+          </Icon>
+          {DnD.dragEnd && (
+            <ImgBox>
+              <GameImg src={matchGame(gameInfo).image} alt="게임아이콘" />
+            </ImgBox>
+          )}
+          {DnD.dragEnd && (
+            <Title>
+              <a href={matchGame(gameInfo).url} target="blank">
+                {gameInfo.korTitle} 고 ?
+              </a>
+            </Title>
+          )}
+          {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
+        </Wrap>
       )}
-      {DnD.dragEnd && (
-        <Title>
-          <a href={matchGame(gameInfo).url} target="blank">
-            {gameInfo.korTitle} 고 ?
-          </a>
-        </Title>
-      )}
-      {!DnD.dragEnd && <Title>오늘 뭐가땡기지</Title>}
-    </Wrap>
+    </>
   );
 };
 

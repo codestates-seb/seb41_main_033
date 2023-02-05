@@ -111,7 +111,7 @@ const Drag = () => {
   const [gameInfo, setGameInfo] = useState("");
 
   const onDragStart = (e) => {
-    if (count > 7) {
+    if (count > 6) {
       setPass(false);
       setPlaying(false);
       setDeadSound(true);
@@ -126,9 +126,7 @@ const Drag = () => {
   const onDragOver = (e) => {
     e.preventDefault();
     if (count > 6) {
-      setPass(false);
-      setPlaying(false);
-      setDeadSound(true);
+      return;
     } else {
       setCount(count + 1);
       setDnD({
@@ -142,30 +140,33 @@ const Drag = () => {
   };
   const onDragLeave = (e) => {
     if (count > 7) {
+      setPass(false);
+      setPlaying(false);
       setDeadSound(true);
-    }
-    e.preventDefault();
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
-      .then((res) => {
-        setGameInfo(res.data.data);
-        setDrag(true);
-        setRecommend(false);
-        setPlaying(true);
-        setPass(false);
-        setDnD({
-          isDragging: false,
-          dragEnd: true,
-        });
-      })
-      .then(
-        setTimeout(() => {
+    } else {
+      e.preventDefault();
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
+        .then((res) => {
+          setGameInfo(res.data.data);
+          setDrag(true);
+          setRecommend(false);
+          setPlaying(true);
+          setPass(false);
           setDnD({
             isDragging: false,
-            dragEnd: false,
+            dragEnd: true,
           });
-        }, 5000)
-      );
+        })
+        .then(
+          setTimeout(() => {
+            setDnD({
+              isDragging: false,
+              dragEnd: false,
+            });
+          }, 5000)
+        );
+    }
     setCount(count + 1);
   };
 
@@ -173,7 +174,7 @@ const Drag = () => {
 
   const onTouchStart = (e) => {
     setTochedY(e.changedTouches[0].pageY);
-    if (count > 7) {
+    if (count > 6) {
       setPlaying(false);
       setDeadSound(true);
     }
@@ -183,8 +184,7 @@ const Drag = () => {
     const distanceY = tochedY - e.changedTouches[0].pageY;
     if (distanceY <= -40) {
       if (count > 7) {
-        setPlaying(false);
-        setDeadSound(true);
+        return;
       } else {
         axios
           .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
@@ -206,7 +206,7 @@ const Drag = () => {
                 dragEnd: false,
               });
               setPlaying(false);
-            }, 10000)
+            }, 8000)
           );
       }
     }

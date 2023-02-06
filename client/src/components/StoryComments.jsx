@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StoryComment from "../components/StoryComment";
 import { useSelector } from "react-redux";
+import { throttle } from "lodash";
 
 const CommentWriteWrap = styled.div`
   margin-bottom: 24px;
@@ -39,7 +40,7 @@ const StoryComments = ({ boardId }) => {
 
   //CRUD
   //CREATE: 댓글 생성
-  const handleWriteClick = () => {
+  const handleWriteClick = throttle(() => {
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/api/boards/${boardId}/comments`,
@@ -58,7 +59,7 @@ const StoryComments = ({ boardId }) => {
         console.log(err);
         alert("댓글 등록에 실패했습니다.");
       });
-  };
+  }, 10000);
   //READ: 댓글 불러오기
   const getCommentsList = () => {
     axios

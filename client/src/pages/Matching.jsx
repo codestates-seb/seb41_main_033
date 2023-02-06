@@ -47,7 +47,9 @@ const Matching = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [matchinglist, setMatchinglist] = useState([]);
   const [loading, setLoding] = useState(true);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(
+    Number(sessionStorage.getItem("matchfix")) || 1
+  );
   const [total, setTotal] = useState(1);
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
@@ -120,7 +122,10 @@ const Matching = () => {
           ) : (
             <Ul>
               {matchinglist?.map((el) => (
-                <li key={el.id}>
+                <li
+                  key={el.id}
+                  onClick={() => sessionStorage.setItem("matchfix", page)}
+                >
                   <Link to={`/match/${el.id}/detail`}>
                     <MatchingCard data={el} />
                   </Link>

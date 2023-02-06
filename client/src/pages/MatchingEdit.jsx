@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import validity from "../util/validity";
 import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "../components/Popup";
-
+import { throttle } from "lodash";
 const Label = styled.label`
   font-style: normal;
   font-weight: 500;
@@ -144,7 +144,7 @@ const MatchingEdit = () => {
     document.body.style.overflow = "hidden";
   };
 
-  const submitBtn = (e) => {
+  const submitBtn = throttle((e) => {
     e.preventDefault();
     const data = { title, game, team, tags, content };
     validity(data);
@@ -168,7 +168,7 @@ const MatchingEdit = () => {
         })
         .catch((err) => console.log(err));
     }
-  };
+  }, 10000);
 
   return (
     <PostPatch

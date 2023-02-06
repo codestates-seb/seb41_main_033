@@ -211,7 +211,6 @@ const Header = () => {
               refreshtoken,
             })
           );
-          window.location.reload();
         })
         .catch((err) => console.log(err));
     }

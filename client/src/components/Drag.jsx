@@ -103,7 +103,7 @@ const GameImg = styled.img`
 const Drag = () => {
   const [DnD, setDnD] = useState({ dragEnd: false, isDragging: false });
   const [isDrag, setDrag] = useState(false);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const [play, setPlaying] = useAudio(sound);
   const [pass, setPass] = useAudio(drum);
   const [deadSound, setDeadSound] = useAudio(heaven);
@@ -126,7 +126,7 @@ const Drag = () => {
   const onDragOver = (e) => {
     e.preventDefault();
     if (count > 6) {
-      return;
+      setDeadSound(true);
     } else {
       setCount(count + 1);
       setDnD({
@@ -184,7 +184,7 @@ const Drag = () => {
     const distanceY = tochedY - e.changedTouches[0].pageY;
     if (distanceY <= -40) {
       if (count > 7) {
-        return;
+        setPlaying(false);
       } else {
         axios
           .get(`${process.env.REACT_APP_API_URL}/api/games/random`)

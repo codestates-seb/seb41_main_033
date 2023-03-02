@@ -2,6 +2,7 @@ package mainproject33.domain.userboard.repository;
 
 import mainproject33.domain.userboard.entity.UserBoard;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserBoardRepository extends JpaRepository<UserBoard, Long>
+public interface UserBoardRepository extends JpaRepository<UserBoard, Long>, UserBoardRepositoryCustom
 {
     @Query(value = "select * from user_board where content like %:keyword% order by id desc", nativeQuery = true)
     List<UserBoard> findByKeyword(@Param("keyword") String keyword);
@@ -23,4 +24,5 @@ public interface UserBoardRepository extends JpaRepository<UserBoard, Long>
 
     @Query(value = "select * from user_board where member_id = :memberId", nativeQuery = true)
     Page<UserBoard> findByMemberId(@Param("memberId")Long memberId, Pageable pageable);
+
 }

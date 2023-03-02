@@ -16,7 +16,7 @@ import java.util.Set;
 
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class UserBoard extends Auditable
 {

@@ -12,9 +12,11 @@ import mainproject33.domain.userboard.mapper.UserBoardMapper;
 import mainproject33.domain.userboard.service.UserBoardService;
 import mainproject33.global.dto.MultiResponseDto;
 import mainproject33.global.dto.SingleResponseDto;
+import mainproject33.global.dto.SliceDto;
 import mainproject33.global.service.VerificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -94,11 +96,25 @@ public class UserBoardController
         return new ResponseEntity(new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);
     }
 
+    //query dsl api. 테스트 용
+    @GetMapping("/query")
+    public ResponseEntity getBoardsQuery(@RequestParam(value = "keyword", required = false) String keyword,
+                                         @PageableDefault(size = 8) Pageable pageable,
+                                         @RequestParam(required = false) Long last,
+                                         @AuthenticationPrincipal Member user)
+    {
+        Slice<UserBoard> sliceBoards = boardService.findAllBoardsQuerydsl(user, pageable, keyword, last);
+
+        List<UserBoard> boards = sliceBoards.getContent();
+        List<UserBoardResponseDto> responses = mapper.userBoardToResponses(boards, user);
+
+        return new ResponseEntity(new SliceDto<>(responses, sliceBoards), HttpStatus.OK);
+    }
+
     @GetMapping("/following")
     public ResponseEntity getFollowerBoards(@RequestParam(value = "keyword", required = false) String keyword,
-                                    @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC)
-                                    Pageable pageable,
-                                    @AuthenticationPrincipal Member member)
+                                            @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                            @AuthenticationPrincipal Member member)
     {
         Page<UserBoard> pageBoards = boardService.findFollowingBoards(keyword, pageable.previousOrFirst(), member);
 
@@ -107,6 +123,23 @@ public class UserBoardController
 
         return new ResponseEntity(new MultiResponseDto<>(responses, pageBoards), HttpStatus.OK);
     }
+
+
+    @GetMapping("/following/query")
+    public ResponseEntity getFollowerBoardsQuery(@RequestParam(value = "keyword", required = false) String keyword,
+                                                 @PageableDefault(size = 8) Pageable pageable,
+                                                 @RequestParam(required = false) Long last,
+                                                 @AuthenticationPrincipal Member member)
+    {
+        Slice<UserBoard> sliceBoards = boardService.findFollowingBoardsQuerydsl(keyword, pageable, member, last);
+
+        List<UserBoard> content = sliceBoards.getContent();
+
+        List<UserBoardResponseDto> responses = mapper.userBoardToResponses(content, member);
+
+        return new ResponseEntity(new SliceDto<>(responses, sliceBoards), HttpStatus.OK);
+    }
+
 
     @DeleteMapping("{board-id}")
     public ResponseEntity deleteBoard(@PathVariable("board-id") @Positive long boardId,

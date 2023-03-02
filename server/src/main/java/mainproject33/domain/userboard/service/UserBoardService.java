@@ -8,12 +8,11 @@ import mainproject33.domain.member.repository.BlockRepository;
 import mainproject33.domain.member.repository.FollowRepository;
 import mainproject33.domain.userboard.entity.UserBoard;
 import mainproject33.domain.userboard.repository.UserBoardRepository;
+import mainproject33.domain.userboard.repository.UserBoardRepositoryImpl;
 import mainproject33.global.exception.BusinessLogicException;
 import mainproject33.global.exception.ExceptionMessage;
 import mainproject33.global.service.VerificationService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +32,8 @@ public class UserBoardService
     private final BlockRepository blockRepository;
     private final UserBoardFileService boardFileService;
     private final VerificationService verify;
-
     private final FollowRepository followRepository;
+
 
     public UserBoard postUserBoard(UserBoard request, Member user, MultipartFile file) throws IOException
     {
@@ -125,6 +124,19 @@ public class UserBoardService
     }
 
     @Transactional(readOnly = true)
+    public Slice<UserBoard> findAllBoardsQuerydsl(Member user, Pageable pageable, String keyword, Long lastBoard)
+    {
+        if(user == null)
+        {
+            return userBoardRepository.findAllWithoutLogin(pageable, keyword, lastBoard);
+        }
+
+        //로그인을 하면 블랙 필터링
+        return userBoardRepository.findAllFilteredBoard(user, pageable, keyword, lastBoard);
+    }
+
+
+    @Transactional(readOnly = true)
     public Page<UserBoard> findFollowingBoards(String keyword, Pageable pageable, Member member)
     {
         if(member == null)
@@ -142,6 +154,16 @@ public class UserBoardService
 
         return getPagedBoard(filterFollowingList(filteredBoards, boards), pageable);
     }
+
+    @Transactional(readOnly = true)
+    public Slice<UserBoard> findFollowingBoardsQuerydsl(String keyword, Pageable pageable, Member user, Long last)
+    {
+        if(user == null)
+            throw new BusinessLogicException(ExceptionMessage.MEMBER_UNAUTHORIZED);
+
+        return userBoardRepository.findFriendsUserBoards(user, pageable, keyword, last);
+    }
+
 
     @Transactional(readOnly = true)
     public Page<UserBoard> findProfileUserBoards(Long memberId, Pageable pageable) {

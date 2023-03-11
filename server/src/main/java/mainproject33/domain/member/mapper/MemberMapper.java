@@ -38,6 +38,7 @@ public class MemberMapper {
 
         member.setIdentifier(post.getIdentifier());
         member.setPassword(post.getPassword());
+        member.setEmail(post.getEmail());
         member.setNickname(post.getNickname());
 
         return member;

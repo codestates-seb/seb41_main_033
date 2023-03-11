@@ -22,7 +22,7 @@ public class CustomAuthorityUtils { // 유저에게 권한을 부여하는 클�
         return authorities;
     }
 
-    public List<String> createRoles(String email) {
+    public List<String> createRoles(String identifier) {
         return USER_ROLES_STRING;
     }
 }

@@ -36,9 +36,11 @@ public enum ExceptionMessage {
 
     //=========user board file=========//
 
-    EXT_NOT_ACCEPTED("확장자 명이 올바르지 않습니다.");
+    EXT_NOT_ACCEPTED("확장자 명이 올바르지 않습니다."),
 
+    //=========oauth2=========//
 
+    GOOGLE_USER_INFO_NOT_FOUND("구글 정보조회에 실패했습니다.");
 
     @Getter
     private final String message;

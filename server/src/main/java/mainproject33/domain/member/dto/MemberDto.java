@@ -1,15 +1,15 @@
 package mainproject33.domain.member.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import mainproject33.domain.gamedb.entity.GameDB;
-import mainproject33.domain.matchboard.dto.MatchBoardDto;
-import mainproject33.domain.userboard.dto.UserBoardResponseDto;
 import mainproject33.global.validator.identifier.Identifier;
 import mainproject33.global.validator.nickname.Nickname;
 import mainproject33.global.validator.notspace.NotSpace;
 import mainproject33.global.validator.password.Password;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -18,6 +18,7 @@ import java.util.List;
 public class MemberDto {
 
     @Getter
+    @AllArgsConstructor
     public static class Post {
 
         @NotBlank(message = "아이디에는 공백이 올 수 없습니다.")
@@ -27,6 +28,10 @@ public class MemberDto {
         @NotBlank(message = "패스워드에는 공백이 올 수 없습니다.")
         @Password
         private String password;
+
+        @NotBlank(message = "이메일에는 공백이 올 수 없습니다.")
+        @Email
+        private String email;
 
         @NotBlank(message = "닉네임에는 공백이 포함될 수 없습니다.")
         @Nickname

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import SingleProfileWrap from "./SingleProfileWrap";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { useEffect } from "react";
 import { setBlock } from "../redux/slice/blockSlice";
 import { MOBILE_POINT } from "../data/breakpoint";
@@ -51,30 +51,19 @@ const BlockUserList = () => {
   const { userid } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const instance = useAuthenticatedRequest();
 
   const handleBlock = (id) => {
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/api/members/${id}/blocks`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${loginInfo?.accessToken}`,
-          },
-        }
-      )
+    instance
+      .post(`/api/members/${id}/blocks`)
       .then(() =>
         dispatch(setBlock(blockUser.filter((block) => block.id !== id)))
       );
   };
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}/blocks`, {
-        headers: {
-          Authorization: `Bearer ${loginInfo?.accessToken}`,
-        },
-      })
+    instance
+      .get(`/api/members/${userid}/blocks`)
       .then((res) => dispatch(setBlock(res.data.data)));
   }, [userid, loginInfo?.accessToken, dispatch]);
 

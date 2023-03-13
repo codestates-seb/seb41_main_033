@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/slice/loginstate";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "../components/Popup";
 const Card = styled.div`
@@ -66,6 +66,8 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const instance = useAuthenticatedRequest();
+
   const submitHandle = (e) => {
     e.preventDefault();
     if (!idValueCheck) {
@@ -74,30 +76,25 @@ const Login = () => {
       setIdError(false);
       setPsdError(true);
     } else if (idValueCheck && psdValueCheck) {
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}/api/members/login`,
-          {
-            identifier,
-            password,
-          },
-          {
-            withCredentials: true,
-          }
-        )
+      instance
+        .post(`/api/members/login`, {
+          identifier,
+          password,
+        })
         .then((res) => {
           localStorage.clear();
           const expire = Date.now() + 1000 * 60 * 60;
-          const refreshtoken = res.headers.refreshtoken;
+          const refreshToken = res.headers.refreshtoken;
           const accessToken = res.headers.authorization;
           const memberId = res.data.data.id;
+
           dispatch(
             login({
               accessToken,
               memberId,
               isLogin: true,
               expire,
-              refreshtoken,
+              refreshToken,
             })
           );
           if (location.state && location.state.from === "signup") {
@@ -155,7 +152,6 @@ const Login = () => {
         setIsOpen={setIsOpen}
         title="올바른 정보를 입력해 주세요"
         content={"아이디 혹은 비밀번호를 확인해주세요"}
-
         button1="확인"
         handleBtn1={() => setIsOpen(false)}
       />

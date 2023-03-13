@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Dropdown from "../components/DropDown";
 import React, { useState } from "react";
 import InputWrap from "../components/InputWrap";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PostPatch from "../components/PostPatch";
@@ -121,6 +121,8 @@ const MatchingWrite = () => {
   const [tags, setTags] = useState([]);
   const [game, setGame] = useState("게임을 선택하세요");
   const navigate = useNavigate();
+  const instance = useAuthenticatedRequest();
+
   const removeTags = (index) => {
     const newTag = tags.filter((_, idx) => idx !== index);
     setTags(newTag);
@@ -156,12 +158,8 @@ const MatchingWrite = () => {
     const isEmpty = (object) =>
       !Object.values(object).every((el) => el !== null && el.length !== 0);
     if (!isEmpty(data) && content.length >= 5 && game !== "게임을 선택하세요") {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/api/matches`, data, {
-          headers: {
-            Authorization: `Bearer ${loginInfo.accessToken}`,
-          },
-        })
+      instance
+        .post(`/api/matches`, data)
         .then((res) => {
           navigate("/match");
         })

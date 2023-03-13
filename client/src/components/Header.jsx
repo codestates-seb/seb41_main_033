@@ -6,10 +6,9 @@ import { ReactComponent as BackHistory } from "./../assets/arrowHistory.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { logout } from "../redux/slice/loginstate";
 import { userInfo } from "../redux/slice/userInfo";
-import { login } from "../redux/slice/loginstate";
 import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "./Popup";
 
@@ -139,16 +138,12 @@ const Header = () => {
   const userInform = useSelector((state) => state.userInfo.userInfo);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const instance = useAuthenticatedRequest();
   useEffect(() => {
     if (loginInfo?.isLogin) {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`
-        )
-        .then((res) => {
-          dispatch(userInfo(res.data.data));
-        });
+      instance.get(`/api/members/${loginInfo?.memberId}`).then((res) => {
+        dispatch(userInfo(res.data.data));
+      });
     }
   }, [loginInfo?.isLogin, loginInfo?.memberId, dispatch]);
 
@@ -163,58 +158,21 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/api/members/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${loginInfo.accessToken}`,
-          },
-        }
-      )
-      .then(() => {
-        localStorage.clear();
-        setIsOpen((prev) => !prev);
-        document.body.style.overflow = "unset";
-        dispatch(logout({ accessToken: null, memberId: null, isLogin: false }));
-        navigate("/");
-      });
-  };
-
-  useEffect(() => {
-    if (loginInfo?.isLogin && Date.now() >= loginInfo?.expire) {
-      const memberId = loginInfo.memberId;
-      const expire = Date.now() + 1000 * 60 * 60;
-      console.log(loginInfo.refreshtoken);
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${loginInfo.accessToken}`,
-              refreshToken: `Bearer ${loginInfo.refreshtoken}`,
-            },
-          },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          const refreshtoken = res.headers.refreshtoken;
-          const accessToken = res.headers.authorization;
-          dispatch(userInfo(res.data.data));
-          dispatch(
-            login({
-              accessToken,
-              memberId,
-              isLogin: true,
-              expire,
-              refreshtoken,
-            })
-          );
+    instance.post(`api/members/logout`).then(() => {
+      localStorage.clear();
+      setIsOpen((prev) => !prev);
+      document.body.style.overflow = "unset";
+      dispatch(
+        logout({
+          accessToken: null,
+          memberId: null,
+          isLogin: false,
+          refreshToken: null,
         })
-        .catch((err) => console.log(err));
-    }
-  });
+      );
+      navigate("/");
+    });
+  };
 
   const handleHistoryBack = () => {
     navigate(-1);

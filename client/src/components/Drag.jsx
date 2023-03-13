@@ -8,8 +8,9 @@ import sound from "../assets/game.mp3";
 import drum from "../assets/drum.mp3";
 import heaven from "../assets/heaven.mp3";
 import RandomRolling from "../components/RandomRolling";
-import axios from "axios";
 import matchGame from "../util/matchGame";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
+
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -109,6 +110,7 @@ const Drag = () => {
   const [deadSound, setDeadSound] = useAudio(heaven);
   const [recommend, setRecommend] = useState(false);
   const [gameInfo, setGameInfo] = useState("");
+  const instance = useAuthenticatedRequest();
 
   const onDragStart = (e) => {
     if (count > 6) {
@@ -145,8 +147,8 @@ const Drag = () => {
       setDeadSound(true);
     } else {
       e.preventDefault();
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
+      instance
+        .get(`/api/games/random`)
         .then((res) => {
           setGameInfo(res.data.data);
           setDrag(true);
@@ -186,8 +188,8 @@ const Drag = () => {
       if (count > 7) {
         setPlaying(false);
       } else {
-        axios
-          .get(`${process.env.REACT_APP_API_URL}/api/games/random`)
+        instance
+          .get(`/api/games/random`)
           .then((res) => {
             setGameInfo(res.data.data);
             setPlaying(true);
@@ -214,6 +216,9 @@ const Drag = () => {
   };
   useEffect(() => {
     setCount(1);
+    return () => {
+      setDeadSound(false);
+    };
   }, []);
 
   return (

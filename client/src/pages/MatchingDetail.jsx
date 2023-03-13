@@ -2,7 +2,7 @@ import styled from "styled-components";
 import MatchDetails from "../components/MatchDetails";
 import UserCard from "../components/UserCard";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { gameInfo } from "../redux/slice/matchInfo";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -19,9 +19,11 @@ const MatchingDetail = () => {
   const [info, setInfo] = useState("");
   const { boardid } = useParams();
   const dispatch = useDispatch();
+  const instance = useAuthenticatedRequest();
+
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/matches/${boardid}`)
+    instance
+      .get(`/api/matches/${boardid}`)
       .then((res) => {
         setInfo(res.data.data);
         dispatch(gameInfo(res.data.data));

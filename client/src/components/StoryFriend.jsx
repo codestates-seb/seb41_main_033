@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import SearchBar from "./../components/SearchBar";
 import StorySingle from "../components/StorySingle";
 import NoSearch from "../components/NoSearch";
@@ -22,6 +22,7 @@ const StoryFriend = ({ accessToken, isLogin }) => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const pageEndPoint = useRef();
+  const instance = useAuthenticatedRequest();
   //페이지 증가 함수
   const addPage = () => {
     setPage((prevPage) => {
@@ -30,23 +31,13 @@ const StoryFriend = ({ accessToken, isLogin }) => {
   };
   //페이지 요청 함수
   const requestPage = async (page) => {
-    let config = {};
     let url = "";
-    if (isLogin) {
-      config = {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      };
-    } else {
-      return;
-    }
 
     if (keyword === "") {
       if (page === 1) setStoryData([]);
-      url = `${process.env.REACT_APP_API_URL}/api/boards/following?page=${page}`;
-      await axios
-        .get(url, config)
+      url = `/api/boards/following?page=${page}`;
+      await instance
+        .get(url)
         .then((res) => {
           setStoryData((prevData) => [...prevData, ...res.data.data]);
           const totalPages = res.data.pageInfo.totalPages;
@@ -67,9 +58,9 @@ const StoryFriend = ({ accessToken, isLogin }) => {
           console.log(err);
         });
     } else {
-      url = `${process.env.REACT_APP_API_URL}/api/boards/following?page=${page}&keyword=${keyword}`;
-      await axios
-        .get(url, config)
+      url = `api/boards/following?page=${page}&keyword=${keyword}`;
+      await instance
+        .get(url)
         .then((res) => {
           setStoryData(res.data.data);
           const totalPages = res.data.pageInfo.totalPages;

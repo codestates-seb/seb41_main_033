@@ -4,7 +4,7 @@ import HeartIcon from "./../assets/heart_sprite.svg";
 import { ReactComponent as CommentIcon } from "./../assets/sms.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import displayedAt from "../util/displayedAt";
 import SinglePofileWrap from "../components/SingleProfileWrap";
 import StoryComments from "../components/StoryComments";
@@ -133,14 +133,11 @@ const StoryDetail = () => {
     status: false,
     likeCount: 0,
   });
+  const instance = useAuthenticatedRequest();
+
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
-        headers: {
-          //"ngrok-skip-browser-warning": "69420",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+    instance
+      .get(`/api/boards/${params.boardid}`)
       .then((res) => {
         setStoryData(res.data.data);
         setStoryLike({
@@ -158,16 +155,8 @@ const StoryDetail = () => {
 
   //스토리 좋아요
   const handleStoryLikeClick = () => {
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}/likes`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${loginInfo?.accessToken}`,
-          },
-        }
-      )
+    instance
+      .post(`/api/boards/${params.boardid}/likes`)
       .then((res) => {
         let countValue = 0;
         if (res.data) countValue = 1;
@@ -199,12 +188,8 @@ const StoryDetail = () => {
   };
 
   const handleStoryDeleteClick = () => {
-    axios
-      .delete(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+    instance
+      .delete(`/api/boards/${params.boardid}`)
       .then((res) => {
         navigate("/story");
         document.body.style.overflow = "unset";

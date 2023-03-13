@@ -1,4 +1,4 @@
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StoryComment from "../components/StoryComment";
@@ -29,6 +29,8 @@ const StoryComments = ({ boardId }) => {
   const memberId = loginInfo.memberId;
   const [comment, setComment] = useState("");
   const [commentsList, setCommentsList] = useState([]);
+  const instance = useAuthenticatedRequest();
+
   //댓글 입력
   const handleCommentChange = (e) => {
     setComment(e.currentTarget.value);
@@ -41,16 +43,8 @@ const StoryComments = ({ boardId }) => {
   //CRUD
   //CREATE: 댓글 생성
   const handleWriteClick = throttle(() => {
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/api/boards/${boardId}/comments`,
-        { content: comment },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
+    instance
+      .post(`/api/boards/${boardId}/comments`, { content: comment })
       .then((res) => {
         setCommentsList((prevData) => [...prevData, res.data.data]);
         setComment("");
@@ -62,12 +56,8 @@ const StoryComments = ({ boardId }) => {
   }, 10000);
   //READ: 댓글 불러오기
   const getCommentsList = () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/boards/${boardId}/comments`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+    instance
+      .get(`/api/boards/${boardId}/comments`)
       .then((res) => {
         setCommentsList(res.data.data);
       })
@@ -78,16 +68,8 @@ const StoryComments = ({ boardId }) => {
 
   //UPDATE: 댓글 수정
   const handleEditClick = (commentsId, content) => {
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/boards/comments/${commentsId}`,
-        { content },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
+    instance
+      .patch(`/api/boards/comments/${commentsId}`, { content })
       .then((res) => {})
       .catch((err) => {
         console.log(err);
@@ -96,15 +78,8 @@ const StoryComments = ({ boardId }) => {
   };
   //DELETE: 댓글 삭제
   const handleDeleteClick = (commentsId) => {
-    axios
-      .delete(
-        `${process.env.REACT_APP_API_URL}/api/boards/comments/${commentsId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
+    instance
+      .delete(`/api/boards/comments/${commentsId}`)
       .then((res) => {
         let newData = commentsList.filter((el) => el.id !== commentsId);
         setCommentsList(newData);

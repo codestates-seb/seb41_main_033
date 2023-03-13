@@ -4,7 +4,7 @@ import { ReactComponent as ImgUploadIcon } from "./../assets/addPhoto.svg";
 import PostPatch from "../components/PostPatch";
 import InputWrap from "../components/InputWrap";
 import gameList from "../data/gameList.json";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userInfo } from "../redux/slice/userInfo";
@@ -153,6 +153,7 @@ const ProfileEdit = () => {
   const userInform = useSelector((state) => state.userInfo.userInfo);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const instance = useAuthenticatedRequest();
 
   const handleNickname = (e) => {
     setNickname(e.target.value);
@@ -215,34 +216,19 @@ const ProfileEdit = () => {
       formData.append("image", file);
     }
 
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/members/${userid}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${loginInfo?.accessToken}`,
-          },
-        }
-      )
-      .then((res) => {
-        setIsOpen((prev) => !prev);
-        document.body.style.overflow = "unset";
-        dispatch(userInfo(res.data.data));
-        navigate(`/profile/${userid}`, { replace: true });
-      });
+    instance.patch(`/api/members/${userid}`, formData).then((res) => {
+      setIsOpen((prev) => !prev);
+      document.body.style.overflow = "unset";
+      dispatch(userInfo(res.data.data));
+      navigate(`/profile/${userid}`, { replace: true });
+    });
   }, 10000);
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`, {
-        headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-      })
-      .then((res) => {
-        setNickname(res.data.data.nickname);
-        setBio(res.data.data.introduction);
-      });
+    instance.get(`api/members/${userid}`).then((res) => {
+      setNickname(res.data.data.nickname);
+      setBio(res.data.data.introduction);
+    });
     setCheckedGame(userInform.games.map((game) => game.korTitle));
   }, [loginInfo?.accessToken, userInform.games, userid]);
 

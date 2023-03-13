@@ -5,12 +5,12 @@ import WriteFloatButton from "../components/WriteFloatButton";
 import MatchPagination from "../components/MatchPagination";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import NoSearch from "../components/NoSearch";
 import Loading from "../components/Loading";
 import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "../components/Popup";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 
 const Wrap = styled.div``;
 
@@ -54,6 +54,7 @@ const Matching = () => {
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
+  const instance = useAuthenticatedRequest();
 
   const matchingBtn = () => {
     if (loginInfo?.isLogin) {
@@ -78,15 +79,8 @@ const Matching = () => {
 
   useEffect(() => {
     if (loginInfo?.isLogin) {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/matches?page=${page}&keyword=${keyword}`,
-          {
-            headers: {
-              Authorization: `Bearer ${loginInfo.accessToken}`,
-            },
-          }
-        )
+      instance
+        .get(`/api/matches?page=${page}&keyword=${keyword}`)
         .then((res) => {
           setMatchinglist(res.data.data);
           setTotal(res.data.pageInfo.totalPages);
@@ -94,11 +88,8 @@ const Matching = () => {
         })
         .catch((err) => console.log(err));
     } else {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/matches?page=${page}&keyword=${keyword}`,
-          {}
-        )
+      instance
+        .get(`api/matches?page=${page}&keyword=${keyword}`, {})
         .then((res) => {
           setMatchinglist(res.data.data);
           setTotal(res.data.pageInfo.totalPages);

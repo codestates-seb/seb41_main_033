@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import displayedAt from "../util/displayedAt";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import matchGame from "../util/matchGame";
@@ -145,6 +145,7 @@ const MatchDetails = ({ data, boardId }) => {
   const [same, setSame] = useState(false);
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
+  const instance = useAuthenticatedRequest();
 
   useEffect(() => {
     if (data.memberId === loginInfo?.memberId) {
@@ -153,17 +154,11 @@ const MatchDetails = ({ data, boardId }) => {
   }, [data.memberId, loginInfo?.memberId]);
 
   const deleteBtn = () => {
-    axios
-      .delete(`${process.env.REACT_APP_API_URL}/api/matches/${boardId}`, {
-        headers: {
-          Authorization: `Bearer ${loginInfo.accessToken}`,
-        },
-      })
-      .then((res) => {
-        setIsOpen((prev) => !prev);
-        navigate("/match");
-        document.body.style.overflow = "unset";
-      });
+    instance.delete(`/api/matches/${boardId}`).then((res) => {
+      setIsOpen((prev) => !prev);
+      navigate("/match");
+      document.body.style.overflow = "unset";
+    });
   };
 
   const handleDelete = () => {

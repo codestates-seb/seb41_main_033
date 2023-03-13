@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import PostPatch from "../components/PostPatch";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,13 +18,15 @@ const StoryEdit = () => {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const instance = useAuthenticatedRequest();
   const params = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
   const memberId = loginInfo.memberId;
   const accessToken = loginInfo.accessToken;
+
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/members/${memberId}`)
+    instance
+      .get(`/api/members/${memberId}`)
       .then((res) => {
         setUserData(res.data.data);
       })
@@ -32,8 +34,8 @@ const StoryEdit = () => {
         console.log(err);
       });
 
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`)
+    instance
+      .get(`/api/boards/${params.boardid}`)
       .then((res) => {
         setContent(res.data.data.content);
       })
@@ -54,16 +56,8 @@ const StoryEdit = () => {
 
   const handleStoryEditSubmit = throttle(() => {
     setIsLoading(true);
-    axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/api/boards/${params.boardid}`,
-        { content: content },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
+    instance
+      .patch(`/api/boards/${params.boardid}`, { content: content })
       .then((res) => {
         setIsLoading(false);
         setIsOpen((prev) => !prev);

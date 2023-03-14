@@ -4,15 +4,13 @@ import SearchBar from "../components/SearchBar";
 import WriteFloatButton from "../components/WriteFloatButton";
 import MatchPagination from "../components/MatchPagination";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import NoSearch from "../components/NoSearch";
 import Loading from "../components/Loading";
 import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "../components/Popup";
 import useAuthenticatedRequest from "../hooks/useinterceptor";
-
-const Wrap = styled.div``;
 
 const Ul = styled.ul`
   display: flex;
@@ -53,50 +51,44 @@ const Matching = () => {
   const [total, setTotal] = useState(1);
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
-  const loginInfo = useSelector((state) => state.islogin.login);
   const instance = useAuthenticatedRequest();
-
-  const matchingBtn = () => {
+  const loginInfo = useSelector((state) => state.islogin.login);
+  const memoizedMatchingList = useMemo(() => matchinglist, [matchinglist]);
+  const matchingBtn = useCallback(() => {
     if (loginInfo?.isLogin) {
       navigate("/match/matchwrite");
     } else {
       setIsOpen((prev) => !prev);
       document.body.style.overflow = "hidden";
     }
-  };
+  }, [navigate]);
 
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     navigate(`/login`);
     setIsOpen((prev) => !prev);
     document.body.style.overflow = "unset";
-  };
+  }, [navigate]);
 
-  const handleSignup = () => {
+  const handleSignup = useCallback(() => {
     navigate(`/signup`);
     setIsOpen((prev) => !prev);
     document.body.style.overflow = "unset";
-  };
+  }, [navigate]);
 
   useEffect(() => {
-    if (loginInfo?.isLogin) {
-      instance
-        .get(`/api/matches?page=${page}&keyword=${keyword}`)
-        .then((res) => {
-          setMatchinglist(res.data.data);
-          setTotal(res.data.pageInfo.totalPages);
-          setLoding(false);
-        })
-        .catch((err) => console.log(err));
-    } else {
-      instance
-        .get(`api/matches?page=${page}&keyword=${keyword}`, {})
-        .then((res) => {
-          setMatchinglist(res.data.data);
-          setTotal(res.data.pageInfo.totalPages);
-          setLoding(false);
-        })
-        .catch((err) => console.log(err));
-    }
+    const fetchData = async () => {
+      try {
+        const res = await instance.get(
+          `api/matches?page=${page}&keyword=${keyword}`
+        );
+        setMatchinglist(res.data.data);
+        setTotal(res.data.pageInfo.totalPages);
+        setLoding(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
   }, [page, keyword]);
 
   return (
@@ -104,15 +96,15 @@ const Matching = () => {
       {loading ? (
         <Loading />
       ) : (
-        <Wrap>
+        <>
           <SearchBar setKeyword={setKeyword} setPage={setPage} />
           {!keyword && !total ? (
             <Empty>매칭하기 게시물이 없습니다</Empty>
-          ) : matchinglist.length === 0 ? (
+          ) : memoizedMatchingList.length === 0 ? (
             <NoSearch />
           ) : (
             <Ul>
-              {matchinglist?.map((el) => (
+              {memoizedMatchingList?.map((el) => (
                 <li
                   key={el.id}
                   onClick={() => sessionStorage.setItem("matchfix", page)}
@@ -126,7 +118,7 @@ const Matching = () => {
           )}
           <WriteFloatButton click={matchingBtn} />
           <MatchPagination setPage={setPage} page={page} total={total} />
-        </Wrap>
+        </>
       )}
       <Popup
         isOpen={isOpen}

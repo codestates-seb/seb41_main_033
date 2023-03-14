@@ -160,6 +160,7 @@ const Header = () => {
   const handleLogout = () => {
     instance.post(`api/members/logout`).then(() => {
       localStorage.clear();
+      sessionStorage.removeItem("matchfix");
       setIsOpen((prev) => !prev);
       document.body.style.overflow = "unset";
       dispatch(

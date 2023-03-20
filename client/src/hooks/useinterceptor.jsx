@@ -39,7 +39,6 @@ const useAuthenticatedRequest = () => {
       Promise.reject(error);
     }
   );
-
   instance.interceptors.response.use(
     function (response) {
       return response;
@@ -60,6 +59,7 @@ const useAuthenticatedRequest = () => {
             headers,
           });
           const { refreshtoken: newRefreshToken, authorization } = data.headers; // refreshToken 변수 이름 변경
+
           dispatch(
             login({
               accessToken: authorization,
@@ -93,7 +93,7 @@ const useAuthenticatedRequest = () => {
             headers,
           });
           localStorage.clear();
-          window.location.href = "/login";
+          window.location.reload();
         }
       }
       return Promise.reject(error);

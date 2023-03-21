@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import { ReactComponent as Glummy } from "../assets/glummy.svg";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { quit } from "../redux/slice/loginstate";
 import { MOBILE_POINT } from "../data/breakpoint";
 import Popup from "./Popup";
-
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 const QuitWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -90,37 +89,25 @@ const QuitCard = () => {
   const loginInfo = useSelector((state) => state.islogin.login);
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-
+  const instance = useAuthenticatedRequest();
   const handleClick = () => {
     setIsOpen((prev) => !prev);
     document.body.style.overflow = "hidden";
   };
 
   const handleQuit = () => {
-    axios
-      .delete(
-        `${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`,
-        {
-          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-        }
-      )
-      .then(() => {
-        localStorage.clear();
-        setIsOpen((prev) => !prev);
-        document.body.style.overflow = "unset";
-        dispatch(quit({ accessToken: null, memberId: null, isLogin: false }));
-        navigate("/");
-      });
+    instance.delete(`/api/members/${loginInfo?.memberId}`).then(() => {
+      localStorage.clear();
+      setIsOpen((prev) => !prev);
+      document.body.style.overflow = "unset";
+      dispatch(quit({ accessToken: null, memberId: null, isLogin: false }));
+      navigate("/");
+    });
   };
 
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/members/${loginInfo?.memberId}`,
-        {
-          headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-        }
-      )
+    instance
+      .get(`api/members/${loginInfo?.memberId}`)
       .then((res) => setUser(res.data.data));
   }, [loginInfo?.memberId, loginInfo?.accessToken]);
 

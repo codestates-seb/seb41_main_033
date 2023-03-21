@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -78,7 +78,6 @@ const InputFile = styled.div`
 const StoryWrite = () => {
   const navigate = useNavigate();
   const loginInfo = useSelector((state) => state.islogin.login);
-  const accessToken = loginInfo.accessToken;
   const memberId = loginInfo.memberId;
   const [userData, setUserData] = useState({});
   const [fileName, setFileName] = useState(
@@ -87,9 +86,11 @@ const StoryWrite = () => {
   const [file, setFile] = useState(null);
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const instance = useAuthenticatedRequest();
+
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/members/${memberId}`)
+    instance
+      .get(`/api/members/${memberId}`)
       .then((res) => {
         setUserData(res.data.data);
       })
@@ -118,13 +119,8 @@ const StoryWrite = () => {
     );
     if (file) formData.append("file", file);
 
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/boards`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+    instance
+      .post(`/api/boards`, formData)
       .then((res) => {
         setIsLoading(false);
         navigate("/story");

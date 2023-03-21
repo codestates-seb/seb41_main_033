@@ -1,14 +1,14 @@
-import axios from 'axios';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import Loading from '../components/Loading';
-import ProfileCard from '../components/ProfileCard';
-import ProfileContent from '../components/ProfileContent';
-import { MOBILE_POINT } from '../data/breakpoint';
-import { setProfile } from '../redux/slice/profileSlice';
+import useAuthenticatedRequest from "../hooks/useinterceptor";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import Loading from "../components/Loading";
+import ProfileCard from "../components/ProfileCard";
+import ProfileContent from "../components/ProfileContent";
+import { MOBILE_POINT } from "../data/breakpoint";
+import { setProfile } from "../redux/slice/profileSlice";
 
 const ProfileWrap = styled.div`
   display: flex;
@@ -30,31 +30,22 @@ const Profile = () => {
   const { userid } = useParams();
   const loginInfo = useSelector((state) => state.islogin.login);
   const dispatch = useDispatch();
+  const instance = useAuthenticatedRequest();
 
   useEffect(() => {
     if (loginInfo?.accessToken) {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`, {
-          headers: {
-            Authorization: `Bearer ${loginInfo?.accessToken}`,
-          },
-        })
-        .then((res) => {
-          setUser(res.data.data);
-          dispatch(setProfile(res.data.data));
-        });
+      instance.get(`/api/members/${userid}`).then((res) => {
+        setUser(res.data.data);
+        dispatch(setProfile(res.data.data));
+      });
     } else {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/members/${userid}`)
-        .then((res) => {
-          setUser(res.data.data);
-          dispatch(setProfile(res.data.data));
-        });
+      instance.get(`/api/members/${userid}`).then((res) => {
+        setUser(res.data.data);
+        dispatch(setProfile(res.data.data));
+      });
     }
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/members/${userid}/matches?page=${matchPage}`
-      )
+    instance
+      .get(`api/members/${userid}/matches?page=${matchPage}`)
       .then((res) => {
         setMatch(res.data.data);
         setMatchPageInfo(res.data.pageInfo);
@@ -62,10 +53,8 @@ const Profile = () => {
       .then(() => {
         if (matchPage > matchPageInfo?.totalPages) setMatchPage(1);
       });
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/members/${userid}/boards?page=${storyPage}`
-      )
+    instance
+      .get(`/api/members/${userid}/boards?page=${storyPage}`)
       .then((res) => {
         setStory(res.data.data);
         setStoryPageInfo(res.data.pageInfo);

@@ -6,7 +6,7 @@ const initialState = {
     memberId: null,
     isLogin: false,
     expire: null,
-    refreshtoken: null,
+    refreshToken: null,
   },
 };
 

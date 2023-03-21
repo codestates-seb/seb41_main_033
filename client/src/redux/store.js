@@ -1,12 +1,12 @@
-import Logined from './slice/loginstate';
-import { configureStore } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { combineReducers } from '@reduxjs/toolkit';
-import GameInfo from './slice/matchInfo';
-import UserInfo from './slice/userInfo';
-import blockSlice from './slice/blockSlice';
-import profileSlice from './slice/profileSlice';
+import Logined from "./slice/loginstate";
+import { configureStore } from "@reduxjs/toolkit";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { combineReducers } from "@reduxjs/toolkit";
+import GameInfo from "./slice/matchInfo";
+import UserInfo from "./slice/userInfo";
+import blockSlice from "./slice/blockSlice";
+import profileSlice from "./slice/profileSlice";
 
 const reducer = combineReducers({
   islogin: Logined.reducer,
@@ -16,7 +16,7 @@ const reducer = combineReducers({
   profile: profileSlice.reducer,
 });
 const persistConfig = {
-  key: 'persist',
+  key: "persist",
   storage,
 };
 const combineReducer = persistReducer(persistConfig, reducer);

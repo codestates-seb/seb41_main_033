@@ -1,15 +1,15 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import SinglePofileWrap from './SingleProfileWrap';
-import { ReactComponent as Setting } from '../assets/settingsIcon.svg';
-import { ReactComponent as Heart } from '../assets/heartIcon.svg';
-import { ReactComponent as EmptyHeart } from '../assets/heartEmptyIcon.svg';
-import axios from 'axios';
-import { useState } from 'react';
-import { setProfile } from '../redux/slice/profileSlice';
-import { MOBILE_POINT } from '../data/breakpoint';
-import Popup from './Popup';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import SinglePofileWrap from "./SingleProfileWrap";
+import { ReactComponent as Setting } from "../assets/settingsIcon.svg";
+import { ReactComponent as Heart } from "../assets/heartIcon.svg";
+import { ReactComponent as EmptyHeart } from "../assets/heartEmptyIcon.svg";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
+import { useState } from "react";
+import { setProfile } from "../redux/slice/profileSlice";
+import { MOBILE_POINT } from "../data/breakpoint";
+import Popup from "./Popup";
 
 const ProfileWrap = styled.div`
   width: var(--col-4);
@@ -101,6 +101,7 @@ const ProfileCard = ({ user, isMe }) => {
   const userInfo = useSelector((state) => state.profile.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const instance = useAuthenticatedRequest();
 
   const handleLogin = () => {
     if (isLikeOpen) {
@@ -112,7 +113,7 @@ const ProfileCard = ({ user, isMe }) => {
     if (isBlockOpen) {
       setIsBlockOpen((prev) => !prev);
     }
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
     navigate(`/login`);
   };
 
@@ -126,57 +127,43 @@ const ProfileCard = ({ user, isMe }) => {
     if (isBlockOpen) {
       setIsBlockOpen((prev) => !prev);
     }
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
     navigate(`/signup`);
   };
 
   const handleFollow = () => {
     if (loginInfo?.isLogin) {
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}/api/members/${userid}/follows`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-          }
-        )
-        .then((res) => {
-          if (res.data === '팔로우가 완료되었습니다.') {
-            dispatch(
-              setProfile({
-                ...userInfo,
-                followStatus: !userInfo.followStatus,
-                followerCount: userInfo.followerCount + 1,
-              })
-            );
-          } else {
-            dispatch(
-              setProfile({
-                ...userInfo,
-                followStatus: !userInfo.followStatus,
-                followerCount: userInfo.followerCount - 1,
-              })
-            );
-          }
-        });
+      instance.post(`/api/members/${userid}/follows`).then((res) => {
+        if (res.data === "팔로우가 완료되었습니다.") {
+          dispatch(
+            setProfile({
+              ...userInfo,
+              followStatus: !userInfo.followStatus,
+              followerCount: userInfo.followerCount + 1,
+            })
+          );
+        } else {
+          dispatch(
+            setProfile({
+              ...userInfo,
+              followStatus: !userInfo.followStatus,
+              followerCount: userInfo.followerCount - 1,
+            })
+          );
+        }
+      });
     } else {
       setIsFollowOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 
   const handleLike = () => {
     if (loginInfo?.isLogin) {
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}/api/members/${userid}/likes`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-          }
-        )
+      instance
+        .post(`${process.env.REACT_APP_API_URL}/api/members/${userid}/likes`)
         .then((res) => {
-          if (res.data === '좋아요가 완료되었습니다.') {
+          if (res.data === "좋아요가 완료되었습니다.") {
             dispatch(
               setProfile({
                 ...userInfo,
@@ -196,43 +183,35 @@ const ProfileCard = ({ user, isMe }) => {
         });
     } else {
       setIsLikeOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 
   const handleBlock = () => {
     if (loginInfo?.isLogin) {
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}/api/members/${userid}/blocks`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${loginInfo?.accessToken}` },
-          }
-        )
-        .then((res) => {
-          if (
-            res.data ===
-            '해당 유저를 차단하셨습니다. 팔로우와 좋아요가 취소됩니다.'
-          ) {
-            dispatch(
-              setProfile({
-                ...userInfo,
-                blockStatus: !userInfo.blockStatus,
-              })
-            );
-          } else {
-            dispatch(
-              setProfile({
-                ...userInfo,
-                blockStatus: !userInfo.blockStatus,
-              })
-            );
-          }
-        });
+      instance.post(`/api/members/${userid}/blocks`).then((res) => {
+        if (
+          res.data ===
+          "해당 유저를 차단하셨습니다. 팔로우와 좋아요가 취소됩니다."
+        ) {
+          dispatch(
+            setProfile({
+              ...userInfo,
+              blockStatus: !userInfo.blockStatus,
+            })
+          );
+        } else {
+          dispatch(
+            setProfile({
+              ...userInfo,
+              blockStatus: !userInfo.blockStatus,
+            })
+          );
+        }
+      });
     } else {
       setIsBlockOpen((prev) => !prev);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
   };
 

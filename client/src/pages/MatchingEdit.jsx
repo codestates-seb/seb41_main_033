@@ -3,7 +3,7 @@ import Dropdown from "../components/DropDown";
 import React, { useState } from "react";
 import InputWrap from "../components/InputWrap";
 import PostPatch from "../components/PostPatch";
-import axios from "axios";
+import useAuthenticatedRequest from "../hooks/useinterceptor";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import validity from "../util/validity";
@@ -103,6 +103,7 @@ const MatchingEdit = () => {
   const loginInfo = useSelector((state) => state.islogin.login);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenGame, setIsOpenGame] = useState(false);
   const [info, setInfo] = useState({
     title: gameInfo?.title,
     team: gameInfo?.team,
@@ -110,6 +111,7 @@ const MatchingEdit = () => {
   });
   const [tags, setTags] = useState(gameInfo?.tags);
   const [game, setGame] = useState(gameInfo?.game.korTitle);
+  const instance = useAuthenticatedRequest();
 
   const removeTags = (index) => {
     const newTag = tags.filter((_, idx) => idx !== index);
@@ -151,16 +153,8 @@ const MatchingEdit = () => {
     const isEmpty = (object) =>
       !Object.values(object).every((el) => el !== null && el.length !== 0);
     if (!isEmpty(data)) {
-      axios
-        .patch(
-          `${process.env.REACT_APP_API_URL}/api/matches/${gameInfo.id}`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${loginInfo.accessToken}`,
-            },
-          }
-        )
+      instance
+        .patch(`api/matches/${gameInfo.id}`, data)
         .then(() => {
           setIsOpen((prev) => !prev);
           document.body.style.overflow = "unset";
@@ -172,13 +166,14 @@ const MatchingEdit = () => {
 
   return (
     <PostPatch
+      onsubmit="return false"
       image={gameInfo?.profileImage}
       nickname={gameInfo?.nickname}
       identifier={gameInfo?.identifier}
       button1="작성완료"
       link={-1}
       button2="취소"
-      handleSubmit={handlePatch}
+      handleSubmit={submitBtn}
     >
       <div>
         <Label htmlFor="title">제목</Label>
@@ -197,8 +192,8 @@ const MatchingEdit = () => {
         <Label htmlFor="game">플레이어 할 게임</Label>
         <Dropdown
           id="game"
-          setIsOpen={setIsOpen}
-          isOpen={isOpen}
+          setIsOpen={setIsOpenGame}
+          isOpen={isOpenGame}
           game={game}
           setGame={setGame}
         />

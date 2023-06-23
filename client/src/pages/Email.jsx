@@ -73,7 +73,7 @@ const Email = () => {
   };
 
   const handleSend = () => {
-    setIsSend({ ...isSend, send: true });
+    if (!isEmailError) setIsSend({ ...isSend, send: true });
   };
 
   return (

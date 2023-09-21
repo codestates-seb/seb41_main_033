@@ -8,6 +8,8 @@
 ![image](https://user-images.githubusercontent.com/110885981/215445088-c01268d2-0d3f-403c-9d07-217bc7393eda.png)</br>
 ![image](https://user-images.githubusercontent.com/110885981/215445186-a0a24c51-59e1-4056-90d1-88e3a0a7905e.png)
 
+- 게스트 id/pw: gameto33guest / guest12!@
+
 ## 팀원소개
 
 <img src="https://user-images.githubusercontent.com/110885981/215442916-9a93b855-98aa-4393-9b01-66fe676081ab.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215443206-68d62057-3612-4ac6-8cfe-6fef6c7d6af6.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215443087-93c83162-682e-4289-99df-677b2b2f9760.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215442791-f15c67e9-9929-4128-bd2c-a2e2798cce86.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215441108-d59792fa-2658-4973-8de8-60f5e743a8e4.png" width = 16% height = 16%> <img src="https://user-images.githubusercontent.com/110885981/215442510-4e9c8590-8b5a-421f-9c24-75fe26611b0d.png" width = 16% height = 16%>

@@ -21,6 +21,13 @@ const EmailWrap = styled.div`
   button {
     width: 100%;
   }
+
+  button.disabled {
+    background: var(--grey);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-btn);
+    cursor: default;
+  }
 `;
 
 const EmailInput = styled.div`
@@ -48,9 +55,10 @@ const VerifyInput = styled.div`
 `;
 
 const Email = () => {
-  const [isEmailError, setIsEmailError] = useState({ email: false });
-  const [isCodeError, setIsCodeError] = useState({ code: false });
+  const [isEmailError, setIsEmailError] = useState({ emailError: false });
+  const [isCodeError, setIsCodeError] = useState({ codeError: false });
   const [isSend, setIsSend] = useState({ send: false });
+  const [isDisabled, setIsDisabled] = useState({ disabled: false });
 
   const handleEmail = (e) => {
     const emailRegex = new RegExp(
@@ -59,21 +67,24 @@ const Email = () => {
 
     setIsEmailError(
       !e.target.value || !emailRegex.test(e.target.value)
-        ? { ...isEmailError, email: true }
-        : { ...isEmailError, email: false }
+        ? { ...isEmailError, emailError: true }
+        : { ...isEmailError, emailError: false }
     );
   };
 
   const handleCode = (e) => {
     setIsCodeError(
       !e.target.value
-        ? { ...isCodeError, code: true }
-        : { ...isCodeError, code: false }
+        ? { ...isCodeError, codeError: true }
+        : { ...isCodeError, codeError: false }
     );
   };
 
   const handleSend = () => {
-    if (!isEmailError) setIsSend({ ...isSend, send: true });
+    if (!isEmailError.emailError) {
+      setIsSend({ ...isSend, send: true });
+      setIsDisabled({ ...isDisabled, disabled: true });
+    }
   };
 
   return (
@@ -85,8 +96,9 @@ const Email = () => {
             <p>이메일 입력</p>
             <InputWrap
               className={
-                (isEmailError.email ? 'error input email' : 'input email') +
-                (isSend.send ? ' clicked' : '')
+                (isEmailError.emailError
+                  ? 'error input email'
+                  : 'input email') + (isSend.send ? ' clicked' : '')
               }
               type="text"
               name="email"
@@ -95,12 +107,16 @@ const Email = () => {
               onChange={handleEmail}
               readOnly={isSend.send ? true : false}
             />
-            {isEmailError.email ? (
+            {isEmailError.emailError ? (
               <div className="error_caption">올바른 이메일을 입력하세요.</div>
             ) : null}
           </div>
         </div>
-        <button className="normal" onClick={handleSend}>
+        <button
+          className={isDisabled.disabled ? 'disabled' : 'normal'}
+          disabled={isDisabled.disabled}
+          onClick={handleSend}
+        >
           인증코드 발급
         </button>
       </EmailInput>
@@ -111,7 +127,7 @@ const Email = () => {
             <p>인증코드 확인</p>
             <InputWrap
               className={
-                isCodeError.code ? 'error input verify' : 'input verify'
+                isCodeError.codeError ? 'error input verify' : 'input verify'
               }
               type="text"
               name="verification"
@@ -119,7 +135,7 @@ const Email = () => {
               maxLength="50"
               onChange={handleCode}
             />
-            {isCodeError.code ? (
+            {isCodeError.codeError ? (
               <div className="error_caption">
                 입력하신 인증코드가 올바르지 않습니다.
               </div>
